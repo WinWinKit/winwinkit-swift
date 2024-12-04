@@ -41,6 +41,8 @@ public final class WinWinKit {
         self.userId = userId
     }
     
+    public weak var delegate: WinWinKitDelegate?
+    
     private let projectKey: String
     private let userId: String
 }
