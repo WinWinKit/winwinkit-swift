@@ -22,17 +22,25 @@ public final class WinWinKit {
     ///
     /// - Parameter projectKey: The project key you wish to use to configure ``WinWinKit``.
     ///
+    /// - Parameter userId: Unique identifier of your app's user.
+    /// Referral program and rewards will be attached to the `userId`.
+    /// Use UUID or similar random identifier types.
+    /// **Avoid setting person identifying information**, like email or name.
+    ///
     /// - Returns: An instance of ``WinWinKit`` object.
     ///
     /// ### Example
     ///
     /// ```swift
-    /// let winWinKit = WinWinKit(projectKey: "<YOUR_PROJECT_KEY>")
+    /// let winWinKit = WinWinKit(projectKey: "<YOUR_PROJECT_KEY>",
+    ///                           userId: "<YOUR_APP_USER_ID>")
     /// ```
     ///
-    public init(projectKey: String) {
+    public init(projectKey: String, userId: String) {
         self.projectKey = projectKey
+        self.userId = userId
     }
     
     private let projectKey: String
+    private let userId: String
 }
