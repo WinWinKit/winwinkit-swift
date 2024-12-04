@@ -1,0 +1,44 @@
+//
+//  Copyright WinWinKit. All Rights Reserved.
+//
+//  Licensed under the MIT License (the "License").
+//  You may not use this file except in compliance with the License.
+//  You may obtain a copy of the License at https://opensource.org/licenses/MIT
+//
+//  ReferralUserService.swift
+//
+//  Created by Oleh Stasula on 04/12/2024.
+//
+
+public final class ReferralUserService {
+    
+    ///
+    /// Initialize an instance of the ``ReferralUserService`.
+    ///
+    /// - Parameter projectKey: The project key to configure ``ReferralUserService`` with.
+    /// Obtain ``projectKey`` in the settings of your project in [WinWinKit dashboard](https://app.winwinkit.com).
+    ///
+    /// - Parameter userId: Unique identifier of your app's user.
+    /// Referral program and rewards will be attached to the `userId`.
+    /// Use UUID or similar random identifier types.
+    /// **Avoid setting person identifying information**, like email or name.
+    ///
+    /// - Returns: An instance of ``ReferralUserService`` object.
+    ///
+    /// ### Example
+    ///
+    /// ```swift
+    /// let service = ReferralUserService(projectKey: "<YOUR_PROJECT_KEY>",
+    ///                                   userId: "<YOUR_APP_USER_ID>")
+    /// ```
+    ///
+    public init(projectKey: String, userId: String) {
+        self.projectKey = projectKey
+        self.userId = userId
+    }
+    
+    public weak var delegate: ReferralUserServiceDelegate?
+    
+    private let projectKey: String
+    private let userId: String
+}
