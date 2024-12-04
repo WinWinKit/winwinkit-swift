@@ -10,6 +10,8 @@
 //  Created by Oleh Stasula on 04/12/2024.
 //
 
+import Foundation
+
 public final class ReferralUserService {
     
     ///
@@ -23,7 +25,10 @@ public final class ReferralUserService {
     /// Use UUID or similar random identifier types.
     /// **Avoid setting person identifying information**, like email or name.
     ///
-    /// - Returns: An instance of ``ReferralUserService`` object.
+    /// - Parameter userDefaults: ``UserDefaults`` for caching data.
+    /// The default value is ``UserDefaults.standard``.
+    ///
+    /// - Returns: An instance of ``ReferralUserService``.
     ///
     /// ### Example
     ///
@@ -32,13 +37,22 @@ public final class ReferralUserService {
     ///                                   userId: "<YOUR_APP_USER_ID>")
     /// ```
     ///
-    public init(projectKey: String, userId: String) {
+    public init(projectKey: String,
+                userId: String,
+                userDefaults: UserDefaults = .standard) {
+        
         self.projectKey = projectKey
         self.userId = userId
+        self.userDefaults = userDefaults
     }
     
     public weak var delegate: ReferralUserServiceDelegate?
     
     private let projectKey: String
     private let userId: String
+    private let userDefaults: UserDefaults
+    
+    private enum UserDefaultsKeys {
+        static let referralUser = "com.winwinkit.userdefaults.referralUser"
+    }
 }
