@@ -41,10 +41,14 @@ public final class ReferralUserService {
                             userId: String,
                             userDefaults: UserDefaults = .standard) {
         
+        let baseEndpointURL = URL(string: "https://app.winwinkit.com/api/")!
+        let requestDispatcher = RemoteReferralUserRequestDispatcher(session: .shared)
+        let referralUserProvider = RemoteReferralUserProvider(baseEndpointURL: baseEndpointURL,
+                                                              requestDispatcher: requestDispatcher)
         self.init(projectKey: projectKey,
                   userId: userId,
                   userDefaults: userDefaults,
-                  referralUserProvider: RemoteReferralUserProvider())
+                  referralUserProvider: referralUserProvider)
     }
     
     public weak var delegate: ReferralUserServiceDelegate?

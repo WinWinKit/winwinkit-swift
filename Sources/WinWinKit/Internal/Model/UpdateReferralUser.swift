@@ -10,6 +10,6 @@
 //  Created by Oleh Stasula on 05/12/2024.
 //
 
-struct UpdateReferralUser {
+struct UpdateReferralUser: Codable {
     let id: ReferralUser.ID
 }
