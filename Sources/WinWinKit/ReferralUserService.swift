@@ -25,7 +25,7 @@ public final class ReferralUserService {
     /// Use UUID or similar random identifier types.
     /// **Avoid setting person identifying information**, like email or name.
     ///
-    /// - Parameter userDefaults: ``UserDefaults`` for caching data.
+    /// - Parameter referralUserCache: Destination for caching referral user data.
     /// The default value is ``UserDefaults.standard``.
     ///
     /// - Returns: An instance of ``ReferralUserService``.
@@ -39,7 +39,7 @@ public final class ReferralUserService {
     ///
     public convenience init(projectKey: String,
                             userId: String,
-                            userDefaults: UserDefaults = .standard) {
+                            referralUserCache: ReferralUserCacheType = UserDefaults.standard) {
         
         let baseEndpointURL = URL(string: "https://app.winwinkit.com/api/")!
         let requestDispatcher = RemoteReferralUserRequestDispatcher(session: .shared)
@@ -47,7 +47,7 @@ public final class ReferralUserService {
                                                               requestDispatcher: requestDispatcher)
         self.init(projectKey: projectKey,
                   userId: userId,
-                  userDefaults: userDefaults,
+                  referralUserCache: referralUserCache,
                   referralUserProvider: referralUserProvider)
     }
     
@@ -55,18 +55,18 @@ public final class ReferralUserService {
     
     internal init(projectKey: String,
                   userId: String,
-                  userDefaults: UserDefaults,
+                  referralUserCache: ReferralUserCacheType,
                   referralUserProvider: ReferralUserProviderType) {
         
         self.projectKey = projectKey
         self.userId = userId
-        self.userDefaults = userDefaults
+        self.referralUserCache = referralUserCache
         self.referralUserProvider = referralUserProvider
     }
     
     private let projectKey: String
     private let userId: String
-    private let userDefaults: UserDefaults
+    private let referralUserCache: ReferralUserCacheType
     private let referralUserProvider: ReferralUserProviderType
     
     private enum UserDefaultsKeys {
