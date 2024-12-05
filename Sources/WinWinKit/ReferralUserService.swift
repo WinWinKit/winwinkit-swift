@@ -37,20 +37,33 @@ public final class ReferralUserService {
     ///                                   userId: "<YOUR_APP_USER_ID>")
     /// ```
     ///
-    public init(projectKey: String,
-                userId: String,
-                userDefaults: UserDefaults = .standard) {
+    public convenience init(projectKey: String,
+                            userId: String,
+                            userDefaults: UserDefaults = .standard) {
         
-        self.projectKey = projectKey
-        self.userId = userId
-        self.userDefaults = userDefaults
+        self.init(projectKey: projectKey,
+                  userId: userId,
+                  userDefaults: userDefaults,
+                  referralUserProvider: RemoteReferralUserProvider())
     }
     
     public weak var delegate: ReferralUserServiceDelegate?
     
+    internal init(projectKey: String,
+                  userId: String,
+                  userDefaults: UserDefaults,
+                  referralUserProvider: ReferralUserProviderType) {
+        
+        self.projectKey = projectKey
+        self.userId = userId
+        self.userDefaults = userDefaults
+        self.referralUserProvider = referralUserProvider
+    }
+    
     private let projectKey: String
     private let userId: String
     private let userDefaults: UserDefaults
+    private let referralUserProvider: ReferralUserProviderType
     
     private enum UserDefaultsKeys {
         static let referralUser = "com.winwinkit.userdefaults.referralUser"
