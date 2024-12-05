@@ -22,6 +22,7 @@ struct RemoteReferralUserRequest {
         case get(userId: ReferralUser.ID)
         case post(user: InsertReferralUser)
         case patch(user: UpdateReferralUser)
+        case claim(code: String, userId: ReferralUser.ID)
     }
     
     let baseEndpointURL: URL
@@ -50,6 +51,7 @@ extension RemoteReferralUserRequest.Request {
         case .get: "GET"
         case .post: "POST"
         case .patch: "PATCH"
+        case .claim: "POST"
         }
     }
     
@@ -58,6 +60,7 @@ extension RemoteReferralUserRequest.Request {
         case .get: nil
         case .post(let referralUser): try referralUser.jsonData()
         case .patch(let referralUser): try referralUser.jsonData()
+        case .claim: nil
         }
     }
     
@@ -66,6 +69,7 @@ extension RemoteReferralUserRequest.Request {
         case .get(let userId): "referral/users/\(userId)"
         case .post: "referral/users"
         case .patch(let user): "referral/users/\(user.id)"
+        case .claim(let code, let userId): "referral/users/\(userId)/codes/\(code)/claim"
         }
     }
 }
