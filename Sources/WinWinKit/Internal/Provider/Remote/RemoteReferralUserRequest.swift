@@ -56,8 +56,8 @@ extension RemoteReferralUserRequest.Request {
     fileprivate func httpBody() throws -> Data? {
         switch self {
         case .get: nil
-        case .post(let referralUser): try JSONEncoder().encode(referralUser)
-        case .patch(let referralUser): try JSONEncoder().encode(referralUser)
+        case .post(let referralUser): try referralUser.jsonData()
+        case .patch(let referralUser): try referralUser.jsonData()
         }
     }
     

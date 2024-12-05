@@ -13,8 +13,8 @@
 import Foundation
 
 enum RemoteReferralUserProviderError: Error {
-    case missingReferralUserAfterCreation
-    case missingReferralUserAfterUpdate
+    case receivedNoDataOnCreate
+    case receivedNoDataOnUpdate
 }
 
 struct RemoteReferralUserProvider: ReferralUserProviderType {
@@ -25,41 +25,40 @@ struct RemoteReferralUserProvider: ReferralUserProviderType {
     // MARK: - ReferralUserProviderType
     
     func fetch(userId: ReferralUser.ID, projectKey: String) async throws -> ReferralUser? {
-        let request = RemoteReferralUserRequest(baseEndpointURL: self.baseEndpointURL,
-                                                projectKey: projectKey,
-                                                request: .get(userId: userId))
-        let data = try await self.requestDispatcher.perform(request: request)
-        let referralUser = try data.map {
-            try JSONDecoder().decode(ReferralUser.self, from: $0)
-        }
-        return referralUser
+        try await self.perform(request: .get(userId: userId),
+                               projectKey: projectKey)
     }
     
     func create(referralUser: InsertReferralUser, projectKey: String) async throws -> ReferralUser {
-        let request = RemoteReferralUserRequest(baseEndpointURL: self.baseEndpointURL,
-                                                projectKey: projectKey,
-                                                request: .post(user: referralUser))
-        let data = try await self.requestDispatcher.perform(request: request)
-        let referralUser = try data.map {
-            try JSONDecoder().decode(ReferralUser.self, from: $0)
-        }
-        guard let referralUser else {
-            throw RemoteReferralUserProviderError.missingReferralUserAfterCreation
-        }
-        return referralUser
+        try await self.perform(request: .post(user: referralUser),
+                               projectKey: projectKey)
+            .unwrap(orThrow: .receivedNoDataOnCreate)
     }
     
     func update(referralUser: UpdateReferralUser, projectKey: String) async throws -> ReferralUser {
+        try await self.perform(request: .patch(user: referralUser),
+                               projectKey: projectKey)
+            .unwrap(orThrow: .receivedNoDataOnUpdate)
+    }
+    
+    // MARK: - Private
+    
+    private func perform(request: RemoteReferralUserRequest.Request, projectKey: String) async throws -> ReferralUser? {
         let request = RemoteReferralUserRequest(baseEndpointURL: self.baseEndpointURL,
                                                 projectKey: projectKey,
-                                                request: .patch(user: referralUser))
+                                                request: request)
         let data = try await self.requestDispatcher.perform(request: request)
-        let referralUser = try data.map {
-            try JSONDecoder().decode(ReferralUser.self, from: $0)
-        }
-        guard let referralUser else {
-            throw RemoteReferralUserProviderError.missingReferralUserAfterUpdate
-        }
+        let referralUser = try data.map { try ReferralUser(jsonData: $0) }
         return referralUser
+    }
+}
+
+extension Optional where Wrapped == ReferralUser {
+    
+    fileprivate func unwrap(orThrow error: RemoteReferralUserProviderError) throws -> ReferralUser {
+        if let self {
+            return self
+        }
+        throw error
     }
 }
