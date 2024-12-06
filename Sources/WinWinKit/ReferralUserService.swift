@@ -69,7 +69,7 @@ public final class ReferralUserService {
     private let referralUserCache: ReferralUserCacheType
     private let referralUserProvider: ReferralUserProviderType
     
-    private enum UserDefaultsKeys {
-        static let referralUser = "com.winwinkit.userdefaults.referralUser"
+    private enum CacheKeys {
+        static let referralUser = "com.winwinkit.cache.referralUser"
     }
 }
