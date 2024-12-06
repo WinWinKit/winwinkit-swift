@@ -19,10 +19,10 @@ enum RemoteReferralUserRequestError: Error {
 struct RemoteReferralUserRequest {
     
     enum Request {
-        case get(userId: ReferralUser.ID)
+        case get(appUserId: String)
         case post(user: InsertReferralUser)
         case patch(user: UpdateReferralUser)
-        case claim(code: String, userId: ReferralUser.ID)
+        case claim(code: String, appUserId: String)
     }
     
     let baseEndpointURL: URL
@@ -66,10 +66,10 @@ extension RemoteReferralUserRequest.Request {
     
     fileprivate var path: String {
         switch self {
-        case .get(let userId): "referral/users/\(userId)"
+        case .get(let appUserId): "referral/users/\(appUserId)"
         case .post: "referral/users"
-        case .patch(let user): "referral/users/\(user.id)"
-        case .claim(let code, let userId): "referral/users/\(userId)/codes/\(code)/claim"
+        case .patch(let user): "referral/users/\(user.appUserId)"
+        case .claim(let code, let appUserId): "referral/users/\(appUserId)/codes/\(code)/claim"
         }
     }
 }

@@ -25,8 +25,8 @@ struct RemoteReferralUserProvider: ReferralUserProviderType {
     
     // MARK: - ReferralUserProviderType
     
-    func fetch(userId: ReferralUser.ID, projectKey: String) async throws -> ReferralUser? {
-        try await self.perform(request: .get(userId: userId),
+    func fetch(appUserId: String, projectKey: String) async throws -> ReferralUser? {
+        try await self.perform(request: .get(appUserId: appUserId),
                                projectKey: projectKey)
     }
     
@@ -42,8 +42,8 @@ struct RemoteReferralUserProvider: ReferralUserProviderType {
             .unwrap(orThrow: .receivedNoDataOnUpdate)
     }
     
-    func claim(code: String, userId: ReferralUser.ID, projectKey: String) async throws -> ReferralUser {
-        try await self.perform(request: .claim(code: code, userId: userId),
+    func claim(code: String, appUserId: String, projectKey: String) async throws -> ReferralUser {
+        try await self.perform(request: .claim(code: code, appUserId: appUserId),
                                projectKey: projectKey)
             .unwrap(orThrow: .receivedNoDataOnClaimCode)
     }

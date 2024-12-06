@@ -13,8 +13,7 @@
 import Foundation
 
 public struct ReferralUser: Codable {
-    public typealias ID = String
-    public let id: ID
+    public let appUserId: String
     public let code: String?
     public let isPremium: Bool
     public let userSince: Date?

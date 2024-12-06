@@ -11,5 +11,5 @@
 //
 
 struct InsertReferralUser: Codable {
-    let id: ReferralUser.ID
+    let appUserId: String
 }
