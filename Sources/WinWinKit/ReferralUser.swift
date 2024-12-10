@@ -31,45 +31,53 @@ public struct ReferralUser: Codable {
 //        public let metadata: Any?
         public let rewards: [Reward]
         
-        public struct Reward: Codable {
-            public let key: String
-            public let description: String?
-            public let side: Side
-//            public let metadata: [String: Any]?
-            public let activationConfigurations: ActivationConfigurations
-            public let deactivationConfigurations: DeactivationConfigurations
+        public struct Rewards {
+            public let basic: [BasicReward]
+            public let credit: [CreditReward]
             
-            public enum Side: String, Codable {
-                case sender
-                case receiver
-            }
-            
-            public struct ActivationConfigurations: Codable {
-                public let type: `Type`
-                public let amount: Int
+            public struct BasicReward: Codable {
+                public let key: String
+                public let description: String?
+                public let side: Side
+                //            public let metadata: [String: Any]?
+                public let activationConfigurations: ActivationConfigurations
+                public let deactivationConfigurations: DeactivationConfigurations
                 
-                public enum `Type`: String, Codable {
-                    case claim
-                    case conversion
+                public enum Side: String, Codable {
+                    case sender
+                    case receiver
+                }
+                
+                public struct ActivationConfigurations: Codable {
+                    public let type: `Type`
+                    public let amount: Int
+                    
+                    public enum `Type`: String, Codable {
+                        case claim
+                        case conversion
+                    }
+                }
+                
+                public struct DeactivationConfigurations: Codable {
+                    public let type: `Type`
+                    public let duration: Int?
+                    public let period: Period?
+                    
+                    public enum `Type`: String, Codable {
+                        case never
+                        case churn
+                        case interval
+                    }
+                    
+                    public enum Period: String, Codable {
+                        case days
+                        case months
+                        case years
+                    }
                 }
             }
             
-            public struct DeactivationConfigurations: Codable {
-                public let type: `Type`
-                public let duration: Int?
-                public let period: Period?
-                
-                public enum `Type`: String, Codable {
-                    case never
-                    case churn
-                    case interval
-                }
-                
-                public enum Period: String, Codable {
-                    case days
-                    case months
-                    case years
-                }
+            public struct CreditReward: Codable {
             }
         }
     }
