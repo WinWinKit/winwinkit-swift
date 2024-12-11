@@ -12,7 +12,7 @@
 
 import Foundation
 
-public struct ReferralUser: Codable {
+public struct ReferralUser: Codable, Sendable {
     public let appUserId: String
     public let code: String?
     public let isPremium: Bool
@@ -22,7 +22,7 @@ public struct ReferralUser: Codable {
     public let program: ReferralProgram?
     public let rewards: [Reward]
     
-    public struct ReferralProgram: Codable {
+    public struct ReferralProgram: Codable, Sendable {
         public let id: String
         public let name: String
         public let description: String?
@@ -31,11 +31,11 @@ public struct ReferralUser: Codable {
 //        public let metadata: Any?
         public let rewards: [Reward]
         
-        public struct Rewards {
+        public struct Rewards: Sendable {
             public let basic: [BasicReward]
             public let credit: [CreditReward]
             
-            public struct BasicReward: Codable {
+            public struct BasicReward: Codable, Sendable {
                 public let key: String
                 public let description: String?
                 public let side: Side
@@ -43,33 +43,33 @@ public struct ReferralUser: Codable {
                 public let activationConfigurations: ActivationConfigurations
                 public let deactivationConfigurations: DeactivationConfigurations
                 
-                public enum Side: String, Codable {
+                public enum Side: String, Codable, Sendable {
                     case sender
                     case receiver
                 }
                 
-                public struct ActivationConfigurations: Codable {
+                public struct ActivationConfigurations: Codable, Sendable {
                     public let type: `Type`
                     public let amount: Int
                     
-                    public enum `Type`: String, Codable {
+                    public enum `Type`: String, Codable, Sendable {
                         case claim
                         case conversion
                     }
                 }
                 
-                public struct DeactivationConfigurations: Codable {
+                public struct DeactivationConfigurations: Codable, Sendable {
                     public let type: `Type`
                     public let duration: Int?
                     public let period: Period?
                     
-                    public enum `Type`: String, Codable {
+                    public enum `Type`: String, Codable, Sendable {
                         case never
                         case churn
                         case interval
                     }
                     
-                    public enum Period: String, Codable {
+                    public enum Period: String, Codable, Sendable {
                         case days
                         case months
                         case years
@@ -77,12 +77,12 @@ public struct ReferralUser: Codable {
                 }
             }
             
-            public struct CreditReward: Codable {
+            public struct CreditReward: Codable, Sendable {
             }
         }
     }
     
-    public struct Reward: Codable {
+    public struct Reward: Codable, Sendable {
         public let key: String
         public let description: String?
 //        public let metadata: [String: Any]?
