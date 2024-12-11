@@ -151,6 +151,8 @@ public final class ReferralUserService {
         // TODO:
     }
     
+    // MARK: - Internal
+    
     internal init(appUserId: String,
                   projectKey: String,
                   networkReachability: NetworkReachabilityType,
@@ -163,6 +165,8 @@ public final class ReferralUserService {
         self.referralUserCache = referralUserCache
         self.referralUserProvider = referralUserProvider
     }
+    
+    // MARK: - Private
     
     private let appUserId: String
     private let projectKey: String
