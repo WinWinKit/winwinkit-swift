@@ -51,7 +51,25 @@ public final class ReferralUserService {
                   referralUserProvider: referralUserProvider)
     }
     
-    public weak var delegate: ReferralUserServiceDelegate?
+    public var delegate: ReferralUserServiceDelegate? {
+        get { self._delegate }
+        set {
+            guard newValue !== self._delegate else {
+                // TODO: log same delegate is set multiple times
+                return
+            }
+            
+            if newValue == nil {
+                // TODO: log delegate is set to nil
+            }
+            
+            self._delegate = newValue
+            
+            if newValue != nil {
+                // TODO: log delegate is set
+            }
+        }
+    }
     
     public var cachedReferralUser: ReferralUser? {
         do {
@@ -138,6 +156,8 @@ public final class ReferralUserService {
     private let projectKey: String
     private let referralUserCache: ReferralUserCacheType
     private let referralUserProvider: ReferralUserProviderType
+    
+    private weak var _delegate: ReferralUserServiceDelegate? = nil
     
     private var hasStartedOnce: Bool = false
     
