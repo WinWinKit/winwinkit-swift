@@ -12,7 +12,7 @@
 
 import Foundation
 
-public protocol ReferralUserCacheType {
+public protocol ReferralUserCacheType: AnyObject {
     subscript(_ key: String) -> Data? { get set }
 }
 

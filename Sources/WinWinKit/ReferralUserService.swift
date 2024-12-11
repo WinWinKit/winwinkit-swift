@@ -86,6 +86,43 @@ public final class ReferralUserService {
         }
     }
     
+    public func set(isPremium: Bool) {
+        self.pendingUpdateReferralUser = (
+            self.pendingUpdateReferralUser?.set(isPremium: isPremium) ??
+            UpdateReferralUser(appUserId: self.appUserId,
+                               isPremium: isPremium,
+                               userSince: nil,
+                               lastSeenAt: nil)
+        )
+        // TODO: push changes
+    }
+    
+    public func set(userSince: Date) {
+        self.pendingUpdateReferralUser = (
+            self.pendingUpdateReferralUser?.set(userSince: userSince) ??
+            UpdateReferralUser(appUserId: self.appUserId,
+                               isPremium: nil,
+                               userSince: userSince,
+                               lastSeenAt: nil)
+        )
+        // TODO: push changes
+    }
+    
+    public func set(lastSeenAt: Date) {
+        self.pendingUpdateReferralUser = (
+            self.pendingUpdateReferralUser?.set(lastSeenAt: lastSeenAt) ??
+            UpdateReferralUser(appUserId: self.appUserId,
+                               isPremium: nil,
+                               userSince: nil,
+                               lastSeenAt: lastSeenAt)
+        )
+        // TODO: push changes
+    }
+    
+    public func set(metadata: Any?) {
+        // TODO:
+    }
+    
     internal init(appUserId: String,
                   projectKey: String,
                   referralUserCache: ReferralUserCacheType,
@@ -104,7 +141,31 @@ public final class ReferralUserService {
     
     private var hasStartedOnce: Bool = false
     
+    private var pendingUpdateReferralUser: UpdateReferralUser? {
+        get {
+            do {
+                let referralUser = try self.referralUserCache[CacheKeys.updateReferralUser].map { try UpdateReferralUser(jsonData: $0) }
+                if referralUser?.appUserId == self.appUserId {
+                    return referralUser
+                }
+            }
+            catch {
+                // TODO: log warning
+            }
+            return nil
+        }
+        set {
+            do {
+                self.referralUserCache[CacheKeys.updateReferralUser] = try newValue?.jsonData()
+            }
+            catch {
+                // TODO: log warning
+            }
+        }
+    }
+    
     private enum CacheKeys {
         static let referralUser = "com.winwinkit.cache.referralUser"
+        static let updateReferralUser = "com.winwinkit.cache.updateReferralUser"
     }
 }
