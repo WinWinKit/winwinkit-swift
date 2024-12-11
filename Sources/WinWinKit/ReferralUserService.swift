@@ -17,13 +17,13 @@ public final class ReferralUserService {
     ///
     /// Initialize an instance of the ``ReferralUserService`.
     ///
-    /// - Parameter projectKey: The project key to configure ``ReferralUserService`` with.
-    /// Obtain ``projectKey`` in the settings of your project in [WinWinKit dashboard](https://app.winwinkit.com).
-    ///
-    /// - Parameter userId: Unique identifier of your app's user.
-    /// Referral program and rewards will be attached to the `userId`.
+    /// - Parameter appUserId: Unique identifier of your app's user.
+    /// Referral program and rewards will be attached to the `appUserId`.
     /// Use UUID or similar random identifier types.
     /// **Avoid setting person identifying information**, like email or name.
+    ///
+    /// - Parameter projectKey: The project key to configure ``ReferralUserService`` with.
+    /// Obtain ``projectKey`` in the settings of your project in [WinWinKit dashboard](https://app.winwinkit.com).
     ///
     /// - Parameter referralUserCache: Destination for caching referral user data.
     /// The default value is ``UserDefaults.standard``.
@@ -33,39 +33,39 @@ public final class ReferralUserService {
     /// ### Example
     ///
     /// ```swift
-    /// let service = ReferralUserService(projectKey: "<YOUR_PROJECT_KEY>",
-    ///                                   userId: "<YOUR_APP_USER_ID>")
+    /// let service = ReferralUserService(appUserId: "<YOUR_APP_USER_ID>",
+    ///                                   projectKey: "<YOUR_PROJECT_KEY>")
     /// ```
     ///
-    public convenience init(projectKey: String,
-                            userId: String,
+    public convenience init(appUserId: String,
+                            projectKey: String,
                             referralUserCache: ReferralUserCacheType = UserDefaults.standard) {
         
         let baseEndpointURL = URL(string: "https://app.winwinkit.com/api/")!
         let requestDispatcher = RemoteReferralUserRequestDispatcher(session: .shared)
         let referralUserProvider = RemoteReferralUserProvider(baseEndpointURL: baseEndpointURL,
                                                               requestDispatcher: requestDispatcher)
-        self.init(projectKey: projectKey,
-                  userId: userId,
+        self.init(appUserId: appUserId,
+                  projectKey: projectKey,
                   referralUserCache: referralUserCache,
                   referralUserProvider: referralUserProvider)
     }
     
     public weak var delegate: ReferralUserServiceDelegate?
     
-    internal init(projectKey: String,
-                  userId: String,
+    internal init(appUserId: String,
+                  projectKey: String,
                   referralUserCache: ReferralUserCacheType,
                   referralUserProvider: ReferralUserProviderType) {
         
+        self.appUserId = appUserId
         self.projectKey = projectKey
-        self.userId = userId
         self.referralUserCache = referralUserCache
         self.referralUserProvider = referralUserProvider
     }
     
+    private let appUserId: String
     private let projectKey: String
-    private let userId: String
     private let referralUserCache: ReferralUserCacheType
     private let referralUserProvider: ReferralUserProviderType
     
