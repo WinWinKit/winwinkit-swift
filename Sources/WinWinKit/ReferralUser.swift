@@ -49,21 +49,21 @@ public struct ReferralUser: Codable, Sendable {
                 }
                 
                 public struct ActivationConfigurations: Codable, Sendable {
-                    public let type: `Type`
+                    public let variant: Variant
                     public let amount: Int
                     
-                    public enum `Type`: String, Codable, Sendable {
+                    public enum Variant: String, Codable, Sendable {
                         case claim
                         case conversion
                     }
                 }
                 
                 public struct DeactivationConfigurations: Codable, Sendable {
-                    public let type: `Type`
+                    public let variant: Variant
                     public let duration: Int?
                     public let period: Period?
                     
-                    public enum `Type`: String, Codable, Sendable {
+                    public enum Variant: String, Codable, Sendable {
                         case never
                         case churn
                         case interval
