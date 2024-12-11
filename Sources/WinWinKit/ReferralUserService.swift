@@ -41,12 +41,16 @@ public final class ReferralUserService {
                             projectKey: String,
                             referralUserCache: ReferralUserCacheType = UserDefaults.standard) {
         
+        let networkReachability = NetworkReachability()
+        
         let baseEndpointURL = URL(string: "https://app.winwinkit.com/api/")!
         let requestDispatcher = RemoteReferralUserRequestDispatcher(session: .shared)
         let referralUserProvider = RemoteReferralUserProvider(baseEndpointURL: baseEndpointURL,
                                                               requestDispatcher: requestDispatcher)
+        
         self.init(appUserId: appUserId,
                   projectKey: projectKey,
+                  networkReachability: networkReachability,
                   referralUserCache: referralUserCache,
                   referralUserProvider: referralUserProvider)
     }
@@ -90,6 +94,12 @@ public final class ReferralUserService {
         else { return } // TODO: log warning
         
         self.hasStartedOnce = true
+        
+        self.networkReachability.start()
+        
+        self.networkReachability.hasBecomeReachable = { [weak self] in
+            self?.handleNetworkHasBecomeReachable()
+        }
         
         if self.cachedReferralUser != nil {
             // pull from remote
@@ -143,17 +153,20 @@ public final class ReferralUserService {
     
     internal init(appUserId: String,
                   projectKey: String,
+                  networkReachability: NetworkReachabilityType,
                   referralUserCache: ReferralUserCacheType,
                   referralUserProvider: ReferralUserProviderType) {
         
         self.appUserId = appUserId
         self.projectKey = projectKey
+        self.networkReachability = networkReachability
         self.referralUserCache = referralUserCache
         self.referralUserProvider = referralUserProvider
     }
     
     private let appUserId: String
     private let projectKey: String
+    private let networkReachability: NetworkReachabilityType
     private let referralUserCache: ReferralUserCacheType
     private let referralUserProvider: ReferralUserProviderType
     
@@ -182,6 +195,10 @@ public final class ReferralUserService {
                 // TODO: log warning
             }
         }
+    }
+    
+    private func handleNetworkHasBecomeReachable() {
+        // TODO:
     }
     
     private enum CacheKeys {
