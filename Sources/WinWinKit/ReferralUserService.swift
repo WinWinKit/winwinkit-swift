@@ -66,6 +66,26 @@ public final class ReferralUserService {
         return nil
     }
     
+    public func start() {
+        guard
+            !self.hasStartedOnce
+        else { return } // TODO: log warning
+        
+        self.hasStartedOnce = true
+        
+        if self.cachedReferralUser != nil {
+            // pull from remote
+            // update cache
+            // call delegate
+        }
+        else {
+            // pull from remote
+            // if not found - register
+            // update cache
+            // call delegate
+        }
+    }
+    
     internal init(appUserId: String,
                   projectKey: String,
                   referralUserCache: ReferralUserCacheType,
@@ -81,6 +101,8 @@ public final class ReferralUserService {
     private let projectKey: String
     private let referralUserCache: ReferralUserCacheType
     private let referralUserProvider: ReferralUserProviderType
+    
+    private var hasStartedOnce: Bool = false
     
     private enum CacheKeys {
         static let referralUser = "com.winwinkit.cache.referralUser"
