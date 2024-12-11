@@ -53,6 +53,19 @@ public final class ReferralUserService {
     
     public weak var delegate: ReferralUserServiceDelegate?
     
+    public var cachedReferralUser: ReferralUser? {
+        do {
+            let referralUser = try self.referralUserCache[CacheKeys.referralUser].map { try ReferralUser(jsonData: $0) }
+            if referralUser?.appUserId == self.appUserId {
+                return referralUser
+            }
+        }
+        catch {
+            // TODO: log warning
+        }
+        return nil
+    }
+    
     internal init(appUserId: String,
                   projectKey: String,
                   referralUserCache: ReferralUserCacheType,
