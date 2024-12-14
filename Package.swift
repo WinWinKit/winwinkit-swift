@@ -23,5 +23,6 @@ let package = Package(
             name: "WinWinKitTests",
             dependencies: ["WinWinKit"]
         ),
-    ]
+    ],
+    swiftLanguageModes: [.v5]
 )
