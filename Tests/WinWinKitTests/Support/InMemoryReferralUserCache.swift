@@ -13,7 +13,7 @@
 import Foundation
 import WinWinKit
 
-struct InMemoryReferralUserCache: ReferralUserCacheType {
+struct InMemoryReferralUserCache: KeyValueCacheType {
     
     subscript(key: String) -> Data? {
         get {

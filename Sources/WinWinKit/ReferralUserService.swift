@@ -25,7 +25,7 @@ public final class ReferralUserService {
     /// - Parameter projectKey: The project key to configure ``ReferralUserService`` with.
     /// Obtain ``projectKey`` in the settings of your project in [WinWinKit dashboard](https://app.winwinkit.com).
     ///
-    /// - Parameter referralUserCache: Destination for caching referral user data.
+    /// - Parameter keyValueCache: Destination for caching referral user data.
     /// The default value is ``UserDefaults.standard``.
     ///
     /// - Returns: An instance of ``ReferralUserService``.
@@ -39,9 +39,11 @@ public final class ReferralUserService {
     ///
     public convenience init(appUserId: String,
                             projectKey: String,
-                            referralUserCache: ReferralUserCacheType = UserDefaults.standard) {
+                            keyValueCache: KeyValueCacheType = UserDefaults.standard) {
         
         let networkReachability = NetworkReachability()
+        
+        let referralUserCache = ReferralUserCache(keyValueCache: keyValueCache)
         
         let baseEndpointURL = URL(string: "https://app.winwinkit.com/api/")!
         let requestDispatcher = RemoteReferralUserRequestDispatcher(session: .shared)
@@ -76,14 +78,9 @@ public final class ReferralUserService {
     }
     
     public var cachedReferralUser: ReferralUser? {
-        do {
-            let referralUser = try self.referralUserCache[CacheKeys.referralUser].map { try ReferralUser(jsonData: $0) }
-            if referralUser?.appUserId == self.appUserId {
-                return referralUser
-            }
-        }
-        catch {
-            // TODO: log warning
+        let referralUser = self.referralUserCache[referralUser: CacheKeys.referralUser]
+        if referralUser?.appUserId == self.appUserId {
+            return referralUser
         }
         return nil
     }
@@ -180,24 +177,14 @@ public final class ReferralUserService {
     
     private var pendingUpdateReferralUser: UpdateReferralUser? {
         get {
-            do {
-                let referralUser = try self.referralUserCache[CacheKeys.updateReferralUser].map { try UpdateReferralUser(jsonData: $0) }
-                if referralUser?.appUserId == self.appUserId {
-                    return referralUser
-                }
-            }
-            catch {
-                // TODO: log warning
+            let referralUser = self.referralUserCache[updateReferralUser: CacheKeys.updateReferralUser]
+            if referralUser?.appUserId == self.appUserId {
+                return referralUser
             }
             return nil
         }
         set {
-            do {
-                self.referralUserCache[CacheKeys.updateReferralUser] = try newValue?.jsonData()
-            }
-            catch {
-                // TODO: log warning
-            }
+            self.referralUserCache[updateReferralUser: CacheKeys.updateReferralUser] = newValue
         }
     }
     
