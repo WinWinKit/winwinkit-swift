@@ -209,7 +209,9 @@ public final class ReferralUserService {
         }
         
         self.refreshingTask = Task { @MainActor in
+            
             self.delegate?.referralUserService(self, isRefreshingChanged: true)
+            
             do {
                 if !self.hasRefreshedOnce || self.shouldPullOnNextRefresh || force,
                    let referralUser = try await self.referralUserProvider.fetch(appUserId: self.appUserId, projectKey: self.projectKey) {
@@ -236,6 +238,7 @@ public final class ReferralUserService {
                     self.resetUpdateReferralUser(with: updateReferralUser)
                     self.cacheReferralUser(referralUser)
                 }
+                
                 self.hasRefreshedOnce = true
             }
             catch {
