@@ -12,7 +12,7 @@
 
 import Foundation
 
-struct UpdateReferralUser: Codable {
+struct UpdateReferralUser: Codable, Hashable {
     let appUserId: String
     let isPremium: Bool?
     let userSince: Date?
