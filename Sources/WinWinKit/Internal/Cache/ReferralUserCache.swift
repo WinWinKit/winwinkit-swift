@@ -11,11 +11,12 @@
 //
 
 protocol ReferralUserCacheType: AnyObject {
-    subscript(referralUser key: String) -> ReferralUser? { get set }
-    subscript(updateReferralUser key: String) -> UpdateReferralUser? { get set }
+    var referralUser: ReferralUser? { get set }
+    var updateReferralUser: UpdateReferralUser? { get set }
 }
 
 final class ReferralUserCache: ReferralUserCacheType {
+    
     let keyValueCache: KeyValueCacheType
     
     init(keyValueCache: KeyValueCacheType) {
@@ -24,10 +25,10 @@ final class ReferralUserCache: ReferralUserCacheType {
     
     // MARK: - ReferralUserCacheType
     
-    subscript(referralUser key: String) -> ReferralUser? {
+    var referralUser: ReferralUser? {
         get {
             do {
-                return try self.keyValueCache[key].map { try ReferralUser(jsonData: $0) }
+                return try self.keyValueCache[Keys.referralUser].map { try ReferralUser(jsonData: $0) }
             }
             catch {
                 Logger.error("Unable to deserialize ReferralUser.")
@@ -36,7 +37,7 @@ final class ReferralUserCache: ReferralUserCacheType {
         }
         set {
             do {
-                self.keyValueCache[key] = try newValue?.jsonData()
+                self.keyValueCache[Keys.referralUser] = try newValue?.jsonData()
             }
             catch {
                 Logger.error("Unable to serialize ReferralUser.")
@@ -44,10 +45,10 @@ final class ReferralUserCache: ReferralUserCacheType {
         }
     }
     
-    subscript(updateReferralUser key: String) -> UpdateReferralUser? {
+    var updateReferralUser: UpdateReferralUser? {
         get {
             do {
-                return try self.keyValueCache[key].map { try UpdateReferralUser(jsonData: $0) }
+                return try self.keyValueCache[Keys.updateReferralUser].map { try UpdateReferralUser(jsonData: $0) }
             }
             catch {
                 Logger.error("Unable to deserialize update ReferralUser.")
@@ -56,11 +57,18 @@ final class ReferralUserCache: ReferralUserCacheType {
         }
         set {
             do {
-                self.keyValueCache[key] = try newValue?.jsonData()
+                self.keyValueCache[Keys.updateReferralUser] = try newValue?.jsonData()
             }
             catch {
                 Logger.error("Unable to serialize update ReferralUser.")
             }
         }
+    }
+    
+    // MARK: - Private
+    
+    private enum Keys {
+        static let referralUser = "com.winwinkit.cache.referralUser"
+        static let updateReferralUser = "com.winwinkit.cache.updateReferralUser"
     }
 }

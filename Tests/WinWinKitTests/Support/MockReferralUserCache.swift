@@ -14,25 +14,6 @@ import Foundation
 @testable import WinWinKit
 
 final class MockReferralUserCache: ReferralUserCacheType {
-    
-    subscript(referralUser key: String) -> ReferralUser? {
-        get {
-            self.referralUser
-        }
-        set(newValue) {
-            self.referralUser = newValue
-        }
-    }
-    
-    subscript(updateReferralUser key: String) -> UpdateReferralUser? {
-        get {
-            self.updateReferralUser
-        }
-        set(newValue) {
-            self.updateReferralUser = newValue
-        }
-    }
-    
-    private var referralUser: ReferralUser?
-    private var updateReferralUser: UpdateReferralUser?
+    var referralUser: ReferralUser?
+    var updateReferralUser: UpdateReferralUser?
 }

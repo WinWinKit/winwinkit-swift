@@ -78,8 +78,8 @@ public final class ReferralUserService {
     }
     
     public var cachedReferralUser: ReferralUser? {
-        let referralUser = self.referralUserCache[referralUser: CacheKeys.referralUser]
-        if referralUser?.appUserId == self.appUserId {
+        if let referralUser = self.referralUserCache.referralUser,
+           referralUser.appUserId == self.appUserId {
             return referralUser
         }
         return nil
@@ -177,23 +177,18 @@ public final class ReferralUserService {
     
     private var pendingUpdateReferralUser: UpdateReferralUser? {
         get {
-            let referralUser = self.referralUserCache[updateReferralUser: CacheKeys.updateReferralUser]
+            let referralUser = self.referralUserCache.updateReferralUser
             if referralUser?.appUserId == self.appUserId {
                 return referralUser
             }
             return nil
         }
         set {
-            self.referralUserCache[updateReferralUser: CacheKeys.updateReferralUser] = newValue
+            self.referralUserCache.updateReferralUser = newValue
         }
     }
     
     private func handleNetworkHasBecomeReachable() {
         // TODO:
-    }
-    
-    private enum CacheKeys {
-        static let referralUser = "com.winwinkit.cache.referralUser"
-        static let updateReferralUser = "com.winwinkit.cache.updateReferralUser"
     }
 }
