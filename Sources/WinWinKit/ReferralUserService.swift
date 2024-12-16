@@ -150,6 +150,8 @@ public final class ReferralUserService {
         self.referralUserProvider = referralUserProvider
     }
     
+    internal weak var internalDelegate: ReferralUserServiceDelegate? = nil
+    
     // MARK: - Private
     
     private let appUserId: String
@@ -182,6 +184,7 @@ public final class ReferralUserService {
     
     private func cacheReferralUser(_ referralUser: ReferralUser) {
         self.referralUserCache.referralUser = referralUser
+        self.internalDelegate?.referralUserService(self, receivedUpdated: referralUser)
         self.delegate?.referralUserService(self, receivedUpdated: referralUser)
     }
     
@@ -210,6 +213,7 @@ public final class ReferralUserService {
         
         self.refreshingTask = Task { @MainActor in
             
+            self.internalDelegate?.referralUserService(self, isRefreshingChanged: true)
             self.delegate?.referralUserService(self, isRefreshingChanged: true)
             
             do {
@@ -246,6 +250,7 @@ public final class ReferralUserService {
             }
             
             self.refreshingTask = nil
+            self.internalDelegate?.referralUserService(self, isRefreshingChanged: false)
             self.delegate?.referralUserService(self, isRefreshingChanged: false)
             
             if self.shouldPullOnNextRefresh || self.pendingUpdateReferralUser != nil {
