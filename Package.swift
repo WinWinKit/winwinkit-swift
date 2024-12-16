@@ -15,9 +15,15 @@ let package = Package(
             targets: ["WinWinKit"]
         ),
     ],
+    dependencies: [
+        .package(url: "https://github.com/apple/swift-log.git", from: "1.0.0"),
+    ],
     targets: [
         .target(
-            name: "WinWinKit"
+            name: "WinWinKit",
+            dependencies: [
+                .product(name: "Logging", package: "swift-log")
+            ]
         ),
         .testTarget(
             name: "WinWinKitTests",
