@@ -177,8 +177,8 @@ public final class ReferralUserService {
     
     private var pendingUpdateReferralUser: UpdateReferralUser? {
         get {
-            let referralUser = self.referralUserCache.updateReferralUser
-            if referralUser?.appUserId == self.appUserId {
+            if let referralUser = self.referralUserCache.updateReferralUser,
+               referralUser.appUserId == self.appUserId {
                 return referralUser
             }
             return nil
