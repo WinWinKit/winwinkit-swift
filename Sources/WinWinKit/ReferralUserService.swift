@@ -230,7 +230,7 @@ public final class ReferralUserService {
                 }
                 else {
                     let updateReferralUser = self.pendingUpdateReferralUser
-                    let insertReferralUser = InsertReferralUser(appUserId: self.appUserId) // TODO: extend with values from update referral user
+                    let insertReferralUser = updateReferralUser?.asInsertReferralUser ?? InsertReferralUser(appUserId: self.appUserId, isPremium: nil, userSince: nil, lastSeenAt: nil)
                     let referralUser = try await self.referralUserProvider.create(referralUser: insertReferralUser,
                                                                                   projectKey: self.projectKey)
                     self.resetUpdateReferralUser(with: updateReferralUser)

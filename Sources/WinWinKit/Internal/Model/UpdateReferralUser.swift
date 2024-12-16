@@ -49,3 +49,15 @@ extension UpdateReferralUser {
         )
     }
 }
+
+extension UpdateReferralUser {
+    
+    var asInsertReferralUser: InsertReferralUser {
+        InsertReferralUser(
+            appUserId: self.appUserId,
+            isPremium: self.isPremium,
+            userSince: self.userSince,
+            lastSeenAt: self.lastSeenAt
+        )
+    }
+}

@@ -10,6 +10,12 @@
 //  Created by Oleh Stasula on 05/12/2024.
 //
 
+import Foundation
+
 struct InsertReferralUser: Codable {
     let appUserId: String
+    let isPremium: Bool?
+    let userSince: Date?
+    let lastSeenAt: Date?
+//    let metadata: Any?
 }
