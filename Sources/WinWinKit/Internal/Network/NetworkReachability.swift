@@ -15,7 +15,6 @@ import Network
 protocol NetworkReachabilityType: AnyObject {
     var isReachable: Bool { get }
     var hasBecomeReachable: (() -> Void)? { get set }
-    var hasBecomeUnreachable: (() -> Void)? { get set }
     func start()
 }
 
@@ -32,8 +31,6 @@ final class NetworkReachability: NetworkReachabilityType, @unchecked Sendable {
     
     var hasBecomeReachable: (() -> Void)?
     
-    var hasBecomeUnreachable: (() -> Void)?
-    
     func start() {
         self.pathMonitor.pathUpdateHandler = { [weak self] path in
             self?.update(with: path)
@@ -49,9 +46,6 @@ final class NetworkReachability: NetworkReachabilityType, @unchecked Sendable {
     private func update(with path: NWPath) {
         if !self.isReachable && path.isReachable {
             self.hasBecomeReachable?()
-        }
-        else if self.isReachable && !path.isReachable {
-            self.hasBecomeUnreachable?()
         }
     }
 }
