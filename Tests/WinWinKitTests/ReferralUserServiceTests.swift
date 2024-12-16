@@ -47,6 +47,27 @@ import Testing
         #expect(networkReachability.hasBecomeReachable != nil)
     }
     
+    @Test func delegate() {
+        let networkReachability = MockNetworkReachability()
+        let referralUserCache = MockReferralUserCache()
+        let referralUserProvider = MockReferralUserProvider()
+        let service = ReferralUserService(appUserId: "app-user-id-1",
+                                          projectKey: "project-key-1",
+                                          networkReachability: networkReachability,
+                                          referralUserCache: referralUserCache,
+                                          referralUserProvider: referralUserProvider)
+        #expect(service.delegate == nil)
+        let delegate = MockReferralUserServiceDelegate()
+        service.delegate = delegate
+        #expect(service.delegate === delegate)
+        var weakDelegate: ReferralUserServiceDelegate?
+        weakDelegate = MockReferralUserServiceDelegate()
+        service.delegate = weakDelegate
+        #expect(service.delegate === weakDelegate)
+        weakDelegate = nil
+        #expect(service.delegate == nil)
+    }
+    
     @Test func createReferralUser() {
     }
     
