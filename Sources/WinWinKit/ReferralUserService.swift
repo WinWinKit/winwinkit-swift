@@ -178,7 +178,7 @@ public final class ReferralUserService {
     
     private func cacheReferralUser(_ referralUser: ReferralUser) {
         self.referralUserCache.referralUser = referralUser
-        self.delegate?.receivedUpdated(referralUser: referralUser)
+        self.delegate?.referralUserService(self, receivedUpdated: referralUser)
     }
     
     private func cacheUpdateReferralUser(_ referralUser: UpdateReferralUser) {

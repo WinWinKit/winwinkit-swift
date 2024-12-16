@@ -11,5 +11,5 @@
 //
 
 public protocol ReferralUserServiceDelegate: AnyObject {
-    func receivedUpdated(referralUser: ReferralUser)
+    func referralUserService(_ service: ReferralUserService, receivedUpdated referralUser: ReferralUser)
 }

@@ -18,7 +18,7 @@ final class MockReferralUserServiceDelegate: ReferralUserServiceDelegate {
     var referralUser: ReferralUser? = nil
     var receivedUpdatedMethodCallCount: Int = 0
     
-    func receivedUpdated(referralUser: ReferralUser) {
+    func referralUserService(_ service: ReferralUserService, receivedUpdated referralUser: ReferralUser) {
         self.referralUser = referralUser
         self.receivedUpdatedMethodCallCount += 1
     }
