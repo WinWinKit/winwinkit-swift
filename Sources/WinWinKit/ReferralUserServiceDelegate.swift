@@ -12,4 +12,5 @@
 
 public protocol ReferralUserServiceDelegate: AnyObject {
     func referralUserService(_ service: ReferralUserService, receivedUpdated referralUser: ReferralUser)
+    func referralUserService(_ service: ReferralUserService, isRefreshingChanged isRefreshing: Bool)
 }

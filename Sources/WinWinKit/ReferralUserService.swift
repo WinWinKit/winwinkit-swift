@@ -163,6 +163,8 @@ public final class ReferralUserService {
     private var hasRefreshedOnce: Bool = false
     private var hasStartedOnce: Bool = false
     
+    private var refreshingTask: Task<Void, Never>?
+    
     private var pendingUpdateReferralUser: UpdateReferralUser? {
         get {
             if let referralUser = self.referralUserCache.updateReferralUser,
@@ -187,7 +189,12 @@ public final class ReferralUserService {
     }
     
     private func refreshReferralUser(force: Bool = false) {
-        Task { @MainActor in
+        if self.refreshingTask != nil {
+            return
+        }
+        
+        self.refreshingTask = Task { @MainActor in
+            self.delegate?.referralUserService(self, isRefreshingChanged: true)
             do {
                 if !self.hasRefreshedOnce || force,
                    let referralUser = try await self.referralUserProvider.fetch(appUserId: self.appUserId, projectKey: self.projectKey) {
@@ -218,6 +225,8 @@ public final class ReferralUserService {
             catch {
                 Logger.error("Failed to refresh referral user: \(String(describing: error))")
             }
+            self.refreshingTask = nil
+            self.delegate?.referralUserService(self, isRefreshingChanged: false)
         }
     }
 }
