@@ -28,7 +28,10 @@ import Testing
                     "1": 123
                 },
                 "program": null,
-                "rewards": []
+                "rewards": {
+                    "basic": [],
+                    "credit": [],
+                }
             }
         """
         let jsonData = jsonString.data(using: .utf8)!
