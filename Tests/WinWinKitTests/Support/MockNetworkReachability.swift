@@ -21,5 +21,9 @@ final class MockNetworkReachability: NetworkReachabilityType {
     
     var hasBecomeUnreachable: (() -> Void)?
     
-    func start() {}
+    func start() {
+        self.startMethodCallsCounter += 1
+    }
+    
+    var startMethodCallsCounter: Int = 0
 }
