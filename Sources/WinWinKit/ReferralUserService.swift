@@ -163,6 +163,8 @@ public final class ReferralUserService {
     private var hasRefreshedOnce: Bool = false
     private var hasStartedOnce: Bool = false
     
+    private var shouldPullOnNextRefresh: Bool = false
+    
     private var refreshingTask: Task<Void, Never>?
     
     private var pendingUpdateReferralUser: UpdateReferralUser? {
@@ -189,14 +191,21 @@ public final class ReferralUserService {
     }
     
     private func refreshReferralUser(force: Bool = false) {
+        
+        if !self.networkReachability.isReachable {
+            self.shouldPullOnNextRefresh = true
+            return
+        }
+        
         if self.refreshingTask != nil {
+            self.shouldPullOnNextRefresh = self.shouldPullOnNextRefresh || force
             return
         }
         
         self.refreshingTask = Task { @MainActor in
             self.delegate?.referralUserService(self, isRefreshingChanged: true)
             do {
-                if !self.hasRefreshedOnce || force,
+                if !self.hasRefreshedOnce || self.shouldPullOnNextRefresh || force,
                    let referralUser = try await self.referralUserProvider.fetch(appUserId: self.appUserId, projectKey: self.projectKey) {
                     self.cacheReferralUser(referralUser)
                     if let updateReferralUser = self.referralUserCache.updateReferralUser {
@@ -225,8 +234,13 @@ public final class ReferralUserService {
             catch {
                 Logger.error("Failed to refresh referral user: \(String(describing: error))")
             }
+            
             self.refreshingTask = nil
             self.delegate?.referralUserService(self, isRefreshingChanged: false)
+            
+            if self.shouldPullOnNextRefresh || self.pendingUpdateReferralUser != nil {
+                self.refreshReferralUser()
+            }
         }
     }
 }
