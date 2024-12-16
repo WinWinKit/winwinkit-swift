@@ -30,7 +30,7 @@ final class ReferralUserCache: ReferralUserCacheType {
                 return try self.keyValueCache[key].map { try ReferralUser(jsonData: $0) }
             }
             catch {
-                // TODO: log error
+                Logger.error("Unable to deserialize ReferralUser.")
                 return nil
             }
         }
@@ -39,7 +39,7 @@ final class ReferralUserCache: ReferralUserCacheType {
                 self.keyValueCache[key] = try newValue?.jsonData()
             }
             catch {
-                // TODO: log error
+                Logger.error("Unable to serialize ReferralUser.")
             }
         }
     }
@@ -50,7 +50,7 @@ final class ReferralUserCache: ReferralUserCacheType {
                 return try self.keyValueCache[key].map { try UpdateReferralUser(jsonData: $0) }
             }
             catch {
-                // TODO: log error
+                Logger.error("Unable to deserialize update ReferralUser.")
                 return nil
             }
         }
@@ -59,7 +59,7 @@ final class ReferralUserCache: ReferralUserCacheType {
                 self.keyValueCache[key] = try newValue?.jsonData()
             }
             catch {
-                // TODO: log error
+                Logger.error("Unable to serialize update ReferralUser.")
             }
         }
     }

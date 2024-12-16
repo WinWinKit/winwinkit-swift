@@ -61,18 +61,18 @@ public final class ReferralUserService {
         get { self._delegate }
         set {
             guard newValue !== self._delegate else {
-                // TODO: log same delegate is set multiple times
+                Logger.warning("ReferralUserService delegate has already been set.")
                 return
             }
             
             if newValue == nil {
-                // TODO: log delegate is set to nil
+                Logger.info("ReferralUserService delegate is being set to nil, you probably don't want to do this.")
             }
             
             self._delegate = newValue
             
             if newValue != nil {
-                // TODO: log delegate is set
+                Logger.debug("ReferralUserService delegate is set.")
             }
         }
     }
