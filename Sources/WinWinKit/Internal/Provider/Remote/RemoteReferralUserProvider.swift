@@ -55,7 +55,7 @@ struct RemoteReferralUserProvider: ReferralUserProviderType {
                                                 projectKey: projectKey,
                                                 request: request)
         let data = try await self.requestDispatcher.perform(request: request)
-        let referralUser = try data.map { try ReferralUser(jsonData: $0) }
+        let referralUser = try data.map { try RemoteReferralUserDataResponse(jsonData: $0) }?.data
         return referralUser
     }
 }
