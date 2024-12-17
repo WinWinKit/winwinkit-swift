@@ -234,6 +234,8 @@ public final class ReferralUserService {
             self.internalDelegate?.referralUserService(self, isRefreshingChanged: true)
             self.delegate?.referralUserService(self, isRefreshingChanged: true)
             
+            var completedSuccessfully = false
+            
             do {
                 if !self.hasRefreshedOnce || self.shouldPullOnNextRefresh || force,
                    let referralUser = try await self.referralUserProvider.fetch(appUserId: self.appUserId, projectKey: self.projectKey) {
@@ -262,6 +264,8 @@ public final class ReferralUserService {
                 }
                 
                 self.hasRefreshedOnce = true
+                
+                completedSuccessfully = true
             }
             catch {
                 Logger.error("Failed to refresh referral user: \(String(describing: error))")
@@ -271,7 +275,7 @@ public final class ReferralUserService {
             self.internalDelegate?.referralUserService(self, isRefreshingChanged: false)
             self.delegate?.referralUserService(self, isRefreshingChanged: false)
             
-            if self.shouldPullOnNextRefresh || self.pendingUpdateReferralUser != nil {
+            if completedSuccessfully && self.shouldPullOnNextRefresh || self.pendingUpdateReferralUser != nil {
                 self.refreshReferralUser()
             }
         }
