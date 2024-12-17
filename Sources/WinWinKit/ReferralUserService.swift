@@ -247,12 +247,13 @@ public final class ReferralUserService {
                         self.cacheReferralUser(updatedReferralUser)
                     }
                 }
-                else if self.cachedReferralUser != nil,
-                        let updateReferralUser = self.pendingUpdateReferralUser {
-                    let updatedReferralUser = try await self.referralUserProvider.update(referralUser: updateReferralUser,
-                                                                                         projectKey: self.projectKey)
-                    self.resetUpdateReferralUser(with: updateReferralUser)
-                    self.cacheReferralUser(updatedReferralUser)
+                else if self.cachedReferralUser != nil {
+                    if let updateReferralUser = self.pendingUpdateReferralUser {
+                        let updatedReferralUser = try await self.referralUserProvider.update(referralUser: updateReferralUser,
+                                                                                             projectKey: self.projectKey)
+                        self.resetUpdateReferralUser(with: updateReferralUser)
+                        self.cacheReferralUser(updatedReferralUser)
+                    }
                 }
                 else {
                     let updateReferralUser = self.pendingUpdateReferralUser
