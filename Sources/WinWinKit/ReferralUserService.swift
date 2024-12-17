@@ -276,6 +276,7 @@ public final class ReferralUserService {
             self.delegate?.referralUserService(self, isRefreshingChanged: false)
             
             if completedSuccessfully && self.shouldPullOnNextRefresh || self.pendingUpdateReferralUser != nil {
+                self.shouldPullOnNextRefresh = false
                 self.refreshReferralUser()
             }
         }
