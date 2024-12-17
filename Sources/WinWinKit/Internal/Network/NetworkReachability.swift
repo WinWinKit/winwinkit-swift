@@ -33,7 +33,9 @@ final class NetworkReachability: NetworkReachabilityType, @unchecked Sendable {
     
     func start() {
         self.pathMonitor.pathUpdateHandler = { [weak self] path in
-            self?.update(with: path)
+            DispatchQueue.main.async {
+                self?.update(with: path)
+            }
         }
         self.pathMonitor.start(queue: DispatchQueue(label: "com.winwinkit.network-reachability"))
         self.isReachable = self.pathMonitor.currentPath.isReachable
@@ -44,7 +46,9 @@ final class NetworkReachability: NetworkReachabilityType, @unchecked Sendable {
     private let pathMonitor: NWPathMonitor
 
     private func update(with path: NWPath) {
-        if !self.isReachable && path.isReachable {
+        let isReachable = self.isReachable
+        self.isReachable = path.isReachable
+        if !isReachable && path.isReachable {
             self.hasBecomeReachable?()
         }
     }
