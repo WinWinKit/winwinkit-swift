@@ -49,24 +49,6 @@ struct MockSuccessfulRemoteReferralUserRequestDispatcher: RemoteReferralUserRequ
     }
 }
 
-struct MockFailingRemoteReferralUserRequestDispatcher: RemoteReferralUserRequestDispatcherType {
-    
-    func perform(request: RemoteReferralUserRequest) async throws -> Data? {
-        return
-            """
-            {
-                "errors": {
-                    "formErrors": [
-                        "Error!"
-                    ],
-                    "fieldErrors": []
-                }
-            }
-            """
-            .data(using: .utf8)
-    }
-}
-
 struct MockThrowingRemoteReferralUserRequestDispatcher: RemoteReferralUserRequestDispatcherType {
     
     let errorToThrow: Error

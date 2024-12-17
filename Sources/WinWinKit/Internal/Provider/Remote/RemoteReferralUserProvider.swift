@@ -26,8 +26,19 @@ struct RemoteReferralUserProvider: ReferralUserProviderType {
     // MARK: - ReferralUserProviderType
     
     func fetch(appUserId: String, projectKey: String) async throws -> ReferralUser? {
-        try await self.perform(request: .get(appUserId: appUserId),
-                               projectKey: projectKey)
+        do {
+            return try await self.perform(request: .get(appUserId: appUserId),
+                                          projectKey: projectKey)
+        }
+        catch (let error as RemoteReferralUserRequestDispatcherError) {
+            if error == .notFound {
+                return nil
+            }
+            throw error
+        }
+        catch {
+            throw error
+        }
     }
     
     func create(referralUser: InsertReferralUser, projectKey: String) async throws -> ReferralUser {

@@ -12,6 +12,11 @@
 
 import Foundation
 
+enum RemoteReferralUserRequestDispatcherError: Error {
+    case notFound
+    case unknown
+}
+
 protocol RemoteReferralUserRequestDispatcherType {
     func perform(request: RemoteReferralUserRequest) async throws -> Data?
 }
@@ -22,7 +27,27 @@ struct RemoteReferralUserRequestDispatcher: RemoteReferralUserRequestDispatcherT
     
     func perform(request: RemoteReferralUserRequest) async throws -> Data? {
         let urlRequest = try request.urlRequest()
-        let (result, response) = try await self.session.data(for: urlRequest)
-        return result
+        let (data, response) = try await self.session.data(for: urlRequest)
+        if let httpResponse = response as? HTTPURLResponse,
+           let error = try RemoteReferralUserRequestDispatcherError(statusCode: httpResponse.statusCode, data: data) {
+            throw error
+        }
+        return data
+    }
+}
+
+extension RemoteReferralUserRequestDispatcherError {
+    
+    init?(statusCode: Int, data: Data?) throws {
+        guard
+            statusCode < 200 && statusCode > 299
+        else { return nil }
+        // TODO: parse errors from data
+        switch statusCode {
+        case 404:
+            self = .notFound
+        default:
+            self = .unknown
+        }
     }
 }

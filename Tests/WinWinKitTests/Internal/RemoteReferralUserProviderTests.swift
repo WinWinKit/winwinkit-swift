@@ -16,12 +16,21 @@ import Testing
 
 @Suite struct RemoteReferralUserProviderTests {
     
-    @Test func getSuccess() async throws {
+    @Test func fetchSuccess() async throws {
         let baseEndpointURL = URL(string: "https://api.winwinkit.com")!
         let requestDispatcher = MockSuccessfulRemoteReferralUserRequestDispatcher()
         let provider = RemoteReferralUserProvider(baseEndpointURL: baseEndpointURL,
                                                   requestDispatcher: requestDispatcher)
         let result = try await provider.fetch(appUserId: "app-user-id-1", projectKey: "project-key-1")
         #expect(result?.appUserId == "app-user-id-1")
+    }
+    
+    @Test func fetchNotFound() async throws {
+        let baseEndpointURL = URL(string: "https://api.winwinkit.com")!
+        let requestDispatcher = MockThrowingRemoteReferralUserRequestDispatcher(errorToThrow: RemoteReferralUserRequestDispatcherError.notFound)
+        let provider = RemoteReferralUserProvider(baseEndpointURL: baseEndpointURL,
+                                                  requestDispatcher: requestDispatcher)
+        let result = try await provider.fetch(appUserId: "app-user-id-1", projectKey: "project-key-1")
+        #expect(result == nil)
     }
 }
