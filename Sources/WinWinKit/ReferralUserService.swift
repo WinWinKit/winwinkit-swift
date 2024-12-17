@@ -164,6 +164,12 @@ public final class ReferralUserService {
         }
     }
     
+    internal func startIfNeeded() {
+        if !self.hasStartedOnce {
+            self.start()
+        }
+    }
+    
     // MARK: - Private
     
     private let appUserId: String

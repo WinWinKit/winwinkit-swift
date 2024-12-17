@@ -20,6 +20,7 @@ public final class ReferralUserObservableObject: ReferralUserServiceDelegate {
     public init(service: ReferralUserService) {
         self.service = service
         self.service.internalDelegate = self
+        self.service.startIfNeeded()
     }
     
     public private(set) var referralUser: ReferralUser?
