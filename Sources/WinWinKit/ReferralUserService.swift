@@ -150,7 +150,19 @@ public final class ReferralUserService {
         self.referralUserProvider = referralUserProvider
     }
     
-    internal weak var internalDelegate: ReferralUserServiceDelegate? = nil
+    internal weak var internalDelegate: ReferralUserServiceDelegate? = nil {
+        didSet {
+            guard
+                let internalDelegate
+            else { return }
+            if let cachedReferralUser {
+                internalDelegate.referralUserService(self, receivedUpdated: cachedReferralUser)
+            }
+            if self.refreshingTask != nil {
+                internalDelegate.referralUserService(self, isRefreshingChanged: true)
+            }
+        }
+    }
     
     // MARK: - Private
     
