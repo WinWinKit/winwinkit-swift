@@ -74,44 +74,7 @@ final class ReferralUserService {
         // TODO:
     }
     
-    // MARK: - Private
-    
-    private var hasRefreshedOnce: Bool = false
-    
-    private var shouldPullOnNextRefresh: Bool = false
-    
-    private var refreshingTask: Task<Void, Never>?
-    
-    private var pendingUpdateReferralUser: UpdateReferralUser? {
-        get {
-            if let referralUser = self.referralUserCache.updateReferralUser,
-               referralUser.appUserId == self.appUserId {
-                return referralUser
-            }
-            return nil
-        }
-        set {
-            self.referralUserCache.updateReferralUser = newValue
-        }
-    }
-    
-    private func cacheReferralUser(_ referralUser: ReferralUser) {
-        self.referralUserCache.referralUser = referralUser
-        self.delegate?.referralUserService(self, receivedUpdated: referralUser)
-    }
-    
-    private func cacheUpdateReferralUser(_ referralUser: UpdateReferralUser) {
-        self.referralUserCache.updateReferralUser = referralUser
-        self.refreshReferralUser()
-    }
-    
-    private func resetUpdateReferralUser(with referralUser: UpdateReferralUser?) {
-        if self.referralUserCache.updateReferralUser == referralUser {
-            self.referralUserCache.updateReferralUser = nil
-        }
-    }
-    
-    private func refreshReferralUser(force: Bool = false) {
+    func refresh(shouldPull: Bool = false) {
         
         if let delegate,
            !delegate.referralUserServiceCanPerformNextRefresh(self) {
@@ -120,7 +83,7 @@ final class ReferralUserService {
         }
         
         if self.refreshingTask != nil {
-            self.shouldPullOnNextRefresh = self.shouldPullOnNextRefresh || force
+            self.shouldPullOnNextRefresh = self.shouldPullOnNextRefresh || shouldPull
             return
         }
         
@@ -131,7 +94,7 @@ final class ReferralUserService {
             var completedSuccessfully = false
             
             do {
-                if !self.hasRefreshedOnce || self.shouldPullOnNextRefresh || force,
+                if !self.hasRefreshedOnce || self.shouldPullOnNextRefresh || shouldPull,
                    let referralUser = try await self.referralUserProvider.fetch(appUserId: self.appUserId, projectKey: self.projectKey) {
                     self.cacheReferralUser(referralUser)
                     if let updateReferralUser = self.pendingUpdateReferralUser {
@@ -171,8 +134,44 @@ final class ReferralUserService {
             
             if completedSuccessfully && self.shouldPullOnNextRefresh || self.pendingUpdateReferralUser != nil {
                 self.shouldPullOnNextRefresh = false
-                self.refreshReferralUser()
+                self.refresh()
             }
+        }
+    }
+    
+    // MARK: - Private
+    
+    private var hasRefreshedOnce: Bool = false
+    
+    private var shouldPullOnNextRefresh: Bool = false
+    
+    private var refreshingTask: Task<Void, Never>?
+    
+    private var pendingUpdateReferralUser: UpdateReferralUser? {
+        get {
+            if let referralUser = self.referralUserCache.updateReferralUser,
+               referralUser.appUserId == self.appUserId {
+                return referralUser
+            }
+            return nil
+        }
+        set {
+            self.referralUserCache.updateReferralUser = newValue
+        }
+    }
+    
+    private func cacheReferralUser(_ referralUser: ReferralUser) {
+        self.referralUserCache.referralUser = referralUser
+        self.delegate?.referralUserService(self, receivedUpdated: referralUser)
+    }
+    
+    private func cacheUpdateReferralUser(_ referralUser: UpdateReferralUser) {
+        self.referralUserCache.updateReferralUser = referralUser
+    }
+    
+    private func resetUpdateReferralUser(with referralUser: UpdateReferralUser?) {
+        if self.referralUserCache.updateReferralUser == referralUser {
+            self.referralUserCache.updateReferralUser = nil
         }
     }
 }

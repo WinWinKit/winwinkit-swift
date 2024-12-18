@@ -120,8 +120,10 @@ public final class WinWinKit {
                                                       projectKey: self.projectKey,
                                                       referralUserCache: self.referralUserCache,
                                                       referralUserProvider: self.referralUserProvider)
-        referralUserService.delegate = self
         self.referralUserService = referralUserService
+        
+        referralUserService.delegate = self
+        referralUserService.refresh()
     }
     
     ///
@@ -136,6 +138,7 @@ public final class WinWinKit {
             return
         }
         referralUserService.set(isPremium: isPremium)
+        referralUserService.refresh()
     }
     
     ///
@@ -156,6 +159,7 @@ public final class WinWinKit {
             return
         }
         referralUserService.set(userSince: userSince)
+        referralUserService.refresh()
     }
     
     ///
@@ -176,6 +180,7 @@ public final class WinWinKit {
             return
         }
         referralUserService.set(lastSeenAt: lastSeenAt)
+        referralUserService.refresh()
     }
     
     ///
@@ -242,7 +247,7 @@ public final class WinWinKit {
 extension WinWinKit: NetworkReachabilityDelegate {
     
     func networkHasBecomeReachable(_ networkReachability: any NetworkReachabilityType) {
-        // TODO: trigger next refresh for current service
+        self.referralUserService?.refresh(shouldPull: true)
     }
 }
 
