@@ -146,7 +146,7 @@ public final class WinWinKit {
     
     ///
     /// Sets user's first seen at date.
-    /// - Parameter firstSeenAt: Date when user has been seen at first.
+    /// - Parameter firstSeenAt: Date when user has been seen at first. Must not be date in the future.
     ///
     public func set(firstSeenAt: Date) {
         guard
@@ -167,7 +167,7 @@ public final class WinWinKit {
     
     ///
     /// Sets user's last seen at date.
-    /// - Parameter lastSeenAt: Date when user has been seen at first.
+    /// - Parameter lastSeenAt: Date when user has been seen at first. Must not be date in the future.
     ///
     public func set(lastSeenAt: Date) {
         guard
