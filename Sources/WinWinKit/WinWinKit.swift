@@ -78,7 +78,7 @@ public final class WinWinKit {
     public static func configure(projectKey: String, keyValueCache: KeyValueCacheType) -> WinWinKit {
         
         if let instance {
-            Logger.error("WinWinKit has already been configured. Calling `configure(projectKey:)` again has no effect.")
+            Logger.error("WinWinKit has already been configured. Calling `configure` again has no effect.")
             return instance
         }
         
