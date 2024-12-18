@@ -70,13 +70,33 @@ public final class WinWinKit {
         Self.instance != nil
     }
     
-    public weak var delegate: WinWinKitDelegate?
+    public var delegate: WinWinKitDelegate? {
+        get { self._delegate }
+        set {
+            guard newValue !== self._delegate else {
+                Logger.warning("WinWinKit delegate has already been set.")
+                return
+            }
+            
+            if newValue == nil {
+                Logger.info("WinWinKit delegate is being set to nil, you probably don't want to do this.")
+            }
+            
+            self._delegate = newValue
+            
+            if newValue != nil {
+                Logger.debug("WinWinKit delegate is set.")
+            }
+        }
+    }
     
     // MARK: - Private
     
     private static var instance: WinWinKit? = nil
     
     private let projectKey: String
+    
+    private weak var _delegate: WinWinKitDelegate? = nil
     
     private init(projectKey: String) {
         self.projectKey = projectKey
