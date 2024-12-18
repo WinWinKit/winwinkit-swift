@@ -28,25 +28,6 @@ import Testing
         #expect(service.delegate == nil)
     }
     
-    @Test func start() {
-        let networkReachability = MockNetworkReachability()
-        let referralUserCache = MockReferralUserCache()
-        let referralUserProvider = MockReferralUserProvider()
-        let service = ReferralUserService(appUserId: "app-user-id-1",
-                                          projectKey: "project-key-1",
-                                          networkReachability: networkReachability,
-                                          referralUserCache: referralUserCache,
-                                          referralUserProvider: referralUserProvider)
-        #expect(networkReachability.startMethodCallsCounter == 0)
-        #expect(networkReachability.hasBecomeReachable == nil)
-        service.start()
-        #expect(networkReachability.startMethodCallsCounter == 0)
-        #expect(networkReachability.hasBecomeReachable == nil)
-        service.start()
-        #expect(networkReachability.startMethodCallsCounter == 0)
-        #expect(networkReachability.hasBecomeReachable == nil)
-    }
-    
     @Test func cachedReferralUser() {
         let networkReachability = MockNetworkReachability()
         let referralUserCache = MockReferralUserCache()

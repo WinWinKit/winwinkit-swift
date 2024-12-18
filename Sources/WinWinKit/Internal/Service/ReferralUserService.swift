@@ -37,16 +37,6 @@ final class ReferralUserService {
         return nil
     }
     
-    func start() {
-        guard
-            !self.hasStartedOnce
-        else { return } // TODO: log warning
-        
-        self.hasStartedOnce = true
-        
-        self.refreshReferralUser()
-    }
-    
     func set(isPremium: Bool) {
         self.cacheUpdateReferralUser(
             self.pendingUpdateReferralUser?.set(isPremium: isPremium) ??
@@ -95,12 +85,6 @@ final class ReferralUserService {
         }
     }
     
-    func startIfNeeded() {
-        if !self.hasStartedOnce {
-            self.start()
-        }
-    }
-    
     // MARK: - Private
     
     private let appUserId: String
@@ -110,7 +94,6 @@ final class ReferralUserService {
     private let referralUserProvider: ReferralUserProviderType
     
     private var hasRefreshedOnce: Bool = false
-    private var hasStartedOnce: Bool = false
     
     private var shouldPullOnNextRefresh: Bool = false
     
