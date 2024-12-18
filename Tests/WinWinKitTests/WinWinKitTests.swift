@@ -1,6 +1,8 @@
 import Testing
 @testable import WinWinKit
 
-@Test func example() async throws {
-    // Write your test here and use APIs like `#expect(...)` to check expected conditions.
+@Suite struct WinWinKitTests {
+    
+    @Test func configure() async throws {
+    }
 }
