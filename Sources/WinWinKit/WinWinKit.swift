@@ -130,6 +130,8 @@ public final class WinWinKit {
             return retained
         }
         let created = ReferralUserObservableObject()
+        created.set(referralUser: self.referralUserService?.cachedReferralUser)
+        created.set(isRefreshing: self.referralUserService?.isRefreshing ?? false)
         self._referralUserObservableObject = created
         return created
     }

@@ -40,6 +40,10 @@ final class ReferralUserService {
         return nil
     }
     
+    var isRefreshing: Bool {
+        self.refreshingTask != nil
+    }
+    
     func set(isPremium: Bool) {
         self.cacheUpdateReferralUser(
             self.pendingUpdateReferralUser?.set(isPremium: isPremium) ??
