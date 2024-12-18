@@ -16,19 +16,16 @@ final class ReferralUserService {
     
     let appUserId: String
     let projectKey: String
-    let networkReachability: NetworkReachabilityType
     let referralUserCache: ReferralUserCacheType
     let referralUserProvider: ReferralUserProviderType
     
     init(appUserId: String,
          projectKey: String,
-         networkReachability: NetworkReachabilityType,
          referralUserCache: ReferralUserCacheType,
          referralUserProvider: ReferralUserProviderType) {
         
         self.appUserId = appUserId
         self.projectKey = projectKey
-        self.networkReachability = networkReachability
         self.referralUserCache = referralUserCache
         self.referralUserProvider = referralUserProvider
     }
@@ -116,7 +113,8 @@ final class ReferralUserService {
     
     private func refreshReferralUser(force: Bool = false) {
         
-        if !self.networkReachability.isReachable {
+        if let delegate,
+           !delegate.referralUserServiceCanPerformNextRefresh(self) {
             self.shouldPullOnNextRefresh = true
             return
         }

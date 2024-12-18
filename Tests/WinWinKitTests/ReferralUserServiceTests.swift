@@ -16,12 +16,10 @@ import Testing
 @Suite struct ReferralUserServiceTests {
 
     @Test func initilization() {
-        let networkReachability = MockNetworkReachability()
         let referralUserCache = MockReferralUserCache()
         let referralUserProvider = MockReferralUserProvider()
         let service = ReferralUserService(appUserId: "app-user-id-1",
                                           projectKey: "project-key-1",
-                                          networkReachability: networkReachability,
                                           referralUserCache: referralUserCache,
                                           referralUserProvider: referralUserProvider)
         #expect(service.cachedReferralUser == nil)
@@ -29,12 +27,10 @@ import Testing
     }
     
     @Test func cachedReferralUser() {
-        let networkReachability = MockNetworkReachability()
         let referralUserCache = MockReferralUserCache()
         let referralUserProvider = MockReferralUserProvider()
         let service = ReferralUserService(appUserId: "app-user-id-1",
                                           projectKey: "project-key-1",
-                                          networkReachability: networkReachability,
                                           referralUserCache: referralUserCache,
                                           referralUserProvider: referralUserProvider)
         #expect(service.cachedReferralUser == nil)
@@ -59,12 +55,10 @@ import Testing
     }
     
     @Test func delegate() {
-        let networkReachability = MockNetworkReachability()
         let referralUserCache = MockReferralUserCache()
         let referralUserProvider = MockReferralUserProvider()
         let service = ReferralUserService(appUserId: "app-user-id-1",
                                           projectKey: "project-key-1",
-                                          networkReachability: networkReachability,
                                           referralUserCache: referralUserCache,
                                           referralUserProvider: referralUserProvider)
         #expect(service.delegate == nil)

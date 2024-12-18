@@ -11,6 +11,7 @@
 //
 
 protocol ReferralUserServiceDelegate: AnyObject {
+    func referralUserServiceCanPerformNextRefresh(_ service: ReferralUserService) -> Bool
     func referralUserService(_ service: ReferralUserService, receivedUpdated referralUser: ReferralUser)
     func referralUserService(_ service: ReferralUserService, isRefreshingChanged isRefreshing: Bool)
 }

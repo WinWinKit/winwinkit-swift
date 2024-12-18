@@ -121,7 +121,6 @@ public final class WinWinKit {
                                                               remoteRequestDispatcher: remoteRequestDispatcher)
         let referralUserService = ReferralUserService(appUserId: appUserId,
                                                       projectKey: self.projectKey,
-                                                      networkReachability: self.networkReachability,
                                                       referralUserCache: referralUserCache,
                                                       referralUserProvider: referralUserProvider)
         self.referralUserService = referralUserService
@@ -160,5 +159,20 @@ public final class WinWinKit {
         self.projectKey = projectKey
         self.keyValueCache = keyValueCache
         self.networkReachability = networkReachability
+    }
+}
+
+extension WinWinKit: ReferralUserServiceDelegate {
+    
+    func referralUserServiceCanPerformNextRefresh(_ service: ReferralUserService) -> Bool {
+        self.networkReachability.isReachable
+    }
+    
+    func referralUserService(_ service: ReferralUserService, receivedUpdated referralUser: ReferralUser) {
+        
+    }
+    
+    func referralUserService(_ service: ReferralUserService, isRefreshingChanged isRefreshing: Bool) {
+        
     }
 }

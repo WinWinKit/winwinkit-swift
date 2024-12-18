@@ -15,11 +15,18 @@ import WinWinKit
 
 final class MockReferralUserServiceDelegate: ReferralUserServiceDelegate {
     
+    var canPerformNextRefresh: Bool = true
     var referralUser: ReferralUser? = nil
     var isRefreshing: Bool? = nil
     
+    var canPerformNextRequestMethodCallsCounter: Int = 0
     var receivedUpdatedReferralUserMethodCallsCounter: Int = 0
     var isRefreshingChangedMethodCallsCounter: Int = 0
+    
+    func referralUserServiceCanPerformNextRefresh(_ service: ReferralUserService) -> Bool {
+        self.canPerformNextRequestMethodCallsCounter += 1
+        return self.canPerformNextRefresh
+    }
     
     func referralUserService(_ service: ReferralUserService, receivedUpdated referralUser: ReferralUser) {
         self.referralUser = referralUser
