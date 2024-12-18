@@ -98,6 +98,25 @@ public final class WinWinKit {
         }
     }
     
+    public func set(appUserId: String) {
+        let referralUserCache = ReferralUserCache(keyValueCache: self.keyValueCache)
+        let baseEndpointURL = URL(string: "https://api.winwinkit.com")!
+        let remoteDataFetcher = RemoteDataFetcher(session: .shared)
+        let remoteRequestDispatcher = RemoteRequestDispatcher(remoteDataFetcher: remoteDataFetcher)
+        let referralUserProvider = RemoteReferralUserProvider(baseEndpointURL: baseEndpointURL,
+                                                              remoteRequestDispatcher: remoteRequestDispatcher)
+        let referralUserService = ReferralUserService(appUserId: appUserId,
+                                                      projectKey: self.projectKey,
+                                                      networkReachability: self.networkReachability,
+                                                      referralUserCache: referralUserCache,
+                                                      referralUserProvider: referralUserProvider)
+        self.referralUserService = referralUserService
+    }
+    
+    public func reset() {
+        self.referralUserService = nil
+    }
+    
     // MARK: - Private
     
     private static var instance: WinWinKit? = nil
@@ -107,6 +126,8 @@ public final class WinWinKit {
     private let networkReachability: NetworkReachabilityType
     
     private weak var _delegate: WinWinKitDelegate? = nil
+    
+    private var referralUserService: ReferralUserService?
     
     private convenience init(projectKey: String,
                              keyValueCache: KeyValueCacheType) {
