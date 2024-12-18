@@ -95,10 +95,19 @@ public final class WinWinKit {
     private static var instance: WinWinKit? = nil
     
     private let projectKey: String
+    private let networkReachability: NetworkReachabilityType
     
     private weak var _delegate: WinWinKitDelegate? = nil
     
-    private init(projectKey: String) {
+    private convenience init(projectKey: String) {
+        let networkReachability = NetworkReachability()
+        self.init(projectKey: projectKey,
+                  networkReachability: networkReachability)
+    }
+    
+    private init(projectKey: String,
+                 networkReachability: NetworkReachabilityType) {
         self.projectKey = projectKey
+        self.networkReachability = networkReachability
     }
 }

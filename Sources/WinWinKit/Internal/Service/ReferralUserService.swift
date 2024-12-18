@@ -44,12 +44,6 @@ final class ReferralUserService {
         
         self.hasStartedOnce = true
         
-        self.networkReachability.hasBecomeReachable = { [weak self] in
-            self?.refreshReferralUser(force: true)
-        }
-        
-        self.networkReachability.start()
-        
         self.refreshReferralUser()
     }
     

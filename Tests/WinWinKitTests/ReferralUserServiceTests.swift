@@ -40,11 +40,11 @@ import Testing
         #expect(networkReachability.startMethodCallsCounter == 0)
         #expect(networkReachability.hasBecomeReachable == nil)
         service.start()
-        #expect(networkReachability.startMethodCallsCounter == 1)
-        #expect(networkReachability.hasBecomeReachable != nil)
+        #expect(networkReachability.startMethodCallsCounter == 0)
+        #expect(networkReachability.hasBecomeReachable == nil)
         service.start()
-        #expect(networkReachability.startMethodCallsCounter == 1)
-        #expect(networkReachability.hasBecomeReachable != nil)
+        #expect(networkReachability.startMethodCallsCounter == 0)
+        #expect(networkReachability.hasBecomeReachable == nil)
     }
     
     @Test func cachedReferralUser() {
