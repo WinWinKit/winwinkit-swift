@@ -17,7 +17,7 @@ import SwiftUI
 @Observable
 public final class ReferralUserObservableObject: ReferralUserServiceDelegate {
     
-    public init(service: ReferralUserService) {
+    init(service: ReferralUserService) {
         self.service = service
         self.service.internalDelegate = self
         self.service.startIfNeeded()
@@ -28,11 +28,11 @@ public final class ReferralUserObservableObject: ReferralUserServiceDelegate {
     
     // MARK: - ReferralUserServiceDelegate
     
-    public func referralUserService(_ service: ReferralUserService, receivedUpdated referralUser: ReferralUser) {
+    func referralUserService(_ service: ReferralUserService, receivedUpdated referralUser: ReferralUser) {
         self.referralUser = referralUser
     }
     
-    public func referralUserService(_ service: ReferralUserService, isRefreshingChanged isRefreshing: Bool) {
+    func referralUserService(_ service: ReferralUserService, isRefreshingChanged isRefreshing: Bool) {
         self.isRefreshing = isRefreshing
     }
     

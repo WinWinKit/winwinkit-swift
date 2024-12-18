@@ -12,7 +12,7 @@
 
 import Foundation
 
-public final class ReferralUserService {
+final class ReferralUserService {
     
     ///
     /// Initialize an instance of the ``ReferralUserService`.
@@ -37,7 +37,7 @@ public final class ReferralUserService {
     ///                                   projectKey: "<YOUR_PROJECT_KEY>")
     /// ```
     ///
-    public convenience init(appUserId: String,
+    convenience init(appUserId: String,
                             projectKey: String,
                             keyValueCache: KeyValueCacheType = UserDefaults.standard) {
         
@@ -58,7 +58,7 @@ public final class ReferralUserService {
                   referralUserProvider: referralUserProvider)
     }
     
-    public var delegate: ReferralUserServiceDelegate? {
+    var delegate: ReferralUserServiceDelegate? {
         get { self._delegate }
         set {
             guard newValue !== self._delegate else {
@@ -78,7 +78,7 @@ public final class ReferralUserService {
         }
     }
     
-    public var cachedReferralUser: ReferralUser? {
+    var cachedReferralUser: ReferralUser? {
         if let referralUser = self.referralUserCache.referralUser,
            referralUser.appUserId == self.appUserId {
             return referralUser
@@ -86,7 +86,7 @@ public final class ReferralUserService {
         return nil
     }
     
-    public func start() {
+    func start() {
         guard
             !self.hasStartedOnce
         else { return } // TODO: log warning
@@ -102,7 +102,7 @@ public final class ReferralUserService {
         self.refreshReferralUser()
     }
     
-    public func set(isPremium: Bool) {
+    func set(isPremium: Bool) {
         self.cacheUpdateReferralUser(
             self.pendingUpdateReferralUser?.set(isPremium: isPremium) ??
             UpdateReferralUser(appUserId: self.appUserId,
@@ -112,7 +112,7 @@ public final class ReferralUserService {
         )
     }
     
-    public func set(userSince: Date) {
+    func set(userSince: Date) {
         self.cacheUpdateReferralUser(
             self.pendingUpdateReferralUser?.set(userSince: userSince) ??
             UpdateReferralUser(appUserId: self.appUserId,
@@ -122,7 +122,7 @@ public final class ReferralUserService {
         )
     }
     
-    public func set(lastSeenAt: Date) {
+    func set(lastSeenAt: Date) {
         self.cacheUpdateReferralUser(
             self.pendingUpdateReferralUser?.set(lastSeenAt: lastSeenAt) ??
             UpdateReferralUser(appUserId: self.appUserId,
@@ -132,13 +132,13 @@ public final class ReferralUserService {
         )
     }
     
-    public func set(metadata: Any?) {
+    func set(metadata: Any?) {
         // TODO:
     }
     
     // MARK: - Internal
     
-    internal init(appUserId: String,
+    init(appUserId: String,
                   projectKey: String,
                   networkReachability: NetworkReachabilityType,
                   referralUserCache: ReferralUserCacheType,
@@ -151,7 +151,7 @@ public final class ReferralUserService {
         self.referralUserProvider = referralUserProvider
     }
     
-    internal weak var internalDelegate: ReferralUserServiceDelegate? = nil {
+    weak var internalDelegate: ReferralUserServiceDelegate? = nil {
         didSet {
             guard
                 let internalDelegate
@@ -165,7 +165,7 @@ public final class ReferralUserService {
         }
     }
     
-    internal func startIfNeeded() {
+    func startIfNeeded() {
         if !self.hasStartedOnce {
             self.start()
         }

@@ -10,7 +10,7 @@
 //  Created by Oleh Stasula on 04/12/2024.
 //
 
-public protocol ReferralUserServiceDelegate: AnyObject {
+protocol ReferralUserServiceDelegate: AnyObject {
     func referralUserService(_ service: ReferralUserService, receivedUpdated referralUser: ReferralUser)
     func referralUserService(_ service: ReferralUserService, isRefreshingChanged isRefreshing: Bool)
 }
