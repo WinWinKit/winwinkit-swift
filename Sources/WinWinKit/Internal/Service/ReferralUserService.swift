@@ -14,69 +14,20 @@ import Foundation
 
 final class ReferralUserService {
     
-    ///
-    /// Initialize an instance of the ``ReferralUserService`.
-    ///
-    /// - Parameter appUserId: Unique identifier of your app's user.
-    /// Referral program and rewards will be attached to the `appUserId`.
-    /// Use UUID or similar random identifier types.
-    /// **Avoid setting person identifying information**, like email or name.
-    ///
-    /// - Parameter projectKey: The project key to configure ``ReferralUserService`` with.
-    /// Obtain ``projectKey`` in the settings of your project in [WinWinKit dashboard](https://app.winwinkit.com).
-    ///
-    /// - Parameter keyValueCache: Destination for caching referral user data.
-    /// The default value is ``UserDefaults.standard``.
-    ///
-    /// - Returns: An instance of ``ReferralUserService``.
-    ///
-    /// ### Example
-    ///
-    /// ```swift
-    /// let service = ReferralUserService(appUserId: "<YOUR_APP_USER_ID>",
-    ///                                   projectKey: "<YOUR_PROJECT_KEY>")
-    /// ```
-    ///
-    convenience init(appUserId: String,
-                            projectKey: String,
-                            keyValueCache: KeyValueCacheType = UserDefaults.standard) {
+    init(appUserId: String,
+         projectKey: String,
+         networkReachability: NetworkReachabilityType,
+         referralUserCache: ReferralUserCacheType,
+         referralUserProvider: ReferralUserProviderType) {
         
-        let networkReachability = NetworkReachability()
-        
-        let referralUserCache = ReferralUserCache(keyValueCache: keyValueCache)
-        
-        let baseEndpointURL = URL(string: "https://api.winwinkit.com/")!
-        let remoteDataFetcher = RemoteDataFetcher(session: .shared)
-        let remoteRequestDispatcher = RemoteRequestDispatcher(remoteDataFetcher: remoteDataFetcher)
-        let referralUserProvider = RemoteReferralUserProvider(baseEndpointURL: baseEndpointURL,
-                                                              remoteRequestDispatcher: remoteRequestDispatcher)
-        
-        self.init(appUserId: appUserId,
-                  projectKey: projectKey,
-                  networkReachability: networkReachability,
-                  referralUserCache: referralUserCache,
-                  referralUserProvider: referralUserProvider)
+        self.appUserId = appUserId
+        self.projectKey = projectKey
+        self.networkReachability = networkReachability
+        self.referralUserCache = referralUserCache
+        self.referralUserProvider = referralUserProvider
     }
     
-    var delegate: ReferralUserServiceDelegate? {
-        get { self._delegate }
-        set {
-            guard newValue !== self._delegate else {
-                Logger.warning("ReferralUserService delegate has already been set.")
-                return
-            }
-            
-            if newValue == nil {
-                Logger.info("ReferralUserService delegate is being set to nil, you probably don't want to do this.")
-            }
-            
-            self._delegate = newValue
-            
-            if newValue != nil {
-                Logger.debug("ReferralUserService delegate is set.")
-            }
-        }
-    }
+    weak var delegate: ReferralUserServiceDelegate?
     
     var cachedReferralUser: ReferralUser? {
         if let referralUser = self.referralUserCache.referralUser,
@@ -136,21 +87,6 @@ final class ReferralUserService {
         // TODO:
     }
     
-    // MARK: - Internal
-    
-    init(appUserId: String,
-                  projectKey: String,
-                  networkReachability: NetworkReachabilityType,
-                  referralUserCache: ReferralUserCacheType,
-                  referralUserProvider: ReferralUserProviderType) {
-        
-        self.appUserId = appUserId
-        self.projectKey = projectKey
-        self.networkReachability = networkReachability
-        self.referralUserCache = referralUserCache
-        self.referralUserProvider = referralUserProvider
-    }
-    
     weak var internalDelegate: ReferralUserServiceDelegate? = nil {
         didSet {
             guard
@@ -178,8 +114,6 @@ final class ReferralUserService {
     private let networkReachability: NetworkReachabilityType
     private let referralUserCache: ReferralUserCacheType
     private let referralUserProvider: ReferralUserProviderType
-    
-    private weak var _delegate: ReferralUserServiceDelegate? = nil
     
     private var hasRefreshedOnce: Bool = false
     private var hasStartedOnce: Bool = false
