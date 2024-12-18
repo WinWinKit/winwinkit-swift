@@ -10,6 +10,8 @@
 //  Created by Oleh Stasula on 03/12/2024.
 //
 
+import Foundation
+
 ///
 /// The entry point for WinWinKit SDK.
 /// Normally it should be instantiated as soon as your app has a unique user id for your user.
@@ -20,7 +22,7 @@ public final class WinWinKit {
     ///
     /// Returns the already configured instance of ``WinWinKit``.
     /// - Warning: this method will crash with `fatalError` if ``WinWinKit`` has not been initialized through
-    /// ``WinWinKit/configure(projectKey:)``.
+    /// ``WinWinKit/configure(projectKey:)`` or one of its overloads.
     /// If there's a chance that may have not happened yet, you can use ``isConfigured`` to check if it's safe to call.
     ///
     /// ### Example
@@ -52,13 +54,19 @@ public final class WinWinKit {
     /// ```
     ///
     public static func configure(projectKey: String) -> WinWinKit {
+        self.configure(projectKey: projectKey,
+                       keyValueCache: UserDefaults.standard)
+    }
+    
+    public static func configure(projectKey: String, keyValueCache: KeyValueCacheType) -> WinWinKit {
         
         if let instance {
             Logger.error("WinWinKit has already been configured. Calling `configure(projectKey:)` again has no effect.")
             return instance
         }
         
-        let instance = WinWinKit(projectKey: projectKey)
+        let instance = WinWinKit(projectKey: projectKey,
+                                 keyValueCache: keyValueCache)
         self.instance = instance
         return instance
     }
@@ -95,19 +103,24 @@ public final class WinWinKit {
     private static var instance: WinWinKit? = nil
     
     private let projectKey: String
+    private let keyValueCache: KeyValueCacheType
     private let networkReachability: NetworkReachabilityType
     
     private weak var _delegate: WinWinKitDelegate? = nil
     
-    private convenience init(projectKey: String) {
+    private convenience init(projectKey: String,
+                             keyValueCache: KeyValueCacheType) {
         let networkReachability = NetworkReachability()
         self.init(projectKey: projectKey,
+                  keyValueCache: keyValueCache,
                   networkReachability: networkReachability)
     }
     
     private init(projectKey: String,
+                 keyValueCache: KeyValueCacheType,
                  networkReachability: NetworkReachabilityType) {
         self.projectKey = projectKey
+        self.keyValueCache = keyValueCache
         self.networkReachability = networkReachability
     }
 }
