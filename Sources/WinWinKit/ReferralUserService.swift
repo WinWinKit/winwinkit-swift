@@ -46,10 +46,10 @@ public final class ReferralUserService {
         let referralUserCache = ReferralUserCache(keyValueCache: keyValueCache)
         
         let baseEndpointURL = URL(string: "https://api.winwinkit.com/")!
-        let remoteRequestDispatcher = RemoteRequestDispatcher(session: .shared)
-        let referralUserRequestDispatcher = RemoteReferralUserRequestDispatcher(remoteRequestDispatcher: remoteRequestDispatcher)
+        let remoteDataFetcher = RemoteDataFetcher(session: .shared)
+        let remoteRequestDispatcher = RemoteRequestDispatcher(remoteDataFetcher: remoteDataFetcher)
         let referralUserProvider = RemoteReferralUserProvider(baseEndpointURL: baseEndpointURL,
-                                                              referralUserRequestDispatcher: referralUserRequestDispatcher)
+                                                              remoteRequestDispatcher: remoteRequestDispatcher)
         
         self.init(appUserId: appUserId,
                   projectKey: projectKey,

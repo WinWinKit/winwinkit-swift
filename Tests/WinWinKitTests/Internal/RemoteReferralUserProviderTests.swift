@@ -18,20 +18,20 @@ import Testing
     
     @Test func fetchSuccess() async throws {
         let baseEndpointURL = URL(string: "https://api.winwinkit.com")!
-        let requestDispatcher = MockRemoteReferralUserRequestDispatcher(referralUserToReturn: MockReferralUser.referralUser1,
-                                                                        errorToThrow: nil)
+        let remoteRequestDispatcher = MockRemoteRequestDispatcher(referralUserToReturn: MockReferralUser.referralUser1,
+                                                                  errorToThrow: nil)
         let provider = RemoteReferralUserProvider(baseEndpointURL: baseEndpointURL,
-                                                  referralUserRequestDispatcher: requestDispatcher)
+                                                  remoteRequestDispatcher: remoteRequestDispatcher)
         let result = try await provider.fetch(appUserId: "app-user-id-1", projectKey: "project-key-1")
         #expect(result?.appUserId == "app-user-id-1")
     }
     
     @Test func fetchNotFound() async throws {
         let baseEndpointURL = URL(string: "https://api.winwinkit.com")!
-        let requestDispatcher = MockRemoteReferralUserRequestDispatcher(referralUserToReturn: nil,
-                                                                        errorToThrow: RemoteReferralUserRequestDispatcherError.notFound)
+        let remoteRequestDispatcher = MockRemoteRequestDispatcher(referralUserToReturn: nil,
+                                                                  errorToThrow: RemoteRequestDispatcherError.notFound)
         let provider = RemoteReferralUserProvider(baseEndpointURL: baseEndpointURL,
-                                                  referralUserRequestDispatcher: requestDispatcher)
+                                                  remoteRequestDispatcher: remoteRequestDispatcher)
         let result = try await provider.fetch(appUserId: "app-user-id-1", projectKey: "project-key-1")
         #expect(result == nil)
     }

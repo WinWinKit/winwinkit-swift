@@ -5,23 +5,23 @@
 //  You may not use this file except in compliance with the License.
 //  You may obtain a copy of the License at https://opensource.org/licenses/MIT
 //
-//  MockRemoteReferralUserRequestDispatcher.swift
+//  MockRemoteDataFetcher.swift
 //
-//  Created by Oleh Stasula on 17/12/2024.
+//  Created by Oleh Stasula on 18/12/2024.
 //
 
 import Foundation
 @testable import WinWinKit
 
-struct MockRemoteReferralUserRequestDispatcher: RemoteReferralUserRequestDispatcherType {
+struct MockRemoteDataFetcher: RemoteDataFetcherType {
     
-    let referralUserToReturn: ReferralUser?
+    let responseToReturn: (Int, Data?)
     let errorToThrow: Error?
     
-    func perform(request: RemoteReferralUserRequest) async throws -> RemoteReferralUserResponse? {
+    func data(for urlRequest: URLRequest) async throws -> (Int, Data?) {
         if let errorToThrow {
             throw errorToThrow
         }
-        return self.referralUserToReturn.map { RemoteReferralUserResponse(data: $0) }
+        return self.responseToReturn
     }
 }

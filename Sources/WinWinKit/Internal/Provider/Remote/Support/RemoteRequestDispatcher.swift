@@ -7,33 +7,49 @@
 //
 //  RemoteRequestDispatcher.swift
 //
-//  Created by Oleh Stasula on 18/12/2024.
+//  Created by Oleh Stasula on 05/12/2024.
 //
 
 import Foundation
 
 enum RemoteRequestDispatcherError: Error {
-    case unableToExtractResponseStatusCode
+    case notFound
+    case unknown
 }
 
 protocol RemoteRequestDispatcherType {
-    func perform(request: RemoteReferralUserRequest) async throws -> (Int, Data?)
+    func perform<Response: Codable>(request: RemoteRequest) async throws -> Response?
 }
 
 struct RemoteRequestDispatcher: RemoteRequestDispatcherType {
     
-    let session: URLSession
+    let remoteDataFetcher: RemoteDataFetcherType
     
     // MARK: - RemoteRequestDispatcherType
     
-    func perform(request: RemoteReferralUserRequest) async throws -> (Int, Data?) {
+    func perform<Response: Codable>(request: RemoteRequest) async throws -> Response? {
         let urlRequest = try request.urlRequest()
-        let (data, response) = try await self.session.data(for: urlRequest)
-        guard
-            let httpResponse = response as? HTTPURLResponse
-        else {
-            throw RemoteRequestDispatcherError.unableToExtractResponseStatusCode
+        let (statusCode, data) = try await self.remoteDataFetcher.data(for: urlRequest)
+        if let error = try RemoteRequestDispatcherError(statusCode: statusCode, data: data) {
+            throw error
         }
-        return (httpResponse.statusCode, data)
+        let response = try data.map { try Response(jsonData: $0) }
+        return response
+    }
+}
+
+extension RemoteRequestDispatcherError {
+    
+    init?(statusCode: Int, data: Data?) throws {
+        guard
+            statusCode < 200 && statusCode > 299
+        else { return nil }
+        // TODO: parse errors from data
+        switch statusCode {
+        case 404:
+            self = .notFound
+        default:
+            self = .unknown
+        }
     }
 }

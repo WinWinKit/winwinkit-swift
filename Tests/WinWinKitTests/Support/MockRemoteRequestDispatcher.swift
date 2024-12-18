@@ -7,7 +7,7 @@
 //
 //  MockRemoteRequestDispatcher.swift
 //
-//  Created by Oleh Stasula on 18/12/2024.
+//  Created by Oleh Stasula on 17/12/2024.
 //
 
 import Foundation
@@ -15,13 +15,13 @@ import Foundation
 
 struct MockRemoteRequestDispatcher: RemoteRequestDispatcherType {
     
-    let responseToReturn: (Int, Data?)
+    let referralUserToReturn: ReferralUser?
     let errorToThrow: Error?
     
-    func perform(request: RemoteReferralUserRequest) async throws -> (Int, Data?) {
+    func perform<Response: Codable>(request: any RemoteRequest) async throws -> Response? {
         if let errorToThrow {
             throw errorToThrow
         }
-        return self.responseToReturn
+        return self.referralUserToReturn.map { RemoteReferralUserResponse(data: $0) } as? Response
     }
 }

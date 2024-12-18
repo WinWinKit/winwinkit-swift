@@ -21,7 +21,7 @@ enum RemoteReferralUserProviderError: Error {
 struct RemoteReferralUserProvider: ReferralUserProviderType {
     
     let baseEndpointURL: URL
-    let referralUserRequestDispatcher: RemoteReferralUserRequestDispatcherType
+    let remoteRequestDispatcher: RemoteRequestDispatcherType
     
     // MARK: - ReferralUserProviderType
     
@@ -30,7 +30,7 @@ struct RemoteReferralUserProvider: ReferralUserProviderType {
             return try await self.perform(request: .get(appUserId: appUserId),
                                           projectKey: projectKey)
         }
-        catch (let error as RemoteReferralUserRequestDispatcherError) {
+        catch (let error as RemoteRequestDispatcherError) {
             if error == .notFound {
                 return nil
             }
@@ -65,7 +65,7 @@ struct RemoteReferralUserProvider: ReferralUserProviderType {
         let request = RemoteReferralUserRequest(baseEndpointURL: self.baseEndpointURL,
                                                 projectKey: projectKey,
                                                 request: request)
-        let response = try await self.referralUserRequestDispatcher.perform(request: request)
+        let response: RemoteReferralUserResponse? = try await self.remoteRequestDispatcher.perform(request: request)
         let referralUser = response?.data
         return referralUser
     }
