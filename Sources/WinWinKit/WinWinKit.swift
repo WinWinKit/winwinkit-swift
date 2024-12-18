@@ -124,6 +124,16 @@ public final class WinWinKit {
         self.referralUserService?.cachedReferralUser
     }
     
+    @available(iOS 17.0, macOS 14.0, *)
+    public var referralUserObservableObject: ReferralUserObservableObject {
+        if let retained = self.retainedReferralUserObservableObject {
+            return retained
+        }
+        let created = ReferralUserObservableObject()
+        self._referralUserObservableObject = created
+        return created
+    }
+    
     ///
     /// Sets your app's user unique identifier.
     /// - Parameter appUserId: Unique identifier of your app's user.
@@ -243,6 +253,13 @@ public final class WinWinKit {
     @Atomic
     private var _shouldAutoUpdateLastSeenAt: Bool = true
     
+    private weak var _referralUserObservableObject: AnyObject?
+    
+    @available(iOS 17.0, macOS 14.0, *)
+    private var retainedReferralUserObservableObject: ReferralUserObservableObject? {
+        self._referralUserObservableObject as? ReferralUserObservableObject
+    }
+    
     @Atomic
     private var referralUserService: ReferralUserService?
     
@@ -297,10 +314,16 @@ extension WinWinKit: ReferralUserServiceDelegate {
     }
     
     func referralUserService(_ service: ReferralUserService, receivedUpdated referralUser: ReferralUser) {
+        if #available(iOS 17, macOS 14, *) {
+            self.retainedReferralUserObservableObject?.set(referralUser: referralUser)
+        }
         self.delegate?.winWinKit(self, receivedUpdated: referralUser)
     }
     
     func referralUserService(_ service: ReferralUserService, isRefreshingChanged isRefreshing: Bool) {
+        if #available(iOS 17, macOS 14, *) {
+            self.retainedReferralUserObservableObject?.set(isRefreshing: isRefreshing)
+        }
         self.delegate?.winWinKit(self, isRefreshingChanged: isRefreshing)
     }
 }
