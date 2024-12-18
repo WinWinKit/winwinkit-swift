@@ -135,6 +135,7 @@ public final class WinWinKit {
     
     // MARK: - Private
     
+    @Atomic
     private static var instance: WinWinKit? = nil
     
     private let projectKey: String
@@ -144,6 +145,7 @@ public final class WinWinKit {
     
     private weak var _delegate: WinWinKitDelegate? = nil
     
+    @Atomic
     private var referralUserService: ReferralUserService?
     
     private convenience init(projectKey: String,
