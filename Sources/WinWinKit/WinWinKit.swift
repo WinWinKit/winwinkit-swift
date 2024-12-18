@@ -58,6 +58,23 @@ public final class WinWinKit {
                        keyValueCache: UserDefaults.standard)
     }
     
+    ///
+    /// Initialize an instance of the WinWinKit SDK.
+    ///
+    /// - Parameter projectKey: The project key you wish to use to configure ``WinWinKit``.
+    ///
+    /// - Parameter keyValueCache: The key-value cache where ``WinWinKit`` can store data.
+    /// By default it is set to `UserDefaults.standard`.
+    /// You may set any other instance of `UserDefaults`.
+    ///
+    /// - Returns: An instance of ``WinWinKit`` object.
+    ///
+    /// ### Example
+    ///
+    /// ```swift
+    /// let winWinKit = WinWinKit.configure(projectKey: "<YOUR_PROJECT_KEY>")
+    /// ```
+    ///
     public static func configure(projectKey: String, keyValueCache: KeyValueCacheType) -> WinWinKit {
         
         if let instance {
