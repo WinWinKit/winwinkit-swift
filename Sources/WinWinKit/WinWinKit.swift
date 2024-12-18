@@ -53,6 +53,7 @@ public final class WinWinKit {
     /// let winWinKit = WinWinKit.configure(projectKey: "<YOUR_PROJECT_KEY>")
     /// ```
     ///
+    @discardableResult
     public static func configure(projectKey: String) -> WinWinKit {
         self.configure(projectKey: projectKey,
                        keyValueCache: UserDefaults.standard)
@@ -75,6 +76,7 @@ public final class WinWinKit {
     /// let winWinKit = WinWinKit.configure(projectKey: "<YOUR_PROJECT_KEY>")
     /// ```
     ///
+    @discardableResult
     public static func configure(projectKey: String, keyValueCache: KeyValueCacheType) -> WinWinKit {
         
         if let instance {
