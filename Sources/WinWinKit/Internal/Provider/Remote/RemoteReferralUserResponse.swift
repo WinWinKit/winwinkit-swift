@@ -5,11 +5,11 @@
 //  You may not use this file except in compliance with the License.
 //  You may obtain a copy of the License at https://opensource.org/licenses/MIT
 //
-//  RemoteReferralUserDataResponse.swift
+//  RemoteReferralUserResponse.swift
 //
 //  Created by Oleh Stasula on 17/12/2024.
 //
 
-struct RemoteReferralUserDataResponse: Codable {
+struct RemoteReferralUserResponse: Codable {
     let data: ReferralUser?
 }

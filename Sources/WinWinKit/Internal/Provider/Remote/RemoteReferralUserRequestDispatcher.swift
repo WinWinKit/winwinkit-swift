@@ -18,21 +18,20 @@ enum RemoteReferralUserRequestDispatcherError: Error {
 }
 
 protocol RemoteReferralUserRequestDispatcherType {
-    func perform(request: RemoteReferralUserRequest) async throws -> Data?
+    func perform(request: RemoteReferralUserRequest) async throws -> RemoteReferralUserResponse?
 }
 
 struct RemoteReferralUserRequestDispatcher: RemoteReferralUserRequestDispatcherType {
     
-    let session: URLSession
+    let remoteRequestDispatcher: RemoteRequestDispatcherType
     
-    func perform(request: RemoteReferralUserRequest) async throws -> Data? {
-        let urlRequest = try request.urlRequest()
-        let (data, response) = try await self.session.data(for: urlRequest)
-        if let httpResponse = response as? HTTPURLResponse,
-           let error = try RemoteReferralUserRequestDispatcherError(statusCode: httpResponse.statusCode, data: data) {
+    func perform(request: RemoteReferralUserRequest) async throws -> RemoteReferralUserResponse? {
+        let (statusCode, data) = try await self.remoteRequestDispatcher.perform(request: request)
+        if let error = try RemoteReferralUserRequestDispatcherError(statusCode: statusCode, data: data) {
             throw error
         }
-        return data
+        let response = try data.map { try RemoteReferralUserResponse(jsonData: $0) }
+        return response
     }
 }
 

@@ -16,7 +16,7 @@ enum RemoteReferralUserRequestError: Error {
     case unableToCreateURL
 }
 
-struct RemoteReferralUserRequest {
+struct RemoteReferralUserRequest: RemoteRequest {
     
     enum Request {
         case get(appUserId: String)
@@ -28,6 +28,8 @@ struct RemoteReferralUserRequest {
     let baseEndpointURL: URL
     let projectKey: String
     let request: Request
+    
+    // MARK: - RemoteRequest
     
     func urlRequest() throws -> URLRequest {
         guard
