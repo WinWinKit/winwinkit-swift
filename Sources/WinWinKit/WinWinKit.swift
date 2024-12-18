@@ -125,6 +125,60 @@ public final class WinWinKit {
     }
     
     ///
+    /// Sets user's premium status.
+    /// - Parameter isPremium: Is user premium.
+    ///
+    public func set(isPremium: Bool) {
+        guard
+            let referralUserService
+        else {
+            Logger.warning("User identifier `appUserId` must be set before updating any other user properties.")
+            return
+        }
+        referralUserService.set(isPremium: isPremium)
+    }
+    
+    ///
+    /// Sets user's first seen at date.
+    /// - Parameter userSince: Date when user has been seen at first.
+    ///
+    public func set(userSince: Date) {
+        guard
+            let referralUserService
+        else {
+            Logger.warning("User identifier `appUserId` must be set before updating any other user properties.")
+            return
+        }
+        guard
+            userSince <= Date()
+        else {
+            Logger.warning("User since date must not be in the future.")
+            return
+        }
+        referralUserService.set(userSince: userSince)
+    }
+    
+    ///
+    /// Sets user's last seen at date.
+    /// - Parameter lastSeenAt: Date when user has been seen at first.
+    ///
+    public func set(lastSeenAt: Date) {
+        guard
+            let referralUserService
+        else {
+            Logger.warning("User identifier `appUserId` must be set before updating any other user properties.")
+            return
+        }
+        guard
+            lastSeenAt <= Date()
+        else {
+            Logger.warning("Last seen at date must not be in the future.")
+            return
+        }
+        referralUserService.set(lastSeenAt: lastSeenAt)
+    }
+    
+    ///
     /// Resets internal state attached to previously set `appUserId`.
     ///
     public func reset() {
