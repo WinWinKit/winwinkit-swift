@@ -105,6 +105,13 @@ public final class WinWinKit {
         self.referralUserService?.cachedReferralUser
     }
     
+    ///
+    /// Sets your app's user unique identifier.
+    /// - Parameter appUserId: Unique identifier of your app's user.
+    /// Referral program and rewards will be attached to the `appUserId`.
+    /// Use UUID or similar random identifier types.
+    /// **Avoid setting person identifying information**, like email or name.
+    ///
     public func set(appUserId: String) {
         let referralUserCache = ReferralUserCache(keyValueCache: self.keyValueCache)
         let baseEndpointURL = URL(string: "https://api.winwinkit.com")!
@@ -120,6 +127,9 @@ public final class WinWinKit {
         self.referralUserService = referralUserService
     }
     
+    ///
+    /// Resets internal state attached to previously set `appUserId`.
+    ///
     public func reset() {
         self.referralUserService = nil
     }
