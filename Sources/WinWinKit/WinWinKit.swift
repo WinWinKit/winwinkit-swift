@@ -98,6 +98,13 @@ public final class WinWinKit {
         }
     }
     
+    ///
+    /// Returns the latest available `ReferralUser` object.
+    ///
+    public var referralUser: ReferralUser? {
+        self.referralUserService?.cachedReferralUser
+    }
+    
     public func set(appUserId: String) {
         let referralUserCache = ReferralUserCache(keyValueCache: self.keyValueCache)
         let baseEndpointURL = URL(string: "https://api.winwinkit.com")!
