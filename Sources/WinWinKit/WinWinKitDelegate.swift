@@ -11,5 +11,6 @@
 //
 
 public protocol WinWinKitDelegate: AnyObject {
-    func receivedUpdated(referralUser: ReferralUser)
+    func winWinKit(_ winWinKit: WinWinKit, receivedUpdated referralUser: ReferralUser?)
+    func winWinKit(_ winWinKit: WinWinKit, isRefreshingChanged isRefreshing: Bool)
 }

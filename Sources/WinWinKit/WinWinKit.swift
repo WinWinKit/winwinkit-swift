@@ -116,16 +116,10 @@ public final class WinWinKit {
         
         self.startNetworkReachability()
         
-        let referralUserCache = ReferralUserCache(keyValueCache: self.keyValueCache)
-        let baseEndpointURL = URL(string: "https://api.winwinkit.com")!
-        let remoteDataFetcher = RemoteDataFetcher(session: .shared)
-        let remoteRequestDispatcher = RemoteRequestDispatcher(remoteDataFetcher: remoteDataFetcher)
-        let referralUserProvider = RemoteReferralUserProvider(baseEndpointURL: baseEndpointURL,
-                                                              remoteRequestDispatcher: remoteRequestDispatcher)
         let referralUserService = ReferralUserService(appUserId: appUserId,
                                                       projectKey: self.projectKey,
-                                                      referralUserCache: referralUserCache,
-                                                      referralUserProvider: referralUserProvider)
+                                                      referralUserCache: self.referralUserCache,
+                                                      referralUserProvider: self.referralUserProvider)
         referralUserService.delegate = self
         self.referralUserService = referralUserService
     }
@@ -135,6 +129,8 @@ public final class WinWinKit {
     ///
     public func reset() {
         self.referralUserService = nil
+        self.referralUserCache.reset()
+        self.delegate?.winWinKit(self, receivedUpdated: nil)
     }
     
     // MARK: - Private
@@ -142,8 +138,9 @@ public final class WinWinKit {
     private static var instance: WinWinKit? = nil
     
     private let projectKey: String
-    private let keyValueCache: KeyValueCacheType
     private let networkReachability: NetworkReachabilityType
+    private let referralUserCache: ReferralUserCacheType
+    private let referralUserProvider: ReferralUserProviderType
     
     private weak var _delegate: WinWinKitDelegate? = nil
     
@@ -151,18 +148,30 @@ public final class WinWinKit {
     
     private convenience init(projectKey: String,
                              keyValueCache: KeyValueCacheType) {
+        
         let networkReachability = NetworkReachability()
+        let referralUserCache = ReferralUserCache(keyValueCache: keyValueCache)
+        let baseEndpointURL = URL(string: "https://api.winwinkit.com")!
+        let remoteDataFetcher = RemoteDataFetcher(session: .shared)
+        let remoteRequestDispatcher = RemoteRequestDispatcher(remoteDataFetcher: remoteDataFetcher)
+        let referralUserProvider = RemoteReferralUserProvider(baseEndpointURL: baseEndpointURL,
+                                                              remoteRequestDispatcher: remoteRequestDispatcher)
+        
         self.init(projectKey: projectKey,
-                  keyValueCache: keyValueCache,
-                  networkReachability: networkReachability)
+                  networkReachability: networkReachability,
+                  referralUserCache: referralUserCache,
+                  referralUserProvider: referralUserProvider)
     }
     
     private init(projectKey: String,
-                 keyValueCache: KeyValueCacheType,
-                 networkReachability: NetworkReachabilityType) {
+                 networkReachability: NetworkReachabilityType,
+                 referralUserCache: ReferralUserCacheType,
+                 referralUserProvider: ReferralUserProviderType) {
+        
         self.projectKey = projectKey
-        self.keyValueCache = keyValueCache
         self.networkReachability = networkReachability
+        self.referralUserCache = referralUserCache
+        self.referralUserProvider = referralUserProvider
     }
     
     private func startNetworkReachability() {
@@ -188,10 +197,10 @@ extension WinWinKit: ReferralUserServiceDelegate {
     }
     
     func referralUserService(_ service: ReferralUserService, receivedUpdated referralUser: ReferralUser) {
-        
+        self.delegate?.winWinKit(self, receivedUpdated: referralUser)
     }
     
     func referralUserService(_ service: ReferralUserService, isRefreshingChanged isRefreshing: Bool) {
-        
+        self.delegate?.winWinKit(self, isRefreshingChanged: isRefreshing)
     }
 }

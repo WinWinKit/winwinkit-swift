@@ -15,6 +15,14 @@ protocol ReferralUserCacheType: AnyObject {
     var updateReferralUser: UpdateReferralUser? { get set }
 }
 
+extension ReferralUserCacheType {
+    
+    func reset() {
+        self.referralUser = nil
+        self.updateReferralUser = nil
+    }
+}
+
 final class ReferralUserCache: ReferralUserCacheType {
     
     let keyValueCache: KeyValueCacheType
