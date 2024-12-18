@@ -123,6 +123,9 @@ public final class WinWinKit {
         self.referralUserService = referralUserService
         
         referralUserService.delegate = self
+        if self.shouldAutoUpdateLastSeenAt {
+            referralUserService.set(lastSeenAt: Date())
+        }
         referralUserService.refresh()
     }
     
@@ -192,6 +195,20 @@ public final class WinWinKit {
         self.delegate?.winWinKit(self, receivedUpdated: nil)
     }
     
+    ///
+    /// A flag controlling whether `lastSeenAt` should be auto-updated or not.
+    /// Set to `false` if you do not want user's `lastSeenAt` property be auto-updated at initialization.
+    /// Additionally, you can always update it by calling `WinWinKit.shared.set(lastSeenAt: <NEW_DATE>)`.
+    ///
+    public var shouldAutoUpdateLastSeenAt: Bool {
+        get {
+            self._shouldAutoUpdateLastSeenAt
+        }
+        set {
+            self._shouldAutoUpdateLastSeenAt = newValue
+        }
+    }
+    
     // MARK: - Private
     
     @Atomic
@@ -203,6 +220,9 @@ public final class WinWinKit {
     private let referralUserProvider: ReferralUserProviderType
     
     private weak var _delegate: WinWinKitDelegate? = nil
+    
+    @Atomic
+    private var _shouldAutoUpdateLastSeenAt: Bool = true
     
     @Atomic
     private var referralUserService: ReferralUserService?
