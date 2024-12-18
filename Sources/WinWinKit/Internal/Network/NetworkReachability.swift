@@ -12,9 +12,13 @@
 
 import Network
 
+protocol NetworkReachabilityDelegate: AnyObject {
+    func networkHasBecomeReachable(_ networkReachability: NetworkReachabilityType)
+}
+
 protocol NetworkReachabilityType: AnyObject {
     var isReachable: Bool { get }
-    var hasBecomeReachable: (() -> Void)? { get set }
+    var delegate: NetworkReachabilityDelegate? { get set }
     func start()
 }
 
@@ -29,7 +33,7 @@ final class NetworkReachability: NetworkReachabilityType, @unchecked Sendable {
     
     private(set) var isReachable: Bool
     
-    var hasBecomeReachable: (() -> Void)?
+    weak var delegate: NetworkReachabilityDelegate?
     
     func start() {
         self.pathMonitor.pathUpdateHandler = { [weak self] path in
@@ -49,7 +53,7 @@ final class NetworkReachability: NetworkReachabilityType, @unchecked Sendable {
         let isReachable = self.isReachable
         self.isReachable = path.isReachable
         if !isReachable && path.isReachable {
-            self.hasBecomeReachable?()
+            self.delegate?.networkHasBecomeReachable(self)
         }
     }
 }

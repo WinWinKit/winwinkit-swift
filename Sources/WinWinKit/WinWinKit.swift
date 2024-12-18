@@ -167,12 +167,17 @@ public final class WinWinKit {
     
     private func startNetworkReachability() {
         guard
-            self.networkReachability.hasBecomeReachable == nil
+            self.networkReachability.delegate == nil
         else { return }
-        self.networkReachability.hasBecomeReachable = { [weak self] in
-            // TODO: trigger next refresh for current service
-        }
+        self.networkReachability.delegate = self
         self.networkReachability.start()
+    }
+}
+
+extension WinWinKit: NetworkReachabilityDelegate {
+    
+    func networkHasBecomeReachable(_ networkReachability: any NetworkReachabilityType) {
+        // TODO: trigger next refresh for current service
     }
 }
 
