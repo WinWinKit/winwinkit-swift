@@ -14,6 +14,12 @@ import Foundation
 
 final class ReferralUserService {
     
+    let appUserId: String
+    let projectKey: String
+    let networkReachability: NetworkReachabilityType
+    let referralUserCache: ReferralUserCacheType
+    let referralUserProvider: ReferralUserProviderType
+    
     init(appUserId: String,
          projectKey: String,
          networkReachability: NetworkReachabilityType,
@@ -72,12 +78,6 @@ final class ReferralUserService {
     }
     
     // MARK: - Private
-    
-    private let appUserId: String
-    private let projectKey: String
-    private let networkReachability: NetworkReachabilityType
-    private let referralUserCache: ReferralUserCacheType
-    private let referralUserProvider: ReferralUserProviderType
     
     private var hasRefreshedOnce: Bool = false
     
