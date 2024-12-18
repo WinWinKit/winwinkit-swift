@@ -18,6 +18,27 @@
 public final class WinWinKit {
     
     ///
+    /// Returns the already configured instance of ``WinWinKit``.
+    /// - Warning: this method will crash with `fatalError` if ``WinWinKit`` has not been initialized through
+    /// ``WinWinKit/configure(projectKey:)``.
+    /// If there's a chance that may have not happened yet, you can use ``isConfigured`` to check if it's safe to call.
+    ///
+    /// ### Example
+    ///
+    /// ```swift
+    /// WinWinKit.shared
+    /// ```
+    ///
+    public static var shared: WinWinKit {
+        guard
+            let instance
+        else {
+            fatalError("WinWinKit has not been configured yet. To get started call `WinWinKit.configure(projectKey:).`")
+        }
+        return instance
+    }
+    
+    ///
     /// Initialize an instance of the WinWinKit SDK.
     ///
     /// - Parameter projectKey: The project key you wish to use to configure ``WinWinKit``.
@@ -27,14 +48,37 @@ public final class WinWinKit {
     /// ### Example
     ///
     /// ```swift
-    /// let winWinKit = WinWinKit(projectKey: "<YOUR_PROJECT_KEY>")
+    /// let winWinKit = WinWinKit.configure(projectKey: "<YOUR_PROJECT_KEY>")
     /// ```
     ///
-    public init(projectKey: String) {
-        self.projectKey = projectKey
+    public static func configure(projectKey: String) -> WinWinKit {
+        
+        if let instance {
+            Logger.error("WinWinKit has already been configured. Calling `configure(projectKey:)` again has no effect.")
+            return instance
+        }
+        
+        let instance = WinWinKit(projectKey: projectKey)
+        self.instance = instance
+        return instance
+    }
+    
+    ///
+    /// Returns `true` if WinWinKit has already been initialized through ``WinWinKit/configure(projectKey:)``.
+    ///
+    public static var isConfigured: Bool {
+        Self.instance != nil
     }
     
     public weak var delegate: WinWinKitDelegate?
     
+    // MARK: - Private
+    
+    private static var instance: WinWinKit? = nil
+    
     private let projectKey: String
+    
+    private init(projectKey: String) {
+        self.projectKey = projectKey
+    }
 }
