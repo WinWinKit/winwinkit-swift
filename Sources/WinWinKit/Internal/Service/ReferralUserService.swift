@@ -45,17 +45,17 @@ final class ReferralUserService {
             self.pendingUpdateReferralUser?.set(isPremium: isPremium) ??
             UpdateReferralUser(appUserId: self.appUserId,
                                isPremium: isPremium,
-                               userSince: nil,
+                               firstSeenAt: nil,
                                lastSeenAt: nil)
         )
     }
     
-    func set(userSince: Date) {
+    func set(firstSeenAt: Date) {
         self.cacheUpdateReferralUser(
-            self.pendingUpdateReferralUser?.set(userSince: userSince) ??
+            self.pendingUpdateReferralUser?.set(firstSeenAt: firstSeenAt) ??
             UpdateReferralUser(appUserId: self.appUserId,
                                isPremium: nil,
-                               userSince: userSince,
+                               firstSeenAt: firstSeenAt,
                                lastSeenAt: nil)
         )
     }
@@ -65,7 +65,7 @@ final class ReferralUserService {
             self.pendingUpdateReferralUser?.set(lastSeenAt: lastSeenAt) ??
             UpdateReferralUser(appUserId: self.appUserId,
                                isPremium: nil,
-                               userSince: nil,
+                               firstSeenAt: nil,
                                lastSeenAt: lastSeenAt)
         )
     }
@@ -114,7 +114,7 @@ final class ReferralUserService {
                 }
                 else {
                     let updateReferralUser = self.pendingUpdateReferralUser
-                    let insertReferralUser = updateReferralUser?.asInsertReferralUser ?? InsertReferralUser(appUserId: self.appUserId, isPremium: nil, userSince: nil, lastSeenAt: nil)
+                    let insertReferralUser = updateReferralUser?.asInsertReferralUser ?? InsertReferralUser(appUserId: self.appUserId, isPremium: nil, firstSeenAt: nil, lastSeenAt: nil)
                     let referralUser = try await self.referralUserProvider.create(referralUser: insertReferralUser,
                                                                                   projectKey: self.projectKey)
                     self.resetUpdateReferralUser(with: updateReferralUser)

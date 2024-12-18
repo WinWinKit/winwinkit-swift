@@ -37,7 +37,7 @@ import Testing
         let referralUser1 = ReferralUser(appUserId: "app-user-id-1",
                                          code: nil,
                                          isPremium: false,
-                                         userSince: nil,
+                                         firstSeenAt: nil,
                                          lastSeenAt: nil,
                                          program: nil,
                                          rewards: ReferralUser.Rewards(basic: [], credit: []))
@@ -46,7 +46,7 @@ import Testing
         let referralUser2 = ReferralUser(appUserId: "app-user-id-2",
                                          code: nil,
                                          isPremium: false,
-                                         userSince: nil,
+                                         firstSeenAt: nil,
                                          lastSeenAt: nil,
                                          program: nil,
                                          rewards: ReferralUser.Rewards(basic: [], credit: []))

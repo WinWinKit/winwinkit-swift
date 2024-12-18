@@ -22,7 +22,7 @@ import Testing
                 "app_user_id": "app-user-id-1",
                 "code": "XYZ123",
                 "is_premium": true,
-                "user_since": "2020-12-06T11:15:59.000000+00:00",
+                "first_seen_at": "2020-12-06T11:15:59.000000+00:00",
                 "last_seen_at": "2024-12-06T11:15:59.000000+00:00",
                 "metadata": {
                     "1": 123
@@ -39,7 +39,7 @@ import Testing
         #expect(referralUser.appUserId == "app-user-id-1")
         #expect(referralUser.code == "XYZ123")
         #expect(referralUser.isPremium == true)
-        #expect(referralUser.userSince == Date(timeIntervalSince1970: 1607253359))
+        #expect(referralUser.firstSeenAt == Date(timeIntervalSince1970: 1607253359))
         #expect(referralUser.lastSeenAt == Date(timeIntervalSince1970: 1733483759))
         // TODO: verify metadata, program and rewards
     }

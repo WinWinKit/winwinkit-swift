@@ -15,7 +15,7 @@ import Foundation
 struct UpdateReferralUser: Codable, Hashable {
     let appUserId: String
     let isPremium: Bool?
-    let userSince: Date?
+    let firstSeenAt: Date?
     let lastSeenAt: Date?
 //    let metadata: Any?
 }
@@ -26,16 +26,16 @@ extension UpdateReferralUser {
         UpdateReferralUser(
             appUserId: self.appUserId,
             isPremium: isPremium,
-            userSince: self.userSince,
+            firstSeenAt: self.firstSeenAt,
             lastSeenAt: self.lastSeenAt
         )
     }
     
-    func set(userSince: Date) -> Self {
+    func set(firstSeenAt: Date) -> Self {
         UpdateReferralUser(
             appUserId: self.appUserId,
             isPremium: self.isPremium,
-            userSince: userSince,
+            firstSeenAt: firstSeenAt,
             lastSeenAt: self.lastSeenAt
         )
     }
@@ -44,7 +44,7 @@ extension UpdateReferralUser {
         UpdateReferralUser(
             appUserId: self.appUserId,
             isPremium: self.isPremium,
-            userSince: self.userSince,
+            firstSeenAt: self.firstSeenAt,
             lastSeenAt: lastSeenAt
         )
     }
@@ -56,7 +56,7 @@ extension UpdateReferralUser {
         InsertReferralUser(
             appUserId: self.appUserId,
             isPremium: self.isPremium,
-            userSince: self.userSince,
+            firstSeenAt: self.firstSeenAt,
             lastSeenAt: self.lastSeenAt
         )
     }

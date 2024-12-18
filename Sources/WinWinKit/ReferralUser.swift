@@ -16,7 +16,7 @@ public struct ReferralUser: Codable, Hashable, Sendable {
     public let appUserId: String
     public let code: String?
     public let isPremium: Bool?
-    public let userSince: Date?
+    public let firstSeenAt: Date?
     public let lastSeenAt: Date?
 //    public let metadata: Any?
     public let program: ReferralProgram?

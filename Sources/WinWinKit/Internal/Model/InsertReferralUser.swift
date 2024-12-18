@@ -15,7 +15,7 @@ import Foundation
 struct InsertReferralUser: Codable {
     let appUserId: String
     let isPremium: Bool?
-    let userSince: Date?
+    let firstSeenAt: Date?
     let lastSeenAt: Date?
 //    let metadata: Any?
 }

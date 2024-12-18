@@ -19,7 +19,7 @@ enum ReferralUserData {
                     "app_user_id": "app-user-id-1",
                     "code": "XYZ123",
                     "is_premium": true,
-                    "user_since": "2024-12-05T08:47:11.782+00:00",
+                    "first_seen_at": "2024-12-05T08:47:11.782+00:00",
                     "last_seen_at": null,
                     "metadata": {
                         "1": 123

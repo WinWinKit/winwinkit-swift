@@ -16,7 +16,7 @@ enum MockReferralUser {
     static let referralUser1: ReferralUser = .init(appUserId: "app-user-id-1",
                                                    code: "XYZ123",
                                                    isPremium: nil,
-                                                   userSince: nil,
+                                                   firstSeenAt: nil,
                                                    lastSeenAt: nil,
                                                    program: nil,
                                                    rewards: ReferralUser.Rewards(basic: [],

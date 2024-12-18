@@ -143,9 +143,9 @@ public final class WinWinKit {
     
     ///
     /// Sets user's first seen at date.
-    /// - Parameter userSince: Date when user has been seen at first.
+    /// - Parameter firstSeenAt: Date when user has been seen at first.
     ///
-    public func set(userSince: Date) {
+    public func set(firstSeenAt: Date) {
         guard
             let referralUserService
         else {
@@ -153,12 +153,12 @@ public final class WinWinKit {
             return
         }
         guard
-            userSince <= Date()
+            firstSeenAt <= Date()
         else {
-            Logger.warning("User since date must not be in the future.")
+            Logger.warning("First seen at date must not be in the future.")
             return
         }
-        referralUserService.set(userSince: userSince)
+        referralUserService.set(firstSeenAt: firstSeenAt)
         referralUserService.refresh()
     }
     
