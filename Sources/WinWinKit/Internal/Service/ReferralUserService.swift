@@ -78,7 +78,7 @@ final class ReferralUserService {
         
         if let delegate,
            !delegate.referralUserServiceCanPerformNextRefresh(self) {
-            self.shouldPullOnNextRefresh = true
+            self.shouldPullOnNextRefresh = self.shouldPullOnNextRefresh || shouldPull
             return
         }
         
