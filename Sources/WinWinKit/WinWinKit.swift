@@ -113,6 +113,9 @@ public final class WinWinKit {
     /// **Avoid setting person identifying information**, like email or name.
     ///
     public func set(appUserId: String) {
+        
+        self.startNetworkReachability()
+        
         let referralUserCache = ReferralUserCache(keyValueCache: self.keyValueCache)
         let baseEndpointURL = URL(string: "https://api.winwinkit.com")!
         let remoteDataFetcher = RemoteDataFetcher(session: .shared)
@@ -123,6 +126,7 @@ public final class WinWinKit {
                                                       projectKey: self.projectKey,
                                                       referralUserCache: referralUserCache,
                                                       referralUserProvider: referralUserProvider)
+        referralUserService.delegate = self
         self.referralUserService = referralUserService
     }
     
@@ -159,6 +163,16 @@ public final class WinWinKit {
         self.projectKey = projectKey
         self.keyValueCache = keyValueCache
         self.networkReachability = networkReachability
+    }
+    
+    private func startNetworkReachability() {
+        guard
+            self.networkReachability.hasBecomeReachable == nil
+        else { return }
+        self.networkReachability.hasBecomeReachable = { [weak self] in
+            // TODO: trigger next refresh for current service
+        }
+        self.networkReachability.start()
     }
 }
 
