@@ -10,7 +10,7 @@
 //  Created by Oleh Stasula on 16/12/2024.
 //
 
-import SwiftUI
+import Observation
 
 @available(iOS 17.0, *)
 @available(macOS 14.0, *)
