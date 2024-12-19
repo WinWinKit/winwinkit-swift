@@ -41,6 +41,7 @@ import Testing
         #expect(referralUser.isPremium == true)
         #expect(referralUser.firstSeenAt == Date(timeIntervalSince1970: 1607253359))
         #expect(referralUser.lastSeenAt == Date(timeIntervalSince1970: 1733483759))
-        // TODO: verify metadata, program and rewards
+        #expect(referralUser.metadata == ["1": 123])
+        // TODO: verify program and rewards
     }
 }

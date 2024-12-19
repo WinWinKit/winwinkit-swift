@@ -18,7 +18,7 @@ public struct ReferralUser: Codable, Hashable, Sendable {
     public let isPremium: Bool?
     public let firstSeenAt: Date?
     public let lastSeenAt: Date?
-//    public let metadata: Any?
+    public let metadata: Metadata?
     public let program: ReferralProgram?
     public let rewards: Rewards
     
@@ -28,7 +28,7 @@ public struct ReferralUser: Codable, Hashable, Sendable {
         public let description: String?
         public let distributionPercentage: Int
         public let limit: Int
-//        public let metadata: Any?
+        public let metadata: Metadata?
         public let rewards: Rewards
         
         public struct Rewards: Codable, Hashable, Sendable {
@@ -39,7 +39,7 @@ public struct ReferralUser: Codable, Hashable, Sendable {
                 public let key: String
                 public let description: String?
                 public let side: Side
-                //            public let metadata: [String: Any]?
+                public let metadata: Metadata?
                 public let activationConfigurations: ActivationConfigurations
                 public let deactivationConfigurations: DeactivationConfigurations
                 
@@ -91,13 +91,13 @@ public struct ReferralUser: Codable, Hashable, Sendable {
         public struct BasicReward: Codable, Hashable, Sendable {
             public let key: String
             public let description: String?
-    //        public let metadata: [String: Any]?
+            public let metadata: Metadata?
         }
         
         public struct CreditReward: Codable, Hashable, Sendable {
             public let key: String
             public let description: String?
-    //        public let metadata: [String: Any]?
+            public let metadata: Metadata?
         }
     }
 }

@@ -5,17 +5,9 @@
 //  You may not use this file except in compliance with the License.
 //  You may obtain a copy of the License at https://opensource.org/licenses/MIT
 //
-//  InsertReferralUser.swift
+//  Metadata.swift
 //
-//  Created by Oleh Stasula on 05/12/2024.
+//  Created by Oleh Stasula on 19/12/2024.
 //
 
-import Foundation
-
-struct InsertReferralUser: Codable {
-    let appUserId: String
-    let isPremium: Bool?
-    let firstSeenAt: Date?
-    let lastSeenAt: Date?
-    let metadata: Metadata?
-}
+public typealias Metadata = AnyCodable

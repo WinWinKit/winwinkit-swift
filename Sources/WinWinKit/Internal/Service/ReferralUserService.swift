@@ -50,7 +50,8 @@ final class ReferralUserService {
             UpdateReferralUser(appUserId: self.appUserId,
                                isPremium: isPremium,
                                firstSeenAt: nil,
-                               lastSeenAt: nil)
+                               lastSeenAt: nil,
+                               metadata: nil)
         )
     }
     
@@ -60,7 +61,8 @@ final class ReferralUserService {
             UpdateReferralUser(appUserId: self.appUserId,
                                isPremium: nil,
                                firstSeenAt: firstSeenAt,
-                               lastSeenAt: nil)
+                               lastSeenAt: nil,
+                               metadata: nil)
         )
     }
     
@@ -70,7 +72,8 @@ final class ReferralUserService {
             UpdateReferralUser(appUserId: self.appUserId,
                                isPremium: nil,
                                firstSeenAt: nil,
-                               lastSeenAt: lastSeenAt)
+                               lastSeenAt: lastSeenAt,
+                               metadata: nil)
         )
     }
     
@@ -125,7 +128,7 @@ final class ReferralUserService {
                 }
                 else {
                     let updateReferralUser = self.pendingUpdateReferralUser
-                    let insertReferralUser = updateReferralUser?.asInsertReferralUser ?? InsertReferralUser(appUserId: self.appUserId, isPremium: nil, firstSeenAt: nil, lastSeenAt: nil)
+                    let insertReferralUser = updateReferralUser?.asInsertReferralUser ?? InsertReferralUser(appUserId: self.appUserId, isPremium: nil, firstSeenAt: nil, lastSeenAt: nil, metadata: nil)
                     let referralUser = try await self.referralUserProvider.create(referralUser: insertReferralUser,
                                                                                   projectKey: self.projectKey)
                     self.resetUpdateReferralUser(with: updateReferralUser)

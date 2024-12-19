@@ -17,7 +17,7 @@ struct UpdateReferralUser: Codable, Hashable {
     let isPremium: Bool?
     let firstSeenAt: Date?
     let lastSeenAt: Date?
-//    let metadata: Any?
+    let metadata: Metadata?
 }
 
 extension UpdateReferralUser {
@@ -27,7 +27,8 @@ extension UpdateReferralUser {
             appUserId: self.appUserId,
             isPremium: isPremium,
             firstSeenAt: self.firstSeenAt,
-            lastSeenAt: self.lastSeenAt
+            lastSeenAt: self.lastSeenAt,
+            metadata: self.metadata
         )
     }
     
@@ -36,7 +37,8 @@ extension UpdateReferralUser {
             appUserId: self.appUserId,
             isPremium: self.isPremium,
             firstSeenAt: firstSeenAt,
-            lastSeenAt: self.lastSeenAt
+            lastSeenAt: self.lastSeenAt,
+            metadata: self.metadata
         )
     }
     
@@ -45,7 +47,8 @@ extension UpdateReferralUser {
             appUserId: self.appUserId,
             isPremium: self.isPremium,
             firstSeenAt: self.firstSeenAt,
-            lastSeenAt: lastSeenAt
+            lastSeenAt: lastSeenAt,
+            metadata: self.metadata
         )
     }
 }
@@ -57,7 +60,8 @@ extension UpdateReferralUser {
             appUserId: self.appUserId,
             isPremium: self.isPremium,
             firstSeenAt: self.firstSeenAt,
-            lastSeenAt: self.lastSeenAt
+            lastSeenAt: self.lastSeenAt,
+            metadata: self.metadata
         )
     }
 }

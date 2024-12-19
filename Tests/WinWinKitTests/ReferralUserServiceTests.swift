@@ -39,6 +39,7 @@ import Testing
                                          isPremium: false,
                                          firstSeenAt: nil,
                                          lastSeenAt: nil,
+                                         metadata: nil,
                                          program: nil,
                                          rewards: ReferralUser.Rewards(basic: [], credit: []))
         referralUserCache.referralUser = referralUser1
@@ -48,6 +49,7 @@ import Testing
                                          isPremium: false,
                                          firstSeenAt: nil,
                                          lastSeenAt: nil,
+                                         metadata: nil,
                                          program: nil,
                                          rewards: ReferralUser.Rewards(basic: [], credit: []))
         referralUserCache.referralUser = referralUser2

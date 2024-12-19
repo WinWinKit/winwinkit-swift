@@ -18,6 +18,7 @@ enum MockReferralUser {
                                                    isPremium: nil,
                                                    firstSeenAt: nil,
                                                    lastSeenAt: nil,
+                                                   metadata: nil,
                                                    program: nil,
                                                    rewards: ReferralUser.Rewards(basic: [],
                                                                                  credit: []))
