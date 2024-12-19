@@ -83,15 +83,19 @@ final class ReferralUserService {
         if let delegate,
            !delegate.referralUserServiceCanPerformNextRefresh(self) {
             self.shouldPullOnNextRefresh = self.shouldPullOnNextRefresh || shouldPull
+            Logger.debug("ReferralUserService: Refresh not allowed")
             return
         }
         
         if self.refreshingTask != nil {
             self.shouldPullOnNextRefresh = self.shouldPullOnNextRefresh || shouldPull
+            Logger.debug("ReferralUserService: Refresh delayed due to already refreshing")
             return
         }
         
         self.refreshingTask = Task { @MainActor in
+            
+            Logger.debug("ReferralUserService: Refresh will start")
             
             self.delegate?.referralUserService(self, isRefreshingChanged: true)
             
@@ -100,12 +104,14 @@ final class ReferralUserService {
             do {
                 if !self.hasRefreshedOnce || self.shouldPullOnNextRefresh || shouldPull,
                    let referralUser = try await self.referralUserProvider.fetch(appUserId: self.appUserId, projectKey: self.projectKey) {
+                    Logger.debug("ReferralUserService: Refresh did fetch referral user")
                     self.cacheReferralUser(referralUser)
                     if let updateReferralUser = self.pendingUpdateReferralUser {
                         let updatedReferralUser = try await self.referralUserProvider.update(referralUser: updateReferralUser,
                                                                                              projectKey: self.projectKey)
                         self.resetUpdateReferralUser(with: updateReferralUser)
                         self.cacheReferralUser(updatedReferralUser)
+                        Logger.debug("ReferralUserService: Refresh did update referral user")
                     }
                 }
                 else if self.cachedReferralUser != nil {
@@ -114,6 +120,7 @@ final class ReferralUserService {
                                                                                              projectKey: self.projectKey)
                         self.resetUpdateReferralUser(with: updateReferralUser)
                         self.cacheReferralUser(updatedReferralUser)
+                        Logger.debug("ReferralUserService: Refresh did update referral user")
                     }
                 }
                 else {
@@ -123,13 +130,17 @@ final class ReferralUserService {
                                                                                   projectKey: self.projectKey)
                     self.resetUpdateReferralUser(with: updateReferralUser)
                     self.cacheReferralUser(referralUser)
+                    Logger.debug("ReferralUserService: Refresh did create referral user")
                 }
                 
                 self.hasRefreshedOnce = true
                 
                 completedSuccessfully = true
+                
+                Logger.debug("ReferralUserService: Refresh did finish")
             }
             catch {
+                Logger.debug("ReferralUserService: Refresh did fail")
                 Logger.error("Failed to refresh referral user: \(String(describing: error))")
             }
             
@@ -137,6 +148,7 @@ final class ReferralUserService {
             self.delegate?.referralUserService(self, isRefreshingChanged: false)
             
             if completedSuccessfully && self.shouldPullOnNextRefresh || self.pendingUpdateReferralUser != nil {
+                Logger.debug("ReferralUserService: Refresh will start again")
                 self.shouldPullOnNextRefresh = false
                 self.refresh()
             }
