@@ -249,7 +249,7 @@ public final class WinWinKit {
     
     ///
     /// A flag controlling whether `lastSeenAt` should be auto-updated or not.
-    /// Set to `false` if you do not want user's `lastSeenAt` property be auto-updated at initialization.
+    /// Set to `false` **before** calling `set(appUserId:)` if you do not want user's `lastSeenAt` property be auto-updated at initialization.
     /// Additionally, you can always update it by calling `WinWinKit.shared.set(lastSeenAt: <NEW_DATE>)`.
     ///
     public var shouldAutoUpdateLastSeenAt: Bool {
