@@ -165,6 +165,21 @@ final class ReferralUserService {
         }
     }
     
+    func claim(code: String, completion: @escaping (Result<ReferralUser, Error>) -> Void) {
+        Task { @MainActor in
+            do {
+                let referralUser = try await self.referralUserProvider.claim(code: code,
+                                                                             appUserId: self.appUserId,
+                                                                             projectKey: self.projectKey)
+                self.cacheReferralUser(referralUser)
+                completion(.success(referralUser))
+            }
+            catch {
+                completion(.failure(error))
+            }
+        }
+    }
+    
     // MARK: - Private
     
     private var hasRefreshedOnce: Bool = false

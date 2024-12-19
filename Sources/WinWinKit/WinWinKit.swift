@@ -130,6 +130,16 @@ public final class WinWinKit {
         return created
     }
     
+    public func claim(code: String, completion: @escaping (Result<ReferralUser, Error>) -> Void) {
+        guard
+            let referralUserService
+        else {
+            Logger.warning("User identifier `appUserId` must be set before claiming code.")
+            return
+        }
+        referralUserService.claim(code: code, completion: completion)
+    }
+    
     ///
     /// Sets your app's user unique identifier.
     /// - Parameter appUserId: Unique identifier of your app's user.
