@@ -212,6 +212,21 @@ public final class WinWinKit {
     }
     
     ///
+    /// Sets user's metadata.
+    /// - Parameter metadata: Metadata object.
+    ///
+    public func set(metadata: Metadata) {
+        guard
+            let referralUserService
+        else {
+            Logger.warning("User identifier `appUserId` must be set before updating any other user properties.")
+            return
+        }
+        referralUserService.set(metadata: metadata)
+        referralUserService.refresh()
+    }
+    
+    ///
     /// Resets internal state attached to previously set `appUserId`.
     ///
     public func reset() {

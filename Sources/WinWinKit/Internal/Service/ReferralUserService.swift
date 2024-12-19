@@ -77,8 +77,15 @@ final class ReferralUserService {
         )
     }
     
-    func set(metadata: Any?) {
-        // TODO:
+    func set(metadata: Metadata) {
+        self.cacheUpdateReferralUser(
+            self.pendingUpdateReferralUser?.set(metadata: metadata) ??
+            UpdateReferralUser(appUserId: self.appUserId,
+                               isPremium: nil,
+                               firstSeenAt: nil,
+                               lastSeenAt: nil,
+                               metadata: metadata)
+        )
     }
     
     func refresh(shouldPull: Bool = false) {

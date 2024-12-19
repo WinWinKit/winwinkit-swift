@@ -51,6 +51,16 @@ extension UpdateReferralUser {
             metadata: self.metadata
         )
     }
+    
+    func set(metadata: Metadata) -> Self {
+        UpdateReferralUser(
+            appUserId: self.appUserId,
+            isPremium: self.isPremium,
+            firstSeenAt: self.firstSeenAt,
+            lastSeenAt: self.lastSeenAt,
+            metadata: metadata
+        )
+    }
 }
 
 extension UpdateReferralUser {
