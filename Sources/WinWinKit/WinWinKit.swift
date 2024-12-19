@@ -78,6 +78,8 @@ public final class WinWinKit {
             return instance
         }
         
+        Logger.logLevel = logLevel
+        
         let instance = WinWinKit(projectKey: projectKey,
                                  keyValueCache: keyValueCache)
         self.instance = instance
