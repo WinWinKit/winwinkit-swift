@@ -12,4 +12,4 @@
 
 import Logging
 
-let Logger = Logging.Logger(label: "com.winwinkit.logger")
+var Logger = Logging.Logger(label: "com.winwinkit.logger")

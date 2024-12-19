@@ -11,6 +11,7 @@
 //
 
 import Foundation
+import Logging
 
 ///
 /// The entry point for WinWinKit SDK.
@@ -45,39 +46,32 @@ public final class WinWinKit {
     ///
     /// - Parameter projectKey: The project key you wish to use to configure ``WinWinKit``.
     ///
-    /// - Returns: An instance of ``WinWinKit`` object.
-    ///
-    /// ### Example
-    ///
-    /// ```swift
-    /// let winWinKit = WinWinKit.configure(projectKey: "<YOUR_PROJECT_KEY>")
-    /// ```
-    ///
-    @discardableResult
-    public static func configure(projectKey: String) -> WinWinKit {
-        self.configure(projectKey: projectKey,
-                       keyValueCache: UserDefaults.standard)
-    }
-    
-    ///
-    /// Initialize an instance of the WinWinKit SDK.
-    ///
-    /// - Parameter projectKey: The project key you wish to use to configure ``WinWinKit``.
-    ///
     /// - Parameter keyValueCache: The key-value cache where ``WinWinKit`` can store data.
-    /// By default it is set to `UserDefaults.standard`.
+    /// The default value is `UserDefaults.standard`.
     /// You may set any other instance of `UserDefaults`.
     ///
+    /// - Parameter logLevel: The log level.
+    /// The default value is `info`.
+    /// You may want to set it to `debug` for debugging purposes.
+    ///
     /// - Returns: An instance of ``WinWinKit`` object.
     ///
     /// ### Example
     ///
     /// ```swift
-    /// let winWinKit = WinWinKit.configure(projectKey: "<YOUR_PROJECT_KEY>")
+    /// WinWinKit.configure(projectKey: "<YOUR_PROJECT_KEY>")
+    /// ```
+    ///
+    /// ```swift
+    /// WinWinKit.configure(projectKey: "<YOUR_PROJECT_KEY>",
+    ///                     keyValueCache: UserDefaults(suiteName: "<YOUR_APP_GROUP>"),
+    ///                     logLevel: .debug)
     /// ```
     ///
     @discardableResult
-    public static func configure(projectKey: String, keyValueCache: KeyValueCacheType) -> WinWinKit {
+    public static func configure(projectKey: String,
+                                 keyValueCache: KeyValueCacheType = UserDefaults.standard,
+                                 logLevel: Logger.Level = .info) -> WinWinKit {
         
         if let instance {
             Logger.error("WinWinKit has already been configured. Calling `configure` again has no effect.")
