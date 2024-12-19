@@ -39,6 +39,7 @@ extension Encodable {
             try container.encode(dateString)
         })
         encoder.keyEncodingStrategy = .convertToSnakeCase
+        encoder.outputFormatting = .sortedKeys
         return try encoder.encode(self)
     }
 }
