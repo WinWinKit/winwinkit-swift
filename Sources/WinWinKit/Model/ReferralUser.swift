@@ -33,72 +33,180 @@ public struct ReferralUser: Codable, Hashable, Sendable {
         public let rewards: Rewards
         
         public struct Rewards: Codable, Hashable, Sendable {
+            public let sender: Sender
+            public let receiver: Receiver
+            
+            public struct Sender: Codable, Hashable, Sendable {
+                public let basic: [BasicReward]
+                public let credit: [CreditReward]
+                
+                public struct BasicReward: Codable, Hashable, Sendable {
+                    public let key: String
+                    public let description: String?
+                    public let metadata: Metadata?
+                    public let activationConfigurations: ActivationConfigurations
+                    public let deactivationConfigurations: DeactivationConfigurations
+                    
+                    public struct ActivationConfigurations: Codable, Hashable, Sendable {
+                        public let variant: Variant
+                        public let amount: Int
+                        
+                        public enum Variant: String, Codable, Sendable {
+                            case claim
+                            case conversion
+                        }
+                    }
+                    
+                    public struct DeactivationConfigurations: Codable, Hashable, Sendable {
+                        public let variant: Variant
+                        public let duration: Int?
+                        public let period: Period?
+                        
+                        public enum Variant: String, Codable, Hashable, Sendable {
+                            case never
+                            case interval
+                        }
+                        
+                        public enum Period: String, Codable, Hashable, Sendable {
+                            case days
+                            case months
+                            case years
+                        }
+                    }
+                }
+                
+                public struct CreditReward: Codable, Hashable, Sendable {
+                    public let credits: Int
+                    public let key: String
+                    public let description: String?
+                    public let metadata: Metadata?
+                    public let activationConfigurations: ActivationConfigurations
+                    public let deactivationConfigurations: DeactivationConfigurations
+                    
+                    public struct ActivationConfigurations: Codable, Hashable, Sendable {
+                        public let variant: Variant
+                        public let amount: Int
+                        public let limit: Int
+                        
+                        public enum Variant: String, Codable, Sendable {
+                            case claim
+                            case conversion
+                        }
+                    }
+                    
+                    public struct DeactivationConfigurations: Codable, Hashable, Sendable {
+                        public let variant: Variant
+                        public let duration: Int?
+                        public let period: Period?
+                        
+                        public enum Variant: String, Codable, Hashable, Sendable {
+                            case never
+                            case interval
+                        }
+                        
+                        public enum Period: String, Codable, Hashable, Sendable {
+                            case days
+                            case months
+                            case years
+                        }
+                    }
+                }
+            }
+            
+            public struct Receiver: Codable, Hashable, Sendable {
+                public let basic: [BasicReward]
+                public let credit: [CreditReward]
+                
+                public struct BasicReward: Codable, Hashable, Sendable {
+                    public let key: String
+                    public let description: String?
+                    public let metadata: Metadata?
+                    public let activationConfigurations: ActivationConfigurations
+                    public let deactivationConfigurations: DeactivationConfigurations
+                    
+                    public struct ActivationConfigurations: Codable, Hashable, Sendable {
+                        public let variant: Variant
+                        
+                        public enum Variant: String, Codable, Sendable {
+                            case claim
+                            case conversion
+                        }
+                    }
+                    
+                    public struct DeactivationConfigurations: Codable, Hashable, Sendable {
+                        public let variant: Variant
+                        public let duration: Int?
+                        public let period: Period?
+                        
+                        public enum Variant: String, Codable, Hashable, Sendable {
+                            case never
+                            case interval
+                        }
+                        
+                        public enum Period: String, Codable, Hashable, Sendable {
+                            case days
+                            case months
+                            case years
+                        }
+                    }
+                }
+                
+                public struct CreditReward: Codable, Hashable, Sendable {
+                    public let credits: Int
+                    public let key: String
+                    public let description: String?
+                    public let metadata: Metadata?
+                    public let activationConfigurations: ActivationConfigurations
+                    public let deactivationConfigurations: DeactivationConfigurations
+                    
+                    public struct ActivationConfigurations: Codable, Hashable, Sendable {
+                        public let variant: Variant
+                        
+                        public enum Variant: String, Codable, Sendable {
+                            case claim
+                            case conversion
+                        }
+                    }
+                    
+                    public struct DeactivationConfigurations: Codable, Hashable, Sendable {
+                        public let variant: Variant
+                        public let duration: Int?
+                        public let period: Period?
+                        
+                        public enum Variant: String, Codable, Hashable, Sendable {
+                            case never
+                            case interval
+                        }
+                        
+                        public enum Period: String, Codable, Hashable, Sendable {
+                            case days
+                            case months
+                            case years
+                        }
+                    }
+                }
+            }
+        }
+    }
+    
+    public struct Rewards: Codable, Hashable, Sendable {
+        public let active: Active
+        
+        public struct Active: Codable, Hashable, Sendable {
             public let basic: [BasicReward]
             public let credit: [CreditReward]
             
             public struct BasicReward: Codable, Hashable, Sendable {
                 public let key: String
                 public let description: String?
-                public let side: Side
                 public let metadata: Metadata?
-                public let activationConfigurations: ActivationConfigurations
-                public let deactivationConfigurations: DeactivationConfigurations
-                
-                public enum Side: String, Codable, Sendable {
-                    case sender
-                    case receiver
-                }
-                
-                public struct ActivationConfigurations: Codable, Hashable, Sendable {
-                    public let variant: Variant
-                    public let amount: Int
-                    
-                    public enum Variant: String, Codable, Sendable {
-                        case claim
-                        case conversion
-                    }
-                }
-                
-                public struct DeactivationConfigurations: Codable, Hashable, Sendable {
-                    public let variant: Variant
-                    public let duration: Int?
-                    public let period: Period?
-                    
-                    public enum Variant: String, Codable, Hashable, Sendable {
-                        case never
-                        case churn
-                        case interval
-                    }
-                    
-                    public enum Period: String, Codable, Hashable, Sendable {
-                        case days
-                        case months
-                        case years
-                    }
-                }
             }
             
             public struct CreditReward: Codable, Hashable, Sendable {
                 public let key: String
                 public let description: String?
+                public let metadata: Metadata?
             }
-        }
-    }
-    
-    public struct Rewards: Codable, Hashable, Sendable {
-        public let basic: [BasicReward]
-        public let credit: [CreditReward]
-        
-        public struct BasicReward: Codable, Hashable, Sendable {
-            public let key: String
-            public let description: String?
-            public let metadata: Metadata?
-        }
-        
-        public struct CreditReward: Codable, Hashable, Sendable {
-            public let key: String
-            public let description: String?
-            public let metadata: Metadata?
         }
     }
     

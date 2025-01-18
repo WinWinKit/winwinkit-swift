@@ -29,8 +29,10 @@ import Testing
                 },
                 "program": null,
                 "rewards": {
-                    "basic": [],
-                    "credit": [],
+                    "active": {
+                        "basic": [],
+                        "credit": [],
+                    }
                 },
                 "stats": {
                     "claims": 10,
