@@ -31,6 +31,11 @@ import Testing
                 "rewards": {
                     "basic": [],
                     "credit": [],
+                },
+                "stats": {
+                    "claims": 10,
+                    "conversions": 8,
+                    "churns": 2
                 }
             }
         """
@@ -43,5 +48,6 @@ import Testing
         #expect(referralUser.lastSeenAt == Date(timeIntervalSince1970: 1733483759))
         #expect(referralUser.metadata == ["1": 123])
         // TODO: verify program and rewards
+        #expect(referralUser.stats == ReferralUser.Stats(claims: 10, conversions: 8, churns: 2))
     }
 }

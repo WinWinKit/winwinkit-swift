@@ -41,7 +41,11 @@ import Testing
                                          lastSeenAt: nil,
                                          metadata: nil,
                                          program: nil,
-                                         rewards: ReferralUser.Rewards(basic: [], credit: []))
+                                         rewards: ReferralUser.Rewards(basic: [],
+                                                                       credit: []),
+                                         stats: ReferralUser.Stats(claims: 10,
+                                                                   conversions: 8,
+                                                                   churns: 2))
         referralUserCache.referralUser = referralUser1
         #expect(service.cachedReferralUser == referralUser1)
         let referralUser2 = ReferralUser(appUserId: "app-user-id-2",
@@ -51,7 +55,10 @@ import Testing
                                          lastSeenAt: nil,
                                          metadata: nil,
                                          program: nil,
-                                         rewards: ReferralUser.Rewards(basic: [], credit: []))
+                                         rewards: ReferralUser.Rewards(basic: [], credit: []),
+                                         stats: ReferralUser.Stats(claims: 10,
+                                                                   conversions: 8,
+                                                                   churns: 2))
         referralUserCache.referralUser = referralUser2
         #expect(service.cachedReferralUser == nil)
     }

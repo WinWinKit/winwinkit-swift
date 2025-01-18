@@ -21,5 +21,8 @@ enum MockReferralUser {
                                                    metadata: nil,
                                                    program: nil,
                                                    rewards: ReferralUser.Rewards(basic: [],
-                                                                                 credit: []))
+                                                                                 credit: []),
+                                                   stats: ReferralUser.Stats(claims: 10,
+                                                                             conversions: 8,
+                                                                             churns: 2))
 }
