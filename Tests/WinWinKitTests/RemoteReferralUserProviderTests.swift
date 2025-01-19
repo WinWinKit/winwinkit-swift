@@ -35,4 +35,28 @@ import Testing
         let result = try await provider.fetch(appUserId: "app-user-id-1", projectKey: "project-key-1")
         #expect(result == nil)
     }
+    
+    @Test func fetchUnauthorized() async throws {
+        let baseEndpointURL = URL(string: "https://api.winwinkit.com")!
+        let remoteRequestDispatcher = MockRemoteRequestDispatcher(referralUserToReturn: nil,
+                                                                  errorToThrow: RemoteRequestDispatcherError.unauthorized)
+        let provider = RemoteReferralUserProvider(baseEndpointURL: baseEndpointURL,
+                                                  remoteRequestDispatcher: remoteRequestDispatcher)
+        
+        await #expect(throws: RemoteRequestDispatcherError.unauthorized) {
+            try await provider.fetch(appUserId: "app-user-id-1", projectKey: "project-key-1")
+        }
+    }
+    
+    @Test func fetchUnknown() async throws {
+        let baseEndpointURL = URL(string: "https://api.winwinkit.com")!
+        let remoteRequestDispatcher = MockRemoteRequestDispatcher(referralUserToReturn: nil,
+                                                                  errorToThrow: RemoteRequestDispatcherError.unknown)
+        let provider = RemoteReferralUserProvider(baseEndpointURL: baseEndpointURL,
+                                                  remoteRequestDispatcher: remoteRequestDispatcher)
+        
+        await #expect(throws: RemoteRequestDispatcherError.unknown) {
+            try await provider.fetch(appUserId: "app-user-id-1", projectKey: "project-key-1")
+        }
+    }
 }

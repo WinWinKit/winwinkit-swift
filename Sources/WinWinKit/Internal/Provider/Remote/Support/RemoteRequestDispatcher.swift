@@ -14,6 +14,7 @@ import Foundation
 
 enum RemoteRequestDispatcherError: Error {
     case notFound
+    case unauthorized
     case unknown
 }
 
@@ -48,6 +49,8 @@ extension RemoteRequestDispatcherError {
         switch statusCode {
         case 404:
             self = .notFound
+        case 401:
+            self = .unauthorized
         default:
             self = .unknown
         }
