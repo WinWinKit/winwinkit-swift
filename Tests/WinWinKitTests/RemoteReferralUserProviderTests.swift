@@ -18,7 +18,7 @@ import Testing
     
     @Test func fetchSuccess() async throws {
         let baseEndpointURL = URL(string: "https://api.winwinkit.com")!
-        let remoteRequestDispatcher = MockRemoteRequestDispatcher(referralUserToReturn: MockReferralUser.referralUser1,
+        let remoteRequestDispatcher = MockRemoteRequestDispatcher(referralUserToReturn: MockReferralUser.Full.object,
                                                                   errorToThrow: nil)
         let provider = RemoteReferralUserProvider(baseEndpointURL: baseEndpointURL,
                                                   remoteRequestDispatcher: remoteRequestDispatcher)
