@@ -59,7 +59,7 @@ import Testing
         #expect(service.delegate == nil)
     }
     
-    @Test func createReferralUserFailsDueToNoData() async throws {
+    @Test func refreshFailsWithNoData() async throws {
         let referralUserCache = MockReferralUserCache()
         let referralUserProvider = MockReferralUserProvider()
         let service = ReferralUserService(appUserId: MockReferralUser.Full.object.appUserId,
@@ -89,7 +89,7 @@ import Testing
         }
     }
     
-    @Test func createReferralUserFailsDueToNoDataAndHasNoFollowingRefresh() async throws {
+    @Test func refreshFailsWithNoDataAndHasNoFollowingRefresh() async throws {
         let referralUserCache = MockReferralUserCache()
         let referralUserProvider = MockReferralUserProvider()
         let service = ReferralUserService(appUserId: MockReferralUser.Full.object.appUserId,
@@ -120,7 +120,7 @@ import Testing
         }
     }
     
-    @Test func createReferralUserFailsDueToUnauthorized() async throws {
+    @Test func refreshFailsWithUnauthorized() async throws {
         let referralUserCache = MockReferralUserCache()
         let referralUserProvider = MockReferralUserProvider()
         referralUserProvider.errorToThrowOnFetch = RemoteRequestDispatcherError.unauthorized
@@ -150,7 +150,7 @@ import Testing
         }
     }
     
-    @Test func createReferralUserFailsAndResetOnUnauthorized() async throws {
+    @Test func refreshFailsAndResetsCacheWithUnauthorized() async throws {
         let referralUserCache = MockReferralUserCache()
         referralUserCache.referralUser = MockReferralUser.Full.object
         let referralUserProvider = MockReferralUserProvider()
