@@ -157,6 +157,11 @@ final class ReferralUserService {
                 Logger.debug("ReferralUserService: Refresh did fail")
                 Logger.error("Failed to refresh referral user: \(String(describing: error))")
                 
+                if let dispatcherError = error as? RemoteRequestDispatcherError,
+                   dispatcherError == .unauthorized {
+                    self.referralUserCache.reset()
+                }
+                
                 self.shouldSuspendIndefinitely = true // TODO: except network connection issues
             }
             

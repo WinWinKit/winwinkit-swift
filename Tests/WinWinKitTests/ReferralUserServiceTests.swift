@@ -150,6 +150,37 @@ import Testing
         }
     }
     
+    @Test func createReferralUserFailsAndResetOnUnauthorized() async throws {
+        let referralUserCache = MockReferralUserCache()
+        referralUserCache.referralUser = MockReferralUser.Full.object
+        let referralUserProvider = MockReferralUserProvider()
+        referralUserProvider.errorToThrowOnFetch = RemoteRequestDispatcherError.unauthorized
+        let service = ReferralUserService(appUserId: MockReferralUser.Full.object.appUserId,
+                                          projectKey: MockConstants.projectKey,
+                                          referralUserCache: referralUserCache,
+                                          referralUserProvider: referralUserProvider)
+        let delegate = MockReferralUserServiceDelegate()
+        service.delegate = delegate
+        
+        try await confirmation("stops indefinetely") { c in
+            delegate.isRefreshingChangedCallback = { isRefreshing in
+                if !isRefreshing {
+                    c.confirm()
+                    
+                    #expect(referralUserProvider.fetchMethodCallsCounter == 1)
+                    #expect(referralUserProvider.createMethodCallsCounter == 0)
+                    #expect(referralUserProvider.updateMethodCallsCounter == 0)
+                    #expect(referralUserProvider.claimMethodCallsCounter == 0)
+                    
+                    #expect(service.cachedReferralUser == nil)
+                }
+            }
+            service.refresh()
+            
+            try await Task.sleep(for: .milliseconds(50))
+        }
+    }
+    
     @Test func createAndUpdateReferralUser() {
     }
     
