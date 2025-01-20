@@ -59,8 +59,95 @@ import Testing
         #expect(service.delegate == nil)
     }
     
-    @Test func createReferralUser() {
+    @Test func createReferralUserFailsDueToNoData() async throws {
+        let referralUserCache = MockReferralUserCache()
+        let referralUserProvider = MockReferralUserProvider()
+        let service = ReferralUserService(appUserId: MockReferralUser.Full.object.appUserId,
+                                          projectKey: MockConstants.projectKey,
+                                          referralUserCache: referralUserCache,
+                                          referralUserProvider: referralUserProvider)
+        let delegate = MockReferralUserServiceDelegate()
+        service.delegate = delegate
         
+        try await confirmation("fails to create") { c in
+            delegate.isRefreshingChangedCallback = { isRefreshing in
+                if !isRefreshing {
+                    c.confirm()
+                    
+                    #expect(referralUserProvider.fetchMethodCallsCounter == 1)
+                    #expect(referralUserProvider.createMethodCallsCounter == 1)
+                    #expect(referralUserProvider.updateMethodCallsCounter == 0)
+                    #expect(referralUserProvider.claimMethodCallsCounter == 0)
+                    
+                    #expect(service.cachedReferralUser == nil)
+                }
+            }
+            
+            service.refresh()
+            
+            try await Task.sleep(for: .milliseconds(50))
+        }
+    }
+    
+    @Test func createReferralUserFailsDueToNoDataAndHasNoFollowingRefresh() async throws {
+        let referralUserCache = MockReferralUserCache()
+        let referralUserProvider = MockReferralUserProvider()
+        let service = ReferralUserService(appUserId: MockReferralUser.Full.object.appUserId,
+                                          projectKey: MockConstants.projectKey,
+                                          referralUserCache: referralUserCache,
+                                          referralUserProvider: referralUserProvider)
+        let delegate = MockReferralUserServiceDelegate()
+        service.delegate = delegate
+        
+        try await confirmation("fails to create") { c in
+            delegate.isRefreshingChangedCallback = { isRefreshing in
+                if !isRefreshing {
+                    c.confirm()
+                    
+                    #expect(referralUserProvider.fetchMethodCallsCounter == 1)
+                    #expect(referralUserProvider.createMethodCallsCounter == 1)
+                    #expect(referralUserProvider.updateMethodCallsCounter == 0)
+                    #expect(referralUserProvider.claimMethodCallsCounter == 0)
+                    
+                    #expect(service.cachedReferralUser == nil)
+                }
+            }
+            service.refresh()
+            
+            service.set(isPremium: true)
+            
+            try await Task.sleep(for: .milliseconds(50))
+        }
+    }
+    
+    @Test func createReferralUserFailsDueToUnauthorized() async throws {
+        let referralUserCache = MockReferralUserCache()
+        let referralUserProvider = MockReferralUserProvider()
+        referralUserProvider.errorToThrowOnFetch = RemoteRequestDispatcherError.unauthorized
+        let service = ReferralUserService(appUserId: MockReferralUser.Full.object.appUserId,
+                                          projectKey: MockConstants.projectKey,
+                                          referralUserCache: referralUserCache,
+                                          referralUserProvider: referralUserProvider)
+        let delegate = MockReferralUserServiceDelegate()
+        service.delegate = delegate
+        
+        try await confirmation("stops indefinetely") { c in
+            delegate.isRefreshingChangedCallback = { isRefreshing in
+                if !isRefreshing {
+                    c.confirm()
+                    
+                    #expect(referralUserProvider.fetchMethodCallsCounter == 1)
+                    #expect(referralUserProvider.createMethodCallsCounter == 0)
+                    #expect(referralUserProvider.updateMethodCallsCounter == 0)
+                    #expect(referralUserProvider.claimMethodCallsCounter == 0)
+                    
+                    #expect(service.cachedReferralUser == nil)
+                }
+            }
+            service.refresh()
+            
+            try await Task.sleep(for: .milliseconds(50))
+        }
     }
     
     @Test func createAndUpdateReferralUser() {

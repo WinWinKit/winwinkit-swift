@@ -23,6 +23,8 @@ final class MockReferralUserServiceDelegate: ReferralUserServiceDelegate {
     var receivedUpdatedReferralUserMethodCallsCounter: Int = 0
     var isRefreshingChangedMethodCallsCounter: Int = 0
     
+    var isRefreshingChangedCallback: ((Bool) -> Void)?
+    
     func referralUserServiceCanPerformNextRefresh(_ service: ReferralUserService) -> Bool {
         self.canPerformNextRequestMethodCallsCounter += 1
         return self.canPerformNextRefresh
@@ -36,5 +38,6 @@ final class MockReferralUserServiceDelegate: ReferralUserServiceDelegate {
     func referralUserService(_ service: ReferralUserService, isRefreshingChanged isRefreshing: Bool) {
         self.isRefreshing = isRefreshing
         self.isRefreshingChangedMethodCallsCounter += 1
+        self.isRefreshingChangedCallback?(isRefreshing)
     }
 }

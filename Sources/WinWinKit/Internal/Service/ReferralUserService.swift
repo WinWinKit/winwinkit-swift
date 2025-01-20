@@ -90,6 +90,10 @@ final class ReferralUserService {
     
     func refresh(shouldPull: Bool = false) {
         
+        if self.shouldSuspendIndefinitely {
+            return
+        }
+        
         if let delegate,
            !delegate.referralUserServiceCanPerformNextRefresh(self) {
             self.shouldPullOnNextRefresh = self.shouldPullOnNextRefresh || shouldPull
@@ -152,6 +156,8 @@ final class ReferralUserService {
             catch {
                 Logger.debug("ReferralUserService: Refresh did fail")
                 Logger.error("Failed to refresh referral user: \(String(describing: error))")
+                
+                self.shouldSuspendIndefinitely = true // TODO: except network connection issues
             }
             
             self.refreshingTask = nil
@@ -181,6 +187,8 @@ final class ReferralUserService {
     }
     
     // MARK: - Private
+    
+    private var shouldSuspendIndefinitely: Bool = false
     
     private var hasRefreshedOnce: Bool = false
     

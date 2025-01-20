@@ -19,29 +19,59 @@ enum MockReferralUserProviderError: Error {
 
 final class MockReferralUserProvider: ReferralUserProviderType {
 
-    var referralUserToReturn: ReferralUser? = nil
+    var referralUserToReturnOnFetch: ReferralUser? = nil
+    var errorToThrowOnFetch: Error? = nil
+    var fetchMethodCallsCounter: Int = 0
+    
+    var referralUserToReturnOnCreate: ReferralUser? = nil
+    var errorToThrowOnCreate: Error? = nil
+    var createMethodCallsCounter: Int = 0
+    
+    var referralUserToReturnOnUpdate: ReferralUser? = nil
+    var errorToThrowOnUpdate: Error? = nil
+    var updateMethodCallsCounter: Int = 0
+    
+    var referralUserToReturnOnClaim: ReferralUser? = nil
+    var errorToThrowOnClaim: Error? = nil
+    var claimMethodCallsCounter: Int = 0
     
     func fetch(appUserId: String, projectKey: String) async throws -> ReferralUser? {
-        self.referralUserToReturn
+        self.fetchMethodCallsCounter += 1
+        if let errorToThrowOnFetch {
+            throw errorToThrowOnFetch
+        }
+        return self.referralUserToReturnOnFetch
     }
     
     func create(referralUser: InsertReferralUser, projectKey: String) async throws -> ReferralUser {
-        if let referralUserToReturn {
-            return referralUserToReturn
+        self.createMethodCallsCounter += 1
+        if let errorToThrowOnCreate {
+            throw errorToThrowOnCreate
+        }
+        if let referralUserToReturnOnCreate {
+            return referralUserToReturnOnCreate
         }
         throw MockReferralUserProviderError.noReferralUserToReturn
     }
     
     func update(referralUser: UpdateReferralUser, projectKey: String) async throws -> ReferralUser {
-        if let referralUserToReturn {
-            return referralUserToReturn
+        self.updateMethodCallsCounter += 1
+        if let errorToThrowOnUpdate {
+            throw errorToThrowOnUpdate
+        }
+        if let referralUserToReturnOnUpdate {
+            return referralUserToReturnOnUpdate
         }
         throw MockReferralUserProviderError.noReferralUserToReturn
     }
     
     func claim(code: String, appUserId: String, projectKey: String) async throws -> ReferralUser {
-        if let referralUserToReturn {
-            return referralUserToReturn
+        self.claimMethodCallsCounter += 1
+        if let errorToThrowOnClaim {
+            throw errorToThrowOnClaim
+        }
+        if let referralUserToReturnOnClaim {
+            return referralUserToReturnOnClaim
         }
         throw MockReferralUserProviderError.noReferralUserToReturn
     }
