@@ -18,8 +18,8 @@ import Testing
     @Test func initilization() {
         let referralUserCache = MockReferralUserCache()
         let referralUserProvider = MockReferralUserProvider()
-        let service = ReferralUserService(appUserId: "app-user-id-1",
-                                          projectKey: "project-key-1",
+        let service = ReferralUserService(appUserId: MockReferralUser.Full.object.appUserId,
+                                          projectKey: MockConstants.projectKey,
                                           referralUserCache: referralUserCache,
                                           referralUserProvider: referralUserProvider)
         #expect(service.cachedReferralUser == nil)
@@ -29,46 +29,22 @@ import Testing
     @Test func cachedReferralUser() {
         let referralUserCache = MockReferralUserCache()
         let referralUserProvider = MockReferralUserProvider()
-        let service = ReferralUserService(appUserId: "app-user-id-1",
-                                          projectKey: "project-key-1",
+        let service = ReferralUserService(appUserId: MockReferralUser.Full.object.appUserId,
+                                          projectKey: MockConstants.projectKey,
                                           referralUserCache: referralUserCache,
                                           referralUserProvider: referralUserProvider)
         #expect(service.cachedReferralUser == nil)
-        let referralUser1 = ReferralUser(appUserId: "app-user-id-1",
-                                         code: nil,
-                                         isPremium: false,
-                                         firstSeenAt: nil,
-                                         lastSeenAt: nil,
-                                         metadata: nil,
-                                         program: nil,
-                                         rewards: ReferralUser.Rewards(active: ReferralUser.Rewards.Active(basic: [],
-                                                                                                           credit: [])),
-                                         stats: ReferralUser.Stats(claims: 10,
-                                                                   conversions: 8,
-                                                                   churns: 2))
-        referralUserCache.referralUser = referralUser1
-        #expect(service.cachedReferralUser == referralUser1)
-        let referralUser2 = ReferralUser(appUserId: "app-user-id-2",
-                                         code: nil,
-                                         isPremium: false,
-                                         firstSeenAt: nil,
-                                         lastSeenAt: nil,
-                                         metadata: nil,
-                                         program: nil,
-                                         rewards: ReferralUser.Rewards(active: ReferralUser.Rewards.Active(basic: [],
-                                                                                                           credit: [])),
-                                         stats: ReferralUser.Stats(claims: 10,
-                                                                   conversions: 8,
-                                                                   churns: 2))
-        referralUserCache.referralUser = referralUser2
+        referralUserCache.referralUser = MockReferralUser.Full.object
+        #expect(service.cachedReferralUser == MockReferralUser.Full.object)
+        referralUserCache.referralUser = MockReferralUser.Empty.object
         #expect(service.cachedReferralUser == nil)
     }
     
     @Test func delegate() {
         let referralUserCache = MockReferralUserCache()
         let referralUserProvider = MockReferralUserProvider()
-        let service = ReferralUserService(appUserId: "app-user-id-1",
-                                          projectKey: "project-key-1",
+        let service = ReferralUserService(appUserId: MockReferralUser.Full.object.appUserId,
+                                          projectKey: MockConstants.projectKey,
                                           referralUserCache: referralUserCache,
                                           referralUserProvider: referralUserProvider)
         #expect(service.delegate == nil)

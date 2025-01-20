@@ -74,9 +74,10 @@ enum MockReferralUser {
             metadata: ["1": 123],
             program: MockReferralProgram.Full.object,
             rewards: ReferralUser.Rewards(
-                active: ReferralUser.Rewards.Active(basic: [],
-                                                    credit: []
-                                                   )
+                active: ReferralUser.Rewards.Active(
+                    basic: [],
+                    credit: []
+                )
             ),
             stats: ReferralUser.Stats(
                 claims: 10,
@@ -110,6 +111,30 @@ enum MockReferralUser {
             }
             """
             .data(using: .utf8)!
+    }
+    
+    enum Empty {
+        
+        static let object: ReferralUser = .init(
+            appUserId: "app-user-id-2",
+            code: nil,
+            isPremium: nil,
+            firstSeenAt: nil,
+            lastSeenAt: nil,
+            metadata: nil,
+            program: nil,
+            rewards: ReferralUser.Rewards(
+                active: ReferralUser.Rewards.Active(
+                    basic: [],
+                    credit: []
+                )
+            ),
+            stats: ReferralUser.Stats(
+                claims: 0,
+                conversions: 0,
+                churns: 0
+            )
+        )
     }
 }
 
