@@ -15,11 +15,14 @@ import Testing
 
 @Suite struct RemoteReferralUserProviderTests {
     
+    // MARK: - fetch
+    
     @Test func fetchSuccess() async throws {
         let remoteRequestDispatcher = MockRemoteRequestDispatcher(referralUserToReturn: MockReferralUser.Full.object,
                                                                   errorToThrow: nil)
         let provider = RemoteReferralUserProvider(baseEndpointURL: MockConstants.baseEndpointURL,
                                                   remoteRequestDispatcher: remoteRequestDispatcher)
+        
         let result = try await provider.fetch(appUserId: MockReferralUser.Full.object.appUserId,
                                               projectKey: MockConstants.projectKey)
         #expect(result == MockReferralUser.Full.object)
@@ -30,6 +33,7 @@ import Testing
                                                                   errorToThrow: nil)
         let provider = RemoteReferralUserProvider(baseEndpointURL: MockConstants.baseEndpointURL,
                                                   remoteRequestDispatcher: remoteRequestDispatcher)
+        
         let result = try await provider.fetch(appUserId: MockReferralUser.Full.object.appUserId,
                                               projectKey: MockConstants.projectKey)
         #expect(result == nil)
@@ -40,6 +44,7 @@ import Testing
                                                                   errorToThrow: RemoteRequestDispatcherError.notFound)
         let provider = RemoteReferralUserProvider(baseEndpointURL: MockConstants.baseEndpointURL,
                                                   remoteRequestDispatcher: remoteRequestDispatcher)
+        
         let result = try await provider.fetch(appUserId: MockReferralUser.Full.object.appUserId,
                                               projectKey: MockConstants.projectKey)
         #expect(result == nil)
@@ -66,6 +71,67 @@ import Testing
         await #expect(throws: RemoteRequestDispatcherError.unknown) {
             try await provider.fetch(appUserId: MockReferralUser.Full.object.appUserId,
                                      projectKey: MockConstants.projectKey)
+        }
+    }
+    
+    // MARK: - create
+    
+    @Test func createSuccess() async throws {
+        let remoteRequestDispatcher = MockRemoteRequestDispatcher(referralUserToReturn: MockReferralUser.Full.object,
+                                                                  errorToThrow: nil)
+        let provider = RemoteReferralUserProvider(baseEndpointURL: MockConstants.baseEndpointURL,
+                                                  remoteRequestDispatcher: remoteRequestDispatcher)
+
+        let result = try await provider.create(referralUser: MockInsertReferralUser.Full.object,
+                                               projectKey: MockConstants.projectKey)
+        #expect(result == MockReferralUser.Full.object)
+    }
+    
+    @Test func createNil() async throws {
+        let remoteRequestDispatcher = MockRemoteRequestDispatcher(referralUserToReturn: nil,
+                                                                  errorToThrow: nil)
+        let provider = RemoteReferralUserProvider(baseEndpointURL: MockConstants.baseEndpointURL,
+                                                  remoteRequestDispatcher: remoteRequestDispatcher)
+        
+        await #expect(throws: RemoteReferralUserProviderError.receivedNoDataOnCreate) {
+            try await provider.create(referralUser: MockInsertReferralUser.Full.object,
+                                      projectKey: MockConstants.projectKey)
+        }
+    }
+    
+    @Test func createNotFound() async throws {
+        let remoteRequestDispatcher = MockRemoteRequestDispatcher(referralUserToReturn: MockReferralUser.Full.object,
+                                                                  errorToThrow: RemoteRequestDispatcherError.notFound)
+        let provider = RemoteReferralUserProvider(baseEndpointURL: MockConstants.baseEndpointURL,
+                                                  remoteRequestDispatcher: remoteRequestDispatcher)
+        
+        await #expect(throws: RemoteRequestDispatcherError.notFound) {
+            try await provider.create(referralUser: MockInsertReferralUser.Full.object,
+                                      projectKey: MockConstants.projectKey)
+        }
+    }
+    
+    @Test func createUnauthorized() async throws {
+        let remoteRequestDispatcher = MockRemoteRequestDispatcher(referralUserToReturn: MockReferralUser.Full.object,
+                                                                  errorToThrow: RemoteRequestDispatcherError.unauthorized)
+        let provider = RemoteReferralUserProvider(baseEndpointURL: MockConstants.baseEndpointURL,
+                                                  remoteRequestDispatcher: remoteRequestDispatcher)
+        
+        await #expect(throws: RemoteRequestDispatcherError.unauthorized) {
+            try await provider.create(referralUser: MockInsertReferralUser.Full.object,
+                                      projectKey: MockConstants.projectKey)
+        }
+    }
+    
+    @Test func createUnknown() async throws {
+        let remoteRequestDispatcher = MockRemoteRequestDispatcher(referralUserToReturn: MockReferralUser.Full.object,
+                                                                  errorToThrow: RemoteRequestDispatcherError.unknown)
+        let provider = RemoteReferralUserProvider(baseEndpointURL: MockConstants.baseEndpointURL,
+                                                  remoteRequestDispatcher: remoteRequestDispatcher)
+        
+        await #expect(throws: RemoteRequestDispatcherError.unknown) {
+            try await provider.create(referralUser: MockInsertReferralUser.Full.object,
+                                      projectKey: MockConstants.projectKey)
         }
     }
 }

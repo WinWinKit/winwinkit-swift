@@ -17,7 +17,7 @@ enum MockReferralProgram {
     
     enum Full {
         
-        static let object = ReferralUser.ReferralProgram(
+        static let object: ReferralUser.ReferralProgram = .init(
             id: "j34me52cznsa2wt6xwbgfimp",
             name: "Program #1",
             description: nil,
@@ -110,5 +110,19 @@ enum MockReferralUser {
             }
             """
             .data(using: .utf8)!
+    }
+}
+
+enum MockInsertReferralUser {
+    
+    enum Full {
+        
+        static let object: InsertReferralUser = .init(
+            appUserId: MockReferralUser.Full.object.appUserId,
+            isPremium: MockReferralUser.Full.object.isPremium,
+            firstSeenAt: MockReferralUser.Full.object.firstSeenAt,
+            lastSeenAt: MockReferralUser.Full.object.lastSeenAt,
+            metadata: MockReferralUser.Full.object.metadata
+        )
     }
 }
