@@ -10,11 +10,11 @@
 //  Created by Oleh Stasula on 21/01/2025.
 //
 
-struct ReferralClaimCodeData {
+struct ReferralClaimCodeResult {
     let referralUser: ReferralUser
-    let referralGrantedRewards: ReferralGrantedRewards
+    let grantedRewards: ReferralGrantedRewards
 }
 
 protocol ReferralClaimCodeProviderType {
-    func claim(code: String, appUserId: String, projectKey: String) async throws -> ReferralClaimCodeData
+    func claim(code: String, appUserId: String, projectKey: String) async throws -> ReferralClaimCodeResult
 }

@@ -23,7 +23,7 @@ struct RemoteReferralClaimCodeProvider: ReferralClaimCodeProviderType {
     
     // MARK: - ReferralUserProviderType
     
-    func claim(code: String, appUserId: String, projectKey: String) async throws -> ReferralClaimCodeData {
+    func claim(code: String, appUserId: String, projectKey: String) async throws -> ReferralClaimCodeResult {
         try await self.perform(request: .claim(code: code, appUserId: appUserId),
                                projectKey: projectKey)
             .unwrap(orThrow: .receivedNoDataOnClaimCode)
@@ -31,7 +31,7 @@ struct RemoteReferralClaimCodeProvider: ReferralClaimCodeProviderType {
     
     // MARK: - Private
     
-    private func perform(request: RemoteReferralClaimCodeRequest.Request, projectKey: String) async throws -> ReferralClaimCodeData? {
+    private func perform(request: RemoteReferralClaimCodeRequest.Request, projectKey: String) async throws -> ReferralClaimCodeResult? {
         let request = RemoteReferralClaimCodeRequest(baseEndpointURL: self.baseEndpointURL,
                                                      projectKey: projectKey,
                                                      request: request)
@@ -40,16 +40,16 @@ struct RemoteReferralClaimCodeProvider: ReferralClaimCodeProviderType {
             let data = response?.data
         else { return nil }
         
-        return ReferralClaimCodeData(
+        return ReferralClaimCodeResult(
             referralUser: data.referralUser,
-            referralGrantedRewards: data.grantedRewards
+            grantedRewards: data.grantedRewards
         )
     }
 }
 
-extension Optional where Wrapped == ReferralClaimCodeData {
+extension Optional where Wrapped == ReferralClaimCodeResult {
     
-    fileprivate func unwrap(orThrow error: RemoteReferralClaimCodeProviderError) throws -> ReferralClaimCodeData {
+    fileprivate func unwrap(orThrow error: RemoteReferralClaimCodeProviderError) throws -> ReferralClaimCodeResult {
         if let self {
             return self
         }

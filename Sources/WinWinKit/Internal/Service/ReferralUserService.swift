@@ -179,7 +179,7 @@ final class ReferralUserService {
         }
     }
     
-    func claim(code: String, completion: @escaping (Result<ReferralClaimCodeData, Error>) -> Void) {
+    func claim(code: String, completion: @escaping (Result<ReferralClaimCodeResult, Error>) -> Void) {
         Task { @MainActor in
             do {
                 let referralClaimCodeData = try await self.referralClaimCodeProvider.claim(code: code,

@@ -164,13 +164,13 @@ public final class WinWinKit {
                 switch result {
                 case .success(let data):
                     self?.retainedReferralClaimCodeObservableObject?.set(didClaimCodeSuccesfully: true)
-                    self?.retainedReferralClaimCodeObservableObject?.set(grantedRewards: data.referralGrantedRewards)
+                    self?.retainedReferralClaimCodeObservableObject?.set(grantedRewards: data.grantedRewards)
                 case .failure:
                     self?.retainedReferralClaimCodeObservableObject?.set(didClaimCodeSuccesfully: false)
                 }
             }
             
-            completion(result.map { ($0.referralUser, $0.referralGrantedRewards) })
+            completion(result.map { ($0.referralUser, $0.grantedRewards) })
         }
     }
     
