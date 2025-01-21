@@ -22,6 +22,6 @@ struct MockRemoteRequestDispatcher: RemoteRequestDispatcherType {
         if let errorToThrow {
             throw errorToThrow
         }
-        return self.referralUserToReturn.map { RemoteReferralUserResponse(data: $0) } as? Response
+        return self.referralUserToReturn.map { RemoteReferralUserResponse(data: .init(referralUser: $0)) } as? Response
     }
 }

@@ -11,5 +11,9 @@
 //
 
 struct RemoteReferralUserResponse: Codable {
-    let data: ReferralUser?
+    let data: Data?
+    
+    struct Data: Codable {
+        let referralUser: ReferralUser?
+    }
 }
