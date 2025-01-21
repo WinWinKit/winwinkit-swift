@@ -132,6 +132,19 @@ public final class WinWinKit {
         return created
     }
     
+    @available(iOS 17.0, macOS 14.0, *)
+    public var referralClaimCodeObservableObject: ReferralClaimCodeObservableObject {
+        if let retained = self.retainedReferralClaimCodeObservableObject {
+            return retained
+        }
+        let created = ReferralClaimCodeObservableObject()
+        created.onClaimCode = { [weak self] code in
+            self?.claim(code: code, completion: { _ in })
+        }
+        self._referralClaimCodeObservableObject = created
+        return created
+    }
+    
     public func claim(code: String, completion: @escaping (Result<ReferralUser, Error>) -> Void) {
         guard
             let referralUserService
@@ -139,7 +152,25 @@ public final class WinWinKit {
             Logger.warning("User identifier `appUserId` must be set before claiming code.")
             return
         }
-        referralUserService.claim(code: code, completion: completion)
+        
+        if #available(iOS 17.0, macOS 14.0, *) {
+            self.retainedReferralClaimCodeObservableObject?.set(isClaimingCode: true)
+        }
+        
+        referralUserService.claim(code: code) { [weak self] result in
+            if #available(iOS 17.0, macOS 14.0, *) {
+                self?.retainedReferralClaimCodeObservableObject?.set(isClaimingCode: false)
+                
+                switch result {
+                case .success:
+                    self?.retainedReferralClaimCodeObservableObject?.set(didClaimCodeSuccesfully: true)
+                case .failure:
+                    self?.retainedReferralClaimCodeObservableObject?.set(didClaimCodeSuccesfully: false)
+                }
+            }
+            
+            completion(result)
+        }
     }
     
     ///
@@ -281,6 +312,13 @@ public final class WinWinKit {
     @available(iOS 17.0, macOS 14.0, *)
     private var retainedReferralUserObservableObject: ReferralUserObservableObject? {
         self._referralUserObservableObject as? ReferralUserObservableObject
+    }
+    
+    private weak var _referralClaimCodeObservableObject: AnyObject?
+    
+    @available(iOS 17.0, macOS 14.0, *)
+    private var retainedReferralClaimCodeObservableObject: ReferralClaimCodeObservableObject? {
+        self._referralClaimCodeObservableObject as? ReferralClaimCodeObservableObject
     }
     
     @Atomic
