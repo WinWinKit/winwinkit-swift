@@ -18,16 +18,19 @@ final class ReferralUserService {
     let projectKey: String
     let referralUserCache: ReferralUserCacheType
     let referralUserProvider: ReferralUserProviderType
+    let referralClaimCodeProvider: ReferralClaimCodeProviderType
     
     init(appUserId: String,
          projectKey: String,
          referralUserCache: ReferralUserCacheType,
-         referralUserProvider: ReferralUserProviderType) {
+         referralUserProvider: ReferralUserProviderType,
+         referralClaimCodeProvider: ReferralClaimCodeProviderType) {
         
         self.appUserId = appUserId
         self.projectKey = projectKey
         self.referralUserCache = referralUserCache
         self.referralUserProvider = referralUserProvider
+        self.referralClaimCodeProvider = referralClaimCodeProvider
     }
     
     weak var delegate: ReferralUserServiceDelegate?
@@ -176,14 +179,14 @@ final class ReferralUserService {
         }
     }
     
-    func claim(code: String, completion: @escaping (Result<ReferralUser, Error>) -> Void) {
+    func claim(code: String, completion: @escaping (Result<ReferralClaimCodeData, Error>) -> Void) {
         Task { @MainActor in
             do {
-                let referralUser = try await self.referralUserProvider.claim(code: code,
-                                                                             appUserId: self.appUserId,
-                                                                             projectKey: self.projectKey)
-                self.cacheReferralUser(referralUser)
-                completion(.success(referralUser))
+                let referralClaimCodeData = try await self.referralClaimCodeProvider.claim(code: code,
+                                                                                           appUserId: self.appUserId,
+                                                                                           projectKey: self.projectKey)
+                self.cacheReferralUser(referralClaimCodeData.referralUser)
+                completion(.success(referralClaimCodeData))
             }
             catch {
                 completion(.failure(error))

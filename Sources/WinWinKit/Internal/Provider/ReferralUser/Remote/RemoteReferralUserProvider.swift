@@ -15,7 +15,6 @@ import Foundation
 enum RemoteReferralUserProviderError: Error {
     case receivedNoDataOnCreate
     case receivedNoDataOnUpdate
-    case receivedNoDataOnClaimCode
 }
 
 struct RemoteReferralUserProvider: ReferralUserProviderType {
@@ -51,12 +50,6 @@ struct RemoteReferralUserProvider: ReferralUserProviderType {
         try await self.perform(request: .patch(user: referralUser),
                                projectKey: projectKey)
             .unwrap(orThrow: .receivedNoDataOnUpdate)
-    }
-    
-    func claim(code: String, appUserId: String, projectKey: String) async throws -> ReferralUser {
-        try await self.perform(request: .claim(code: code, appUserId: appUserId),
-                               projectKey: projectKey)
-            .unwrap(orThrow: .receivedNoDataOnClaimCode)
     }
     
     // MARK: - Private

@@ -145,7 +145,7 @@ public final class WinWinKit {
         return created
     }
     
-    public func claim(code: String, completion: @escaping (Result<ReferralUser, Error>) -> Void) {
+    public func claim(code: String, completion: @escaping (Result<(ReferralUser, ReferralGrantedRewards), Error>) -> Void) {
         guard
             let referralUserService
         else {
@@ -169,7 +169,7 @@ public final class WinWinKit {
                 }
             }
             
-            completion(result)
+            completion(result.map { ($0.referralUser, $0.referralGrantedRewards) })
         }
     }
     
@@ -187,7 +187,8 @@ public final class WinWinKit {
         let referralUserService = ReferralUserService(appUserId: appUserId,
                                                       projectKey: self.projectKey,
                                                       referralUserCache: self.referralUserCache,
-                                                      referralUserProvider: self.referralUserProvider)
+                                                      referralUserProvider: self.referralUserProvider,
+                                                      referralClaimCodeProvider: self.referralClaimCodeProvider)
         self.referralUserService = referralUserService
         
         referralUserService.delegate = self
@@ -301,6 +302,7 @@ public final class WinWinKit {
     private let networkReachability: NetworkReachabilityType
     private let referralUserCache: ReferralUserCacheType
     private let referralUserProvider: ReferralUserProviderType
+    private let referralClaimCodeProvider: ReferralClaimCodeProviderType
     
     private weak var _delegate: WinWinKitDelegate? = nil
     
@@ -334,22 +336,27 @@ public final class WinWinKit {
         let remoteRequestDispatcher = RemoteRequestDispatcher(remoteDataFetcher: remoteDataFetcher)
         let referralUserProvider = RemoteReferralUserProvider(baseEndpointURL: baseEndpointURL,
                                                               remoteRequestDispatcher: remoteRequestDispatcher)
+        let referralClaimCodeProvider = RemoteReferralClaimCodeProvider(baseEndpointURL: baseEndpointURL,
+                                                                        remoteRequestDispatcher: remoteRequestDispatcher)
         
         self.init(projectKey: projectKey,
                   networkReachability: networkReachability,
                   referralUserCache: referralUserCache,
-                  referralUserProvider: referralUserProvider)
+                  referralUserProvider: referralUserProvider,
+                  referralClaimCodeProvider: referralClaimCodeProvider)
     }
     
     private init(projectKey: String,
                  networkReachability: NetworkReachabilityType,
                  referralUserCache: ReferralUserCacheType,
-                 referralUserProvider: ReferralUserProviderType) {
+                 referralUserProvider: ReferralUserProviderType,
+                 referralClaimCodeProvider: ReferralClaimCodeProviderType) {
         
         self.projectKey = projectKey
         self.networkReachability = networkReachability
         self.referralUserCache = referralUserCache
         self.referralUserProvider = referralUserProvider
+        self.referralClaimCodeProvider = referralClaimCodeProvider
     }
     
     private func startNetworkReachability() {

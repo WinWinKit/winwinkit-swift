@@ -5,23 +5,20 @@
 //  You may not use this file except in compliance with the License.
 //  You may obtain a copy of the License at https://opensource.org/licenses/MIT
 //
-//  RemoteReferralUserRequest.swift
+//  RemoteReferralClaimCodeRequest.swift
 //
 //  Created by Oleh Stasula on 05/12/2024.
 //
 
 import Foundation
 
-enum RemoteReferralUserRequestError: Error {
+enum RemoteReferralClaimCodeRequestError: Error {
     case unableToCreateURL
 }
 
-struct RemoteReferralUserRequest: RemoteRequest {
+struct RemoteReferralClaimCodeRequest: RemoteRequest {
     
     enum Request {
-        case get(appUserId: String)
-        case post(user: InsertReferralUser)
-        case patch(user: UpdateReferralUser)
         case claim(code: String, appUserId: String)
     }
     
@@ -46,31 +43,22 @@ struct RemoteReferralUserRequest: RemoteRequest {
     }
 }
 
-extension RemoteReferralUserRequest.Request {
+extension RemoteReferralClaimCodeRequest.Request {
     
     fileprivate var httpMethod: String {
         switch self {
-        case .get: "GET"
-        case .post: "POST"
-        case .patch: "PATCH"
         case .claim: "POST"
         }
     }
     
     fileprivate func httpBody() throws -> Data? {
         switch self {
-        case .get: nil
-        case .post(let referralUser): try referralUser.jsonData()
-        case .patch(let referralUser): try referralUser.jsonData()
         case .claim: nil
         }
     }
     
     fileprivate var path: String {
         switch self {
-        case .get(let appUserId): "referral/users/\(appUserId)"
-        case .post: "referral/users"
-        case .patch(let user): "referral/users/\(user.appUserId)"
         case .claim(let code, let appUserId): "referral/users/\(appUserId)/codes/\(code)/claim"
         }
     }
