@@ -83,6 +83,9 @@ enum MockReferralUser {
                 claims: 10,
                 conversions: 8,
                 churns: 2
+            ),
+            claimCodeEligibility: ReferralUser.ClaimCodeEligibility(
+                eligible: true
             )
         )
         
@@ -107,6 +110,9 @@ enum MockReferralUser {
                     "claims": 10,
                     "conversions": 8,
                     "churns": 2
+                },
+                "claim_code_eligibility": {
+                    "eligible": true
                 }
             }
             """
@@ -133,6 +139,9 @@ enum MockReferralUser {
                 claims: 0,
                 conversions: 0,
                 churns: 0
+            ),
+            claimCodeEligibility: ReferralUser.ClaimCodeEligibility(
+                eligible: false
             )
         )
     }

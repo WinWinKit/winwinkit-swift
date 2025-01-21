@@ -22,6 +22,7 @@ public struct ReferralUser: Codable, Hashable, Sendable {
     public let program: ReferralProgram?
     public let rewards: Rewards
     public let stats: Stats
+    public let claimCodeEligibility: ClaimCodeEligibility
     
     public struct ReferralProgram: Codable, Hashable, Sendable {
         public let id: String
@@ -214,5 +215,9 @@ public struct ReferralUser: Codable, Hashable, Sendable {
         public let claims: Int
         public let conversions: Int
         public let churns: Int
+    }
+    
+    public struct ClaimCodeEligibility: Codable, Hashable, Sendable {
+        public let eligible: Bool
     }
 }
