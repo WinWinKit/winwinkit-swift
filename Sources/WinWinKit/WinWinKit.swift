@@ -363,25 +363,25 @@ public final class WinWinKit {
 
 extension WinWinKit: NetworkReachabilityDelegate {
     
-    func networkHasBecomeReachable(_ networkReachability: any NetworkReachabilityType) {
+    internal func networkHasBecomeReachable(_ networkReachability: any NetworkReachabilityType) {
         self.referralUserService?.refresh(shouldPull: true)
     }
 }
 
 extension WinWinKit: ReferralUserServiceDelegate {
     
-    func referralUserServiceCanPerformNextRefresh(_ service: ReferralUserService) -> Bool {
+    internal func referralUserServiceCanPerformNextRefresh(_ service: ReferralUserService) -> Bool {
         self.networkReachability.isReachable
     }
     
-    func referralUserService(_ service: ReferralUserService, receivedUpdated referralUser: ReferralUser) {
+    internal func referralUserService(_ service: ReferralUserService, receivedUpdated referralUser: ReferralUser) {
         if #available(iOS 17, macOS 14, *) {
             self.retainedReferralUserObservableObject?.set(referralUser: referralUser)
         }
         self.delegate?.winWinKit(self, receivedUpdated: referralUser)
     }
     
-    func referralUserService(_ service: ReferralUserService, isRefreshingChanged isRefreshing: Bool) {
+    internal func referralUserService(_ service: ReferralUserService, isRefreshingChanged isRefreshing: Bool) {
         if #available(iOS 17, macOS 14, *) {
             self.retainedReferralUserObservableObject?.set(isRefreshing: isRefreshing)
         }

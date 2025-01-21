@@ -22,14 +22,14 @@ public final class ReferralUserObservableObject {
     
     // MARK: - Internal
     
-    init() {
+    internal init() {
     }
     
-    func set(referralUser: ReferralUser?) {
+    internal func set(referralUser: ReferralUser?) {
         self.referralUser = referralUser
     }
     
-    func set(isRefreshing: Bool) {
+    internal func set(isRefreshing: Bool) {
         self.isRefreshing = isRefreshing
     }
 }
