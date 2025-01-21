@@ -162,8 +162,9 @@ public final class WinWinKit {
                 self?.retainedReferralClaimCodeObservableObject?.set(isClaimingCode: false)
                 
                 switch result {
-                case .success:
+                case .success(let data):
                     self?.retainedReferralClaimCodeObservableObject?.set(didClaimCodeSuccesfully: true)
+                    self?.retainedReferralClaimCodeObservableObject?.set(grantedRewards: data.referralGrantedRewards)
                 case .failure:
                     self?.retainedReferralClaimCodeObservableObject?.set(didClaimCodeSuccesfully: false)
                 }
