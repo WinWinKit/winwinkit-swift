@@ -219,5 +219,6 @@ public struct ReferralUser: Codable, Hashable, Sendable {
     
     public struct ClaimCodeEligibility: Codable, Hashable, Sendable {
         public let eligible: Bool
+        public let eligibleUntil: Date?
     }
 }

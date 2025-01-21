@@ -85,7 +85,8 @@ enum MockReferralUser {
                 churns: 2
             ),
             claimCodeEligibility: ReferralUser.ClaimCodeEligibility(
-                eligible: true
+                eligible: true,
+                eligibleUntil: Date(timeIntervalSince1970: 1733483759)
             )
         )
         
@@ -112,7 +113,8 @@ enum MockReferralUser {
                     "churns": 2
                 },
                 "claim_code_eligibility": {
-                    "eligible": true
+                    "eligible": true,
+                    "eligible_until": "2024-12-06T11:15:59.000000+00:00"
                 }
             }
             """
@@ -141,7 +143,8 @@ enum MockReferralUser {
                 churns: 0
             ),
             claimCodeEligibility: ReferralUser.ClaimCodeEligibility(
-                eligible: false
+                eligible: false,
+                eligibleUntil: nil
             )
         )
     }
