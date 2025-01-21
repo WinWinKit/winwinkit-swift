@@ -17,7 +17,7 @@ import Testing
 @Suite struct UpdateReferralUserCodableTests {
     
     @Test func encodingEmpty() throws {
-        let referralUser = UpdateReferralUser(appUserId: "app-user-id-1",
+        let referralUser = ReferralUserUpdate(appUserId: "app-user-id-1",
                                               isPremium: nil,
                                               firstSeenAt: nil,
                                               lastSeenAt: nil,
@@ -29,7 +29,7 @@ import Testing
     }
     
     @Test func encodingMetadataObject() throws {
-        let referralUser = UpdateReferralUser(appUserId: "app-user-id-1",
+        let referralUser = ReferralUserUpdate(appUserId: "app-user-id-1",
                                               isPremium: nil,
                                               firstSeenAt: nil,
                                               lastSeenAt: nil,
@@ -41,7 +41,7 @@ import Testing
     }
     
     @Test func encodingMetadataEmptyObject() throws {
-        let referralUser = UpdateReferralUser(appUserId: "app-user-id-1",
+        let referralUser = ReferralUserUpdate(appUserId: "app-user-id-1",
                                               isPremium: nil,
                                               firstSeenAt: nil,
                                               lastSeenAt: nil,
@@ -53,7 +53,7 @@ import Testing
     }
     
     @Test func encodingMetadataArray() throws {
-        let referralUser = UpdateReferralUser(appUserId: "app-user-id-1",
+        let referralUser = ReferralUserUpdate(appUserId: "app-user-id-1",
                                               isPremium: nil,
                                               firstSeenAt: nil,
                                               lastSeenAt: nil,
@@ -65,7 +65,7 @@ import Testing
     }
     
     @Test func encodingMetadataEmptyArray() throws {
-        let referralUser = UpdateReferralUser(appUserId: "app-user-id-1",
+        let referralUser = ReferralUserUpdate(appUserId: "app-user-id-1",
                                               isPremium: nil,
                                               firstSeenAt: nil,
                                               lastSeenAt: nil,

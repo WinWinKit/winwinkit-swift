@@ -40,13 +40,13 @@ struct RemoteReferralUserProvider: ReferralUserProviderType {
         }
     }
     
-    func create(referralUser: InsertReferralUser, projectKey: String) async throws -> ReferralUser {
+    func create(referralUser: ReferralUserInsert, projectKey: String) async throws -> ReferralUser {
         try await self.perform(request: .post(user: referralUser),
                                projectKey: projectKey)
             .unwrap(orThrow: .receivedNoDataOnCreate)
     }
     
-    func update(referralUser: UpdateReferralUser, projectKey: String) async throws -> ReferralUser {
+    func update(referralUser: ReferralUserUpdate, projectKey: String) async throws -> ReferralUser {
         try await self.perform(request: .patch(user: referralUser),
                                projectKey: projectKey)
             .unwrap(orThrow: .receivedNoDataOnUpdate)

@@ -15,5 +15,5 @@ import Foundation
 
 final class MockReferralUserCache: ReferralUserCacheType {
     var referralUser: ReferralUser?
-    var updateReferralUser: UpdateReferralUser?
+    var referralUserUpdate: ReferralUserUpdate?
 }

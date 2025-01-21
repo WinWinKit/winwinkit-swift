@@ -5,14 +5,14 @@
 //  You may not use this file except in compliance with the License.
 //  You may obtain a copy of the License at https://opensource.org/licenses/MIT
 //
-//  UpdateReferralUser.swift
+//  ReferralUserUpdate.swift
 //
 //  Created by Oleh Stasula on 05/12/2024.
 //
 
 import Foundation
 
-struct UpdateReferralUser: Codable, Hashable {
+struct ReferralUserUpdate: Codable, Hashable {
     let appUserId: String
     let isPremium: Bool?
     let firstSeenAt: Date?
@@ -20,10 +20,10 @@ struct UpdateReferralUser: Codable, Hashable {
     let metadata: Metadata?
 }
 
-extension UpdateReferralUser {
+extension ReferralUserUpdate {
     
     func set(isPremium: Bool) -> Self {
-        UpdateReferralUser(
+        ReferralUserUpdate(
             appUserId: self.appUserId,
             isPremium: isPremium,
             firstSeenAt: self.firstSeenAt,
@@ -33,7 +33,7 @@ extension UpdateReferralUser {
     }
     
     func set(firstSeenAt: Date) -> Self {
-        UpdateReferralUser(
+        ReferralUserUpdate(
             appUserId: self.appUserId,
             isPremium: self.isPremium,
             firstSeenAt: firstSeenAt,
@@ -43,7 +43,7 @@ extension UpdateReferralUser {
     }
     
     func set(lastSeenAt: Date) -> Self {
-        UpdateReferralUser(
+        ReferralUserUpdate(
             appUserId: self.appUserId,
             isPremium: self.isPremium,
             firstSeenAt: self.firstSeenAt,
@@ -53,7 +53,7 @@ extension UpdateReferralUser {
     }
     
     func set(metadata: Metadata) -> Self {
-        UpdateReferralUser(
+        ReferralUserUpdate(
             appUserId: self.appUserId,
             isPremium: self.isPremium,
             firstSeenAt: self.firstSeenAt,
@@ -63,10 +63,10 @@ extension UpdateReferralUser {
     }
 }
 
-extension UpdateReferralUser {
+extension ReferralUserUpdate {
     
-    var asInsertReferralUser: InsertReferralUser {
-        InsertReferralUser(
+    var asReferralUserInsert: ReferralUserInsert {
+        ReferralUserInsert(
             appUserId: self.appUserId,
             isPremium: self.isPremium,
             firstSeenAt: self.firstSeenAt,

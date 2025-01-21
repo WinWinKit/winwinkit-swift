@@ -20,8 +20,8 @@ struct RemoteReferralUserRequest: RemoteRequest {
     
     enum Request {
         case get(appUserId: String)
-        case post(user: InsertReferralUser)
-        case patch(user: UpdateReferralUser)
+        case post(user: ReferralUserInsert)
+        case patch(user: ReferralUserUpdate)
     }
     
     let baseEndpointURL: URL

@@ -154,7 +154,7 @@ enum MockInsertReferralUser {
     
     enum Full {
         
-        static let object: InsertReferralUser = .init(
+        static let object: ReferralUserInsert = .init(
             appUserId: MockReferralUser.Full.object.appUserId,
             isPremium: MockReferralUser.Full.object.isPremium,
             firstSeenAt: MockReferralUser.Full.object.firstSeenAt,

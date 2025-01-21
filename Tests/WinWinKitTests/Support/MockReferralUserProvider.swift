@@ -43,7 +43,7 @@ final class MockReferralUserProvider: ReferralUserProviderType {
         return self.referralUserToReturnOnFetch
     }
     
-    func create(referralUser: InsertReferralUser, projectKey: String) async throws -> ReferralUser {
+    func create(referralUser: ReferralUserInsert, projectKey: String) async throws -> ReferralUser {
         self.createMethodCallsCounter += 1
         if let errorToThrowOnCreate {
             throw errorToThrowOnCreate
@@ -54,7 +54,7 @@ final class MockReferralUserProvider: ReferralUserProviderType {
         throw MockReferralUserProviderError.noReferralUserToReturn
     }
     
-    func update(referralUser: UpdateReferralUser, projectKey: String) async throws -> ReferralUser {
+    func update(referralUser: ReferralUserUpdate, projectKey: String) async throws -> ReferralUser {
         self.updateMethodCallsCounter += 1
         if let errorToThrowOnUpdate {
             throw errorToThrowOnUpdate

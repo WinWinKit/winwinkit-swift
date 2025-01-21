@@ -12,14 +12,14 @@
 
 protocol ReferralUserCacheType: AnyObject {
     var referralUser: ReferralUser? { get set }
-    var updateReferralUser: UpdateReferralUser? { get set }
+    var referralUserUpdate: ReferralUserUpdate? { get set }
 }
 
 extension ReferralUserCacheType {
     
     func reset() {
         self.referralUser = nil
-        self.updateReferralUser = nil
+        self.referralUserUpdate = nil
     }
 }
 
@@ -53,10 +53,10 @@ final class ReferralUserCache: ReferralUserCacheType {
         }
     }
     
-    var updateReferralUser: UpdateReferralUser? {
+    var referralUserUpdate: ReferralUserUpdate? {
         get {
             do {
-                return try self.keyValueCache[Keys.updateReferralUser].map { try UpdateReferralUser(jsonData: $0) }
+                return try self.keyValueCache[Keys.referralUserUpdate].map { try ReferralUserUpdate(jsonData: $0) }
             }
             catch {
                 Logger.error("Unable to deserialize update ReferralUser.")
@@ -65,7 +65,7 @@ final class ReferralUserCache: ReferralUserCacheType {
         }
         set {
             do {
-                self.keyValueCache[Keys.updateReferralUser] = try newValue?.jsonData()
+                self.keyValueCache[Keys.referralUserUpdate] = try newValue?.jsonData()
             }
             catch {
                 Logger.error("Unable to serialize update ReferralUser.")
@@ -77,6 +77,6 @@ final class ReferralUserCache: ReferralUserCacheType {
     
     private enum Keys {
         static let referralUser = "com.winwinkit.cache.referralUser"
-        static let updateReferralUser = "com.winwinkit.cache.updateReferralUser"
+        static let referralUserUpdate = "com.winwinkit.cache.referralUserUpdate"
     }
 }

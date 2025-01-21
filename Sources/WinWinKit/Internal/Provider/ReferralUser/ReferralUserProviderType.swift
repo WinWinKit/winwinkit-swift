@@ -12,6 +12,6 @@
 
 protocol ReferralUserProviderType {
     func fetch(appUserId: String, projectKey: String) async throws -> ReferralUser?
-    func create(referralUser: InsertReferralUser, projectKey: String) async throws -> ReferralUser
-    func update(referralUser: UpdateReferralUser, projectKey: String) async throws -> ReferralUser
+    func create(referralUser: ReferralUserInsert, projectKey: String) async throws -> ReferralUser
+    func update(referralUser: ReferralUserUpdate, projectKey: String) async throws -> ReferralUser
 }
