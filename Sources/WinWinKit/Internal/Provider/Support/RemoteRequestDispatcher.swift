@@ -31,7 +31,7 @@ struct RemoteRequestDispatcher: RemoteRequestDispatcherType {
     func perform<Response: Codable>(request: RemoteRequest) async throws -> Response? {
         let urlRequest = try request.urlRequest()
         let (statusCode, data) = try await self.remoteDataFetcher.data(for: urlRequest)
-        if let error = try RemoteRequestDispatcherError(statusCode: statusCode, data: data) {
+        if let error = RemoteRequestDispatcherError(statusCode: statusCode, data: data) {
             throw error
         }
         let response = try data.map { try Response(jsonData: $0) }
@@ -41,9 +41,9 @@ struct RemoteRequestDispatcher: RemoteRequestDispatcherType {
 
 extension RemoteRequestDispatcherError {
     
-    init?(statusCode: Int, data: Data?) throws {
+    init?(statusCode: Int, data: Data?) {
         guard
-            statusCode < 200 && statusCode > 299
+            statusCode < 200 || statusCode > 299
         else { return nil }
         // TODO: parse errors from data
         switch statusCode {
