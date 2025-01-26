@@ -10,10 +10,10 @@
 //  Created by Oleh Stasula on 17/12/2024.
 //
 
-struct RemoteReferralUserResponse: Codable {
+struct RemoteReferralUserResponse: Codable, Hashable, Sendable {
     let data: Data?
     
-    struct Data: Codable {
+    struct Data: Codable, Hashable, Sendable {
         let referralUser: ReferralUser?
     }
 }

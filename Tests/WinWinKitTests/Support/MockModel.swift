@@ -90,7 +90,7 @@ enum MockReferralUser {
             )
         )
         
-        static let data: Data = """
+        static let jsonString: String = """
             {
                 "app_user_id": "app-user-id-1",
                 "code": "XYZ123",
@@ -118,6 +118,8 @@ enum MockReferralUser {
                 }
             }
             """
+        
+        static let data: Data = Self.jsonString
             .data(using: .utf8)!
     }
     
@@ -161,5 +163,27 @@ enum MockInsertReferralUser {
             lastSeenAt: MockReferralUser.Full.object.lastSeenAt,
             metadata: MockReferralUser.Full.object.metadata
         )
+    }
+}
+
+enum MockReferralUserResponse {
+    
+    enum Full {
+        
+        static let object: RemoteReferralUserResponse = .init(
+            data: RemoteReferralUserResponse.Data(
+                referralUser: MockReferralUser.Full.object
+            )
+        )
+        
+        static let jsonString: String = """
+            {
+                "data": {
+                    "referral_user": \(MockReferralUser.Full.jsonString)
+                }
+            }
+            """
+        
+        static let data: Data = Self.jsonString.data(using: .utf8)!
     }
 }
