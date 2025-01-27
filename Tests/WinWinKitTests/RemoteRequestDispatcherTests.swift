@@ -19,9 +19,9 @@ import Testing
     @Test func unauthorized() async throws {
         let remoteDataFetcher = RemoteDataFetcher(session: .shared)
         let dispatcher = RemoteRequestDispatcher(remoteDataFetcher: remoteDataFetcher)
-        let request = RemoteReferralUserRequest(baseEndpointURL: URL(string: "https://api.winwinkit.com")!,
-                                                projectKey: "no-key",
-                                                request: .get(appUserId: "0000-0000"))
+        let request = RemoteReferralUserRequest(baseEndpointURL: MockConstants.baseEndpointURL,
+                                                projectKey: MockConstants.projectKey,
+                                                request: .get(appUserId: MockReferralUser.Full.object.appUserId))
         await #expect(throws: RemoteRequestDispatcherError.unauthorized) {
             let _: RemoteReferralUserResponse? = try await dispatcher.perform(request: request)
         }
