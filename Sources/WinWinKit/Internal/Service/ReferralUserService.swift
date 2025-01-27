@@ -160,18 +160,13 @@ final class ReferralUserService {
                 Logger.debug("ReferralUserService: Refresh did fail")
                 Logger.error("Failed to refresh referral user: \(String(describing: error))")
                 
-                if let dispatcherError = error as? RemoteRequestDispatcherError,
-                   dispatcherError == .unauthorized {
-                    self.referralUserCache.reset()
-                }
-                
-                self.shouldSuspendIndefinitely = true // TODO: except network connection issues
+                self.handleProviderError(error)
             }
             
             self.refreshingTask = nil
             self.delegate?.referralUserService(self, isRefreshingChanged: false)
             
-            if completedSuccessfully && self.shouldPullOnNextRefresh || self.pendingReferralUserUpdate != nil {
+            if completedSuccessfully && (self.shouldPullOnNextRefresh || self.pendingReferralUserUpdate != nil) {
                 Logger.debug("ReferralUserService: Refresh will start again")
                 self.shouldPullOnNextRefresh = false
                 self.refresh()
@@ -185,10 +180,19 @@ final class ReferralUserService {
                 let referralClaimCodeData = try await self.referralClaimCodeProvider.claim(code: code,
                                                                                            appUserId: self.appUserId,
                                                                                            projectKey: self.projectKey)
+                
+                Logger.debug("ReferralUserService: Claim code did finish")
+                
                 self.cacheReferralUser(referralClaimCodeData.referralUser)
+                
                 completion(.success(referralClaimCodeData))
             }
             catch {
+                Logger.debug("ReferralUserService: Claim code did fail")
+                Logger.error("Failed to claim code: \(String(describing: error))")
+                
+                self.handleProviderError(error)
+                
                 completion(.failure(error))
             }
         }
@@ -229,6 +233,14 @@ final class ReferralUserService {
     private func resetUpdateReferralUser(with referralUser: ReferralUserUpdate?) {
         if self.referralUserCache.referralUserUpdate == referralUser {
             self.referralUserCache.referralUserUpdate = nil
+        }
+    }
+    
+    private func handleProviderError(_ error: Error) {
+        if let dispatcherError = error as? RemoteRequestDispatcherError,
+           dispatcherError == .unauthorized {
+            self.referralUserCache.reset()
+            self.shouldSuspendIndefinitely = true
         }
     }
 }
