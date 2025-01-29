@@ -45,10 +45,30 @@ extension RemoteRequestDispatcherError {
         guard
             statusCode < 200 || statusCode > 299
         else { return nil }
-        // TODO: parse errors from data
+        
+        let errorsResponse: RemoteErrorsResponse?
+        
+        if let data {
+            do {
+                errorsResponse = try RemoteErrorsResponse(jsonData: data)
+            }
+            catch {
+                self = .unknown
+                return
+            }
+        }
+        else {
+            errorsResponse = nil
+        }
+        
         switch statusCode {
         case 404:
-            self = .notFound
+            if errorsResponse?.errors.contains(where: { $0.code == "NOT_FOUND" }) == true {
+                self = .notFound
+            }
+            else {
+                self = .unknown
+            }
         case 401:
             self = .unauthorized
         default:
