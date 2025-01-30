@@ -77,6 +77,10 @@ enum MockReferralUser {
                 active: ReferralUser.Rewards.Active(
                     basic: [],
                     credit: []
+                ),
+                expired: ReferralUser.Rewards.Expired(
+                    basic: [],
+                    credit: []
                 )
             ),
             stats: ReferralUser.Stats(
@@ -103,6 +107,10 @@ enum MockReferralUser {
                 "program": \(MockReferralProgram.Full.jsonString),
                 "rewards": {
                     "active": {
+                        "basic": [],
+                        "credit": [],
+                    },
+                    "expired": {
                         "basic": [],
                         "credit": [],
                     }
@@ -135,6 +143,10 @@ enum MockReferralUser {
             program: nil,
             rewards: ReferralUser.Rewards(
                 active: ReferralUser.Rewards.Active(
+                    basic: [],
+                    credit: []
+                ),
+                expired: ReferralUser.Rewards.Expired(
                     basic: [],
                     credit: []
                 )

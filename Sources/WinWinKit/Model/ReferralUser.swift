@@ -192,6 +192,7 @@ public struct ReferralUser: Codable, Hashable, Sendable {
     
     public struct Rewards: Codable, Hashable, Sendable {
         public let active: Active
+        public let expired: Expired
         
         public struct Active: Codable, Hashable, Sendable {
             public let basic: [BasicReward]
@@ -201,14 +202,20 @@ public struct ReferralUser: Codable, Hashable, Sendable {
                 public let key: String
                 public let description: String?
                 public let metadata: Metadata?
+                public let createdAt: Date
+                public let expiresAt: Date?
             }
             
             public struct CreditReward: Codable, Hashable, Sendable {
                 public let key: String
                 public let description: String?
                 public let metadata: Metadata?
+                public let createdAt: Date
+                public let expiresAt: Date?
             }
         }
+        
+        public typealias Expired = Active
     }
     
     public struct Stats: Codable, Hashable, Sendable {
