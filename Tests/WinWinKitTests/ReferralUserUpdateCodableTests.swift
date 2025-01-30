@@ -5,7 +5,7 @@
 //  You may not use this file except in compliance with the License.
 //  You may obtain a copy of the License at https://opensource.org/licenses/MIT
 //
-//  UpdateReferralUserCodableTests.swift
+//  ReferralUserUpdateCodableTests.swift
 //
 //  Created by Oleh Stasula on 19/12/2024.
 //
@@ -14,7 +14,7 @@ import Foundation
 import Testing
 @testable import WinWinKit
 
-@Suite struct UpdateReferralUserCodableTests {
+@Suite struct ReferralUserUpdateCodableTests {
     
     @Test func encodingEmpty() throws {
         let referralUser = ReferralUserUpdate(appUserId: "app-user-id-1",
