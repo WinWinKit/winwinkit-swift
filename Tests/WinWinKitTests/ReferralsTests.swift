@@ -1,7 +1,7 @@
 import Testing
 @testable import WinWinKit
 
-@Suite struct WinWinKitTests {
+@Suite struct ReferralsTests {
     
     @Test func configure() async throws {
     }

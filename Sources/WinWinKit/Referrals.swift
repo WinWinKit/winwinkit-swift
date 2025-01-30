@@ -5,7 +5,7 @@
 //  You may not use this file except in compliance with the License.
 //  You may obtain a copy of the License at https://opensource.org/licenses/MIT
 //
-//  WinWinKit.swift
+//  Referrals.swift
 //
 //  Created by Oleh Stasula on 03/12/2024.
 //
@@ -18,35 +18,35 @@ import Logging
 /// Normally it should be instantiated as soon as your app has a unique user id for your user.
 /// This can be when a user logs in if you have accounts or on launch if you can generate a random user identifier.
 ///
-public final class WinWinKit {
+public final class Referrals {
     
     ///
-    /// Returns the already configured instance of ``WinWinKit``.
-    /// - Warning: this method will crash with `fatalError` if ``WinWinKit`` has not been initialized through
-    /// ``WinWinKit/configure(projectKey:)`` or one of its overloads.
+    /// Returns the already configured instance of ``Referrals``.
+    /// - Warning: this method will crash with `fatalError` if ``Referrals`` has not been initialized through
+    /// ``Referrals/configure(projectKey:)`` or one of its overloads.
     /// If there's a chance that may have not happened yet, you can use ``isConfigured`` to check if it's safe to call.
     ///
     /// ### Example
     ///
     /// ```swift
-    /// WinWinKit.shared
+    /// Referrals.shared
     /// ```
     ///
-    public static var shared: WinWinKit {
+    public static var shared: Referrals {
         guard
             let instance
         else {
-            fatalError("WinWinKit has not been configured yet. To get started call `WinWinKit.configure(projectKey:).`")
+            fatalError("Referrals has not been configured yet. To get started call `Referrals.configure(projectKey:).`")
         }
         return instance
     }
     
     ///
-    /// Initialize an instance of the WinWinKit SDK.
+    /// Initialize an instance of the Referrals SDK.
     ///
-    /// - Parameter projectKey: The project key you wish to use to configure ``WinWinKit``.
+    /// - Parameter projectKey: The project key you wish to use to configure ``Referrals``.
     ///
-    /// - Parameter keyValueCache: The key-value cache where ``WinWinKit`` can store data.
+    /// - Parameter keyValueCache: The key-value cache where ``Referrals`` can store data.
     /// The default value is `UserDefaults.standard`.
     /// You may set any other instance of `UserDefaults`.
     ///
@@ -54,16 +54,16 @@ public final class WinWinKit {
     /// The default value is `info`.
     /// You may want to set it to `debug` for debugging purposes.
     ///
-    /// - Returns: An instance of ``WinWinKit`` object.
+    /// - Returns: An instance of ``Referrals`` object.
     ///
     /// ### Example
     ///
     /// ```swift
-    /// WinWinKit.configure(projectKey: "<YOUR_PROJECT_KEY>")
+    /// Referrals.configure(projectKey: "<YOUR_PROJECT_KEY>")
     /// ```
     ///
     /// ```swift
-    /// WinWinKit.configure(projectKey: "<YOUR_PROJECT_KEY>",
+    /// Referrals.configure(projectKey: "<YOUR_PROJECT_KEY>",
     ///                     keyValueCache: UserDefaults(suiteName: "<YOUR_APP_GROUP>"),
     ///                     logLevel: .debug)
     /// ```
@@ -71,44 +71,44 @@ public final class WinWinKit {
     @discardableResult
     public static func configure(projectKey: String,
                                  keyValueCache: KeyValueCacheType = UserDefaults.standard,
-                                 logLevel: Logger.Level = .info) -> WinWinKit {
+                                 logLevel: Logger.Level = .info) -> Referrals {
         
         if let instance {
-            Logger.error("WinWinKit has already been configured. Calling `configure` again has no effect.")
+            Logger.error("Referrals has already been configured. Calling `configure` again has no effect.")
             return instance
         }
         
         Logger.logLevel = logLevel
         
-        let instance = WinWinKit(projectKey: projectKey,
+        let instance = Referrals(projectKey: projectKey,
                                  keyValueCache: keyValueCache)
         self.instance = instance
         return instance
     }
     
     ///
-    /// Returns `true` if WinWinKit has already been initialized through ``WinWinKit/configure(projectKey:)``.
+    /// Returns `true` if Referrals has already been initialized through ``Referrals/configure(projectKey:)``.
     ///
     public static var isConfigured: Bool {
         Self.instance != nil
     }
     
-    public var delegate: WinWinKitDelegate? {
+    public var delegate: ReferralsDelegate? {
         get { self._delegate }
         set {
             guard newValue !== self._delegate else {
-                Logger.warning("WinWinKit delegate has already been set.")
+                Logger.warning("Referrals delegate has already been set.")
                 return
             }
             
             if newValue == nil {
-                Logger.info("WinWinKit delegate is being set to nil, you probably don't want to do this.")
+                Logger.info("Referrals delegate is being set to nil, you probably don't want to do this.")
             }
             
             self._delegate = newValue
             
             if newValue != nil {
-                Logger.debug("WinWinKit delegate is set.")
+                Logger.debug("Referrals delegate is set.")
             }
         }
     }
@@ -277,13 +277,13 @@ public final class WinWinKit {
     public func reset() {
         self.referralUserService = nil
         self.referralUserCache.reset()
-        self.delegate?.winWinKit(self, receivedUpdated: nil)
+        self.delegate?.referrals(self, receivedUpdated: nil)
     }
     
     ///
     /// A flag controlling whether `lastSeenAt` should be auto-updated or not.
     /// Set to `false` **before** calling `set(appUserId:)` if you do not want user's `lastSeenAt` property be auto-updated at initialization.
-    /// Additionally, you can always update it by calling `WinWinKit.shared.set(lastSeenAt: <NEW_DATE>)`.
+    /// Additionally, you can always update it by calling `Referrals.shared.set(lastSeenAt: <NEW_DATE>)`.
     ///
     public var shouldAutoUpdateLastSeenAt: Bool {
         get {
@@ -297,7 +297,7 @@ public final class WinWinKit {
     // MARK: - Private
     
     @Atomic
-    private static var instance: WinWinKit? = nil
+    private static var instance: Referrals? = nil
     
     private let projectKey: String
     private let networkReachability: NetworkReachabilityType
@@ -305,7 +305,7 @@ public final class WinWinKit {
     private let referralUserProvider: ReferralUserProviderType
     private let referralClaimCodeProvider: ReferralClaimCodeProviderType
     
-    private weak var _delegate: WinWinKitDelegate? = nil
+    private weak var _delegate: ReferralsDelegate? = nil
     
     @Atomic
     private var _shouldAutoUpdateLastSeenAt: Bool = true
@@ -369,14 +369,14 @@ public final class WinWinKit {
     }
 }
 
-extension WinWinKit: NetworkReachabilityDelegate {
+extension Referrals: NetworkReachabilityDelegate {
     
     internal func networkHasBecomeReachable(_ networkReachability: any NetworkReachabilityType) {
         self.referralUserService?.refresh(shouldPull: true)
     }
 }
 
-extension WinWinKit: ReferralUserServiceDelegate {
+extension Referrals: ReferralUserServiceDelegate {
     
     internal func referralUserServiceCanPerformNextRefresh(_ service: ReferralUserService) -> Bool {
         self.networkReachability.isReachable
@@ -386,13 +386,13 @@ extension WinWinKit: ReferralUserServiceDelegate {
         if #available(iOS 17, macOS 14, *) {
             self.retainedReferralUserObservableObject?.set(referralUser: referralUser)
         }
-        self.delegate?.winWinKit(self, receivedUpdated: referralUser)
+        self.delegate?.referrals(self, receivedUpdated: referralUser)
     }
     
     internal func referralUserService(_ service: ReferralUserService, isRefreshingChanged isRefreshing: Bool) {
         if #available(iOS 17, macOS 14, *) {
             self.retainedReferralUserObservableObject?.set(isRefreshing: isRefreshing)
         }
-        self.delegate?.winWinKit(self, isRefreshingChanged: isRefreshing)
+        self.delegate?.referrals(self, isRefreshingChanged: isRefreshing)
     }
 }
