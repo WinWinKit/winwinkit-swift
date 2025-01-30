@@ -260,6 +260,8 @@ final class ReferralUserService {
            dispatcherError == .unauthorized {
             self.referralUserCache.reset()
             self.shouldSuspendIndefinitely = true
+            
+            Logger.error("Authorization with the provided project key has failed! Please obtain a new project key and use it when initializing the Referrals object.")
         }
     }
 }
