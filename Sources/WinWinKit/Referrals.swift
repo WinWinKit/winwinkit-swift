@@ -194,7 +194,7 @@ public final class Referrals {
         
         referralUserService.delegate = self
         if self.shouldAutoUpdateLastSeenAt {
-            referralUserService.set(lastSeenAt: Date())
+            referralUserService.set(lastSeenAt: .now)
         }
         referralUserService.refresh()
     }
@@ -226,7 +226,7 @@ public final class Referrals {
             return
         }
         guard
-            firstSeenAt <= Date()
+            firstSeenAt <= .now
         else {
             Logger.warning("First seen at date must not be in the future.")
             return
@@ -247,7 +247,7 @@ public final class Referrals {
             return
         }
         guard
-            lastSeenAt <= Date()
+            lastSeenAt <= .now
         else {
             Logger.warning("Last seen at date must not be in the future.")
             return
