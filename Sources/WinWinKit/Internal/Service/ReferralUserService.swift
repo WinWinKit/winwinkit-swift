@@ -43,10 +43,6 @@ final class ReferralUserService {
         return nil
     }
     
-    var isRefreshing: Bool {
-        self.refreshingTask != nil
-    }
-    
     func set(isPremium: Bool) {
         self.cacheUpdateReferralUser(
             self.pendingReferralUserUpdate?.set(isPremium: isPremium) ??
@@ -91,6 +87,10 @@ final class ReferralUserService {
         )
     }
     
+    var isRefreshing: Bool {
+        self.refreshTask != nil
+    }
+    
     func refresh(shouldPull: Bool = false) {
         
         if self.shouldSuspendIndefinitely {
@@ -104,13 +104,13 @@ final class ReferralUserService {
             return
         }
         
-        if self.refreshingTask != nil {
+        if self.refreshTask != nil {
             self.shouldPullOnNextRefresh = self.shouldPullOnNextRefresh || shouldPull
-            Logger.debug("ReferralUserService: Refresh delayed due to already refreshing")
+            Logger.debug("ReferralUserService: Refresh delayed because of already refreshing")
             return
         }
         
-        self.refreshingTask = Task { @MainActor in
+        self.refreshTask = Task { @MainActor in
             
             Logger.debug("ReferralUserService: Refresh will start")
             
@@ -163,7 +163,7 @@ final class ReferralUserService {
                 self.handleProviderError(error)
             }
             
-            self.refreshingTask = nil
+            self.refreshTask = nil
             self.delegate?.referralUserService(self, isRefreshingChanged: false)
             
             if completedSuccessfully && (self.shouldPullOnNextRefresh || self.pendingReferralUserUpdate != nil) {
@@ -174,8 +174,22 @@ final class ReferralUserService {
         }
     }
     
+    var isClaimingCode: Bool {
+        self.claimCodeTask != nil
+    }
+    
     func claim(code: String, completion: @escaping (Result<ReferralClaimCodeResult, Error>) -> Void) {
-        Task { @MainActor in
+        
+        if self.shouldSuspendIndefinitely {
+            return
+        }
+        
+        if self.claimCodeTask != nil {
+            Logger.debug("ReferralUserService: Claim code skipped because of already claiming code")
+            return
+        }
+        
+        self.claimCodeTask = Task { @MainActor in
             do {
                 let referralClaimCodeData = try await self.referralClaimCodeProvider.claim(code: code,
                                                                                            appUserId: self.appUserId,
@@ -185,6 +199,8 @@ final class ReferralUserService {
                 
                 self.cacheReferralUser(referralClaimCodeData.referralUser)
                 
+                self.claimCodeTask = nil
+                
                 completion(.success(referralClaimCodeData))
             }
             catch {
@@ -192,6 +208,8 @@ final class ReferralUserService {
                 Logger.error("Failed to claim code: \(String(describing: error))")
                 
                 self.handleProviderError(error)
+                
+                self.claimCodeTask = nil
                 
                 completion(.failure(error))
             }
@@ -206,7 +224,8 @@ final class ReferralUserService {
     
     private var shouldPullOnNextRefresh: Bool = false
     
-    private var refreshingTask: Task<Void, Never>?
+    private var claimCodeTask: Task<Void, Never>?
+    private var refreshTask: Task<Void, Never>?
     
     private var pendingReferralUserUpdate: ReferralUserUpdate? {
         get {

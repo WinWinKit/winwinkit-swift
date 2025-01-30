@@ -138,6 +138,7 @@ public final class Referrals {
             return retained
         }
         let created = ReferralClaimCodeObservableObject()
+        created.set(isClaimingCode: self.referralUserService?.isClaimingCode ?? false)
         created.onClaimCode = { [weak self] code in
             self?.claim(code: code, completion: { _ in })
         }
