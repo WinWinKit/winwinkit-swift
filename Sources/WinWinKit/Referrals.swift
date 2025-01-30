@@ -374,7 +374,7 @@ public final class Referrals {
 extension Referrals: NetworkReachabilityDelegate {
     
     internal func networkHasBecomeReachable(_ networkReachability: any NetworkReachabilityType) {
-        self.referralUserService?.refresh(shouldPull: true)
+        self.referralUserService?.refresh(shouldFetch: true)
     }
 }
 

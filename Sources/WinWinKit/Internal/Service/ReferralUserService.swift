@@ -91,7 +91,7 @@ final class ReferralUserService {
         self.refreshTask != nil
     }
     
-    func refresh(shouldPull: Bool = false) {
+    func refresh(shouldFetch: Bool = false) {
         
         if self.shouldSuspendIndefinitely {
             return
@@ -99,13 +99,13 @@ final class ReferralUserService {
         
         if let delegate,
            !delegate.referralUserServiceCanPerformNextRefresh(self) {
-            self.shouldPullOnNextRefresh = self.shouldPullOnNextRefresh || shouldPull
+            self.shouldFetchOnNextRefresh = self.shouldFetchOnNextRefresh || shouldFetch
             Logger.debug("ReferralUserService: Refresh not allowed")
             return
         }
         
         if self.refreshTask != nil {
-            self.shouldPullOnNextRefresh = self.shouldPullOnNextRefresh || shouldPull
+            self.shouldFetchOnNextRefresh = self.shouldFetchOnNextRefresh || shouldFetch
             Logger.debug("ReferralUserService: Refresh delayed because of already refreshing")
             return
         }
@@ -118,8 +118,10 @@ final class ReferralUserService {
             
             var completedSuccessfully = false
             
+            let shouldPerformFetch = !self.hasRefreshedOnce || self.shouldFetchOnNextRefresh || shouldFetch
+            
             do {
-                if !self.hasRefreshedOnce || self.shouldPullOnNextRefresh || shouldPull,
+                if shouldPerformFetch,
                    let referralUser = try await self.referralUserProvider.fetch(appUserId: self.appUserId, projectKey: self.projectKey) {
                     Logger.debug("ReferralUserService: Refresh did fetch referral user")
                     self.cacheReferralUser(referralUser)
@@ -131,7 +133,7 @@ final class ReferralUserService {
                         Logger.debug("ReferralUserService: Refresh did update referral user")
                     }
                 }
-                else if self.cachedReferralUser != nil {
+                else if !shouldPerformFetch && self.cachedReferralUser != nil {
                     if let updateReferralUser = self.pendingReferralUserUpdate {
                         let updatedReferralUser = try await self.referralUserProvider.update(referralUser: updateReferralUser,
                                                                                              projectKey: self.projectKey)
@@ -160,15 +162,15 @@ final class ReferralUserService {
                 Logger.debug("ReferralUserService: Refresh did fail")
                 Logger.error("Failed to refresh referral user: \(String(describing: error))")
                 
-                self.handleProviderError(error)
+                self.handleTaskError(error)
             }
             
             self.refreshTask = nil
             self.delegate?.referralUserService(self, isRefreshingChanged: false)
             
-            if completedSuccessfully && (self.shouldPullOnNextRefresh || self.pendingReferralUserUpdate != nil) {
+            if completedSuccessfully && (self.shouldFetchOnNextRefresh || self.pendingReferralUserUpdate != nil) {
                 Logger.debug("ReferralUserService: Refresh will start again")
-                self.shouldPullOnNextRefresh = false
+                self.shouldFetchOnNextRefresh = false
                 self.refresh()
             }
         }
@@ -207,7 +209,7 @@ final class ReferralUserService {
                 Logger.debug("ReferralUserService: Claim code did fail")
                 Logger.error("Failed to claim code: \(String(describing: error))")
                 
-                self.handleProviderError(error)
+                self.handleTaskError(error)
                 
                 self.claimCodeTask = nil
                 
@@ -222,7 +224,7 @@ final class ReferralUserService {
     
     private var hasRefreshedOnce: Bool = false
     
-    private var shouldPullOnNextRefresh: Bool = false
+    private var shouldFetchOnNextRefresh: Bool = false
     
     private var claimCodeTask: Task<Void, Never>?
     private var refreshTask: Task<Void, Never>?
@@ -255,7 +257,7 @@ final class ReferralUserService {
         }
     }
     
-    private func handleProviderError(_ error: Error) {
+    private func handleTaskError(_ error: Error) {
         if let dispatcherError = error as? RemoteRequestDispatcherError,
            dispatcherError == .unauthorized {
             self.referralUserCache.reset()

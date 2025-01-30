@@ -200,4 +200,38 @@ import Testing
     
     @Test func claimReferralCode() {
     }
+    
+    @Test func referralUserDeletedOnRemoteCreatesNewReferralUser() async throws {
+        let referralUserCache = MockReferralUserCache()
+        referralUserCache.referralUser = MockReferralUser.Full.object
+        let referralUserProvider = MockReferralUserProvider()
+        let expectedReferralUser = MockReferralUser.Full.object.set(metadata: nil)
+        referralUserProvider.referralUserToReturnOnCreate = expectedReferralUser
+        let referralClaimCodeProvider = MockReferralClaimCodeProvider()
+        let service = ReferralUserService(appUserId: MockReferralUser.Full.object.appUserId,
+                                          projectKey: MockConstants.projectKey,
+                                          referralUserCache: referralUserCache,
+                                          referralUserProvider: referralUserProvider,
+                                          referralClaimCodeProvider: referralClaimCodeProvider)
+        let delegate = MockReferralUserServiceDelegate()
+        service.delegate = delegate
+        
+        try await confirmation("creates new referral user") { c in
+            delegate.isRefreshingChangedCallback = { isRefreshing in
+                if !isRefreshing {
+                    c.confirm()
+                    
+                    #expect(referralUserProvider.fetchMethodCallsCounter == 1)
+                    #expect(referralUserProvider.createMethodCallsCounter == 1)
+                    #expect(referralUserProvider.updateMethodCallsCounter == 0)
+                    #expect(referralUserProvider.claimMethodCallsCounter == 0)
+                    
+                    #expect(service.cachedReferralUser == expectedReferralUser)
+                }
+            }
+            service.refresh()
+            
+            try await Task.sleep(for: .milliseconds(50))
+        }
+    }
 }
