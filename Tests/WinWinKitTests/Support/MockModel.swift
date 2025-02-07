@@ -26,7 +26,23 @@ enum MockReferralProgram {
             metadata: nil,
             rewards: ReferralUser.ReferralProgram.Rewards(
                 sender: ReferralUser.ReferralProgram.Rewards.Sender(
-                    basic: [],
+                    basic: [
+                        ReferralUser.ReferralProgram.Rewards.Sender.BasicReward(
+                        key: "basic-reward-1",
+                        name: "Basic Reward 1",
+                        description: nil,
+                        metadata: nil,
+                        activationConfigurations: ReferralUser.ReferralProgram.Rewards.Sender.BasicReward.ActivationConfigurations(
+                            variant: .claim,
+                            amount: 2
+                        ),
+                        deactivationConfigurations: ReferralUser.ReferralProgram.Rewards.Sender.BasicReward.DeactivationConfigurations(
+                            variant: .interval,
+                            duration: 2,
+                            period: .months
+                        )
+                        )
+                    ],
                     credit: []
                 ),
                 receiver: ReferralUser.ReferralProgram.Rewards.Receiver(
@@ -46,7 +62,23 @@ enum MockReferralProgram {
                 "metadata": null,
                 "rewards": {
                     "sender": {
-                        "basic": [],
+                        "basic": [
+                            {
+                                "key": "basic-reward-1",
+                                "name": "Basic Reward 1",
+                                "description": null,
+                                "metadata": null,
+                                "activation_configurations": {
+                                    "variant": "claim",
+                                    "amount": 2
+                                },
+                                "deactivation_configurations": {
+                                    "variant": "interval",
+                                    "duration": 2,
+                                    "period": "months"
+                                }
+                            }
+                        ],
                         "credit": []
                     },
                     "receiver": {

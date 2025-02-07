@@ -17,6 +17,7 @@ public struct ReferralGrantedRewards: Codable {
     
     public struct BasicReward: Codable {
         public let key: String
+        public let name: String
         public let description: String?
         public let metadata: Metadata?
         public let expiresAt: Date?

@@ -43,6 +43,7 @@ public struct ReferralUser: Codable, Hashable, Sendable {
                 
                 public struct BasicReward: Codable, Hashable, Sendable {
                     public let key: String
+                    public let name: String
                     public let description: String?
                     public let metadata: Metadata?
                     public let activationConfigurations: ActivationConfigurations
@@ -77,8 +78,9 @@ public struct ReferralUser: Codable, Hashable, Sendable {
                 }
                 
                 public struct CreditReward: Codable, Hashable, Sendable {
-                    public let credits: Int
                     public let key: String
+                    public let credits: Int
+                    public let name: String
                     public let description: String?
                     public let metadata: Metadata?
                     public let activationConfigurations: ActivationConfigurations
@@ -120,6 +122,7 @@ public struct ReferralUser: Codable, Hashable, Sendable {
                 
                 public struct BasicReward: Codable, Hashable, Sendable {
                     public let key: String
+                    public let name: String
                     public let description: String?
                     public let metadata: Metadata?
                     public let activationConfigurations: ActivationConfigurations
@@ -153,8 +156,9 @@ public struct ReferralUser: Codable, Hashable, Sendable {
                 }
                 
                 public struct CreditReward: Codable, Hashable, Sendable {
-                    public let credits: Int
                     public let key: String
+                    public let credits: Int
+                    public let name: String
                     public let description: String?
                     public let metadata: Metadata?
                     public let activationConfigurations: ActivationConfigurations
@@ -200,6 +204,7 @@ public struct ReferralUser: Codable, Hashable, Sendable {
             
             public struct BasicReward: Codable, Hashable, Sendable {
                 public let key: String
+                public let name: String
                 public let description: String?
                 public let metadata: Metadata?
                 public let createdAt: Date
@@ -208,6 +213,7 @@ public struct ReferralUser: Codable, Hashable, Sendable {
             
             public struct CreditReward: Codable, Hashable, Sendable {
                 public let key: String
+                public let name: String
                 public let description: String?
                 public let metadata: Metadata?
                 public let createdAt: Date
