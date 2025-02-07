@@ -18,7 +18,7 @@ extension ReferralUser {
         .init(
             appUserId: self.appUserId,
             code: self.code,
-            codePreviewLink: self.codePreviewLink,
+            previewLink: self.previewLink,
             isPremium: self.isPremium,
             firstSeenAt: self.firstSeenAt,
             lastSeenAt: self.lastSeenAt,
