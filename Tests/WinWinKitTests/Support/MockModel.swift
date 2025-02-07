@@ -100,6 +100,7 @@ enum MockReferralUser {
         static let object: ReferralUser = .init(
             appUserId: "app-user-id-1",
             code: "XYZ123",
+            codePreviewLink: "https://usage.wwk.link/XYZ123",
             isPremium: true,
             firstSeenAt: Date(timeIntervalSince1970: 1607253359),
             lastSeenAt: Date(timeIntervalSince1970: 1733483759),
@@ -130,6 +131,7 @@ enum MockReferralUser {
             {
                 "app_user_id": "app-user-id-1",
                 "code": "XYZ123",
+                "code_preview_link": "https://usage.wwk.link/XYZ123",
                 "is_premium": true,
                 "first_seen_at": "2020-12-06T11:15:59.000000+00:00",
                 "last_seen_at": "2024-12-06T11:15:59.000000+00:00",
@@ -168,6 +170,7 @@ enum MockReferralUser {
         static let object: ReferralUser = .init(
             appUserId: "app-user-id-2",
             code: nil,
+            codePreviewLink: nil,
             isPremium: nil,
             firstSeenAt: nil,
             lastSeenAt: nil,

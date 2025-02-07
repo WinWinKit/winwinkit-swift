@@ -15,6 +15,7 @@ import Foundation
 public struct ReferralUser: Codable, Hashable, Sendable {
     public let appUserId: String
     public let code: String?
+    public let codePreviewLink: String?
     public let isPremium: Bool?
     public let firstSeenAt: Date?
     public let lastSeenAt: Date?
