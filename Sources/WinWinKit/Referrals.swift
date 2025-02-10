@@ -397,6 +397,10 @@ extension Referrals: ReferralUserServiceDelegate {
         self.delegate?.referrals(self, receivedUpdated: referralUser)
     }
     
+    internal func referralUserService(_ service: ReferralUserService, receivedError error: any Error) {
+        self.delegate?.referrals(self, receivedError: error)
+    }
+    
     internal func referralUserService(_ service: ReferralUserService, isRefreshingChanged isRefreshing: Bool) {
         if #available(iOS 17, macOS 14, *) {
             self.retainedReferralUserObservableObject?.set(isRefreshing: isRefreshing)

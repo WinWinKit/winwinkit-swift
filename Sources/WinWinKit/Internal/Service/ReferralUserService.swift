@@ -265,5 +265,7 @@ final class ReferralUserService {
             
             Logger.error("Authorization with the provided project key has failed! Please obtain a new project key and use it when initializing the Referrals object.")
         }
+        
+        self.delegate?.referralUserService(self, receivedError: error)
     }
 }

@@ -12,5 +12,6 @@
 
 public protocol ReferralsDelegate: AnyObject {
     func referrals(_ referrals: Referrals, receivedUpdated referralUser: ReferralUser?)
+    func referrals(_ referrals: Referrals, receivedError error: Error)
     func referrals(_ referrals: Referrals, isRefreshingChanged isRefreshing: Bool)
 }

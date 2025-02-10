@@ -35,6 +35,9 @@ final class MockReferralUserServiceDelegate: ReferralUserServiceDelegate {
         self.receivedUpdatedReferralUserMethodCallsCounter += 1
     }
     
+    func referralUserService(_ service: ReferralUserService, receivedError error: any Error) {
+    }
+    
     func referralUserService(_ service: ReferralUserService, isRefreshingChanged isRefreshing: Bool) {
         self.isRefreshing = isRefreshing
         self.isRefreshingChangedMethodCallsCounter += 1
