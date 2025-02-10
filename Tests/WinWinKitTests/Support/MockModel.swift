@@ -108,7 +108,16 @@ enum MockReferralUser {
             program: MockReferralProgram.Full.object,
             rewards: ReferralUser.Rewards(
                 active: ReferralUser.Rewards.Active(
-                    basic: [],
+                    basic: [
+                        ReferralUser.Rewards.Active.BasicReward(
+                            key: "basic-reward-1",
+                            name: "Basic Reward 1",
+                            description: nil,
+                            metadata: nil,
+                            createdAt: Date(timeIntervalSince1970: 1733483759),
+                            expiresAt: nil
+                        )
+                    ],
                     credit: []
                 ),
                 expired: ReferralUser.Rewards.Expired(
@@ -141,7 +150,16 @@ enum MockReferralUser {
                 "program": \(MockReferralProgram.Full.jsonString),
                 "rewards": {
                     "active": {
-                        "basic": [],
+                        "basic": [
+                            {
+                                "key": "basic-reward-1",
+                                "name": "Basic Reward 1",
+                                "description": null,
+                                "metadata": null,
+                                "expires_at": null,
+                                "created_at": "2024-12-06T11:15:59.000000+00:00"
+                            }
+                        ],
                         "credit": [],
                     },
                     "expired": {
