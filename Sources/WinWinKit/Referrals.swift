@@ -54,6 +54,10 @@ public final class Referrals {
     /// The default value is `info`.
     /// You may want to set it to `debug` for debugging purposes.
     ///
+    /// - Parameter baseEndpointURL: The url to the API endpoint of `WinWinKit`.
+    /// The default value is `https://api.winwinkit.com`.
+    /// You don't need to use this parameter, and it is here for performing internal testing.
+    ///
     /// - Returns: An instance of ``Referrals`` object.
     ///
     /// ### Example
@@ -71,7 +75,8 @@ public final class Referrals {
     @discardableResult
     public static func configure(projectKey: String,
                                  keyValueCache: KeyValueCacheType = UserDefaults.standard,
-                                 logLevel: Logger.Level = .info) -> Referrals {
+                                 logLevel: Logger.Level = .info,
+                                 baseEndpointURL: URL = URL(string: "https://api.winwinkit.com")!) -> Referrals {
         
         if let instance {
             Logger.error("Referrals has already been configured. Calling `configure` again has no effect.")
@@ -81,7 +86,8 @@ public final class Referrals {
         Logger.logLevel = logLevel
         
         let instance = Referrals(projectKey: projectKey,
-                                 keyValueCache: keyValueCache)
+                                 keyValueCache: keyValueCache,
+                                 baseEndpointURL: baseEndpointURL)
         self.instance = instance
         return instance
     }
@@ -330,11 +336,11 @@ public final class Referrals {
     private var referralUserService: ReferralUserService?
     
     private convenience init(projectKey: String,
-                             keyValueCache: KeyValueCacheType) {
+                             keyValueCache: KeyValueCacheType,
+                             baseEndpointURL: URL) {
         
         let networkReachability = NetworkReachability()
         let referralUserCache = ReferralUserCache(keyValueCache: keyValueCache)
-        let baseEndpointURL = URL(string: "https://api.winwinkit.com")!
         let remoteDataFetcher = RemoteDataFetcher(session: .shared)
         let remoteRequestDispatcher = RemoteRequestDispatcher(remoteDataFetcher: remoteDataFetcher)
         let referralUserProvider = RemoteReferralUserProvider(baseEndpointURL: baseEndpointURL,
