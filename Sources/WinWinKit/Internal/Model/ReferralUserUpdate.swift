@@ -62,16 +62,3 @@ extension ReferralUserUpdate {
         )
     }
 }
-
-extension ReferralUserUpdate {
-    
-    var asReferralUserInsert: ReferralUserInsert {
-        ReferralUserInsert(
-            appUserId: self.appUserId,
-            isPremium: self.isPremium,
-            firstSeenAt: self.firstSeenAt,
-            lastSeenAt: self.lastSeenAt,
-            metadata: self.metadata
-        )
-    }
-}

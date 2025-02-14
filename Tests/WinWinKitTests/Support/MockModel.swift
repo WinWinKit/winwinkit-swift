@@ -217,11 +217,11 @@ enum MockReferralUser {
     }
 }
 
-enum MockInsertReferralUser {
+enum MockReferralUserUpdate {
     
     enum Full {
         
-        static let object: ReferralUserInsert = .init(
+        static let object: ReferralUserUpdate = .init(
             appUserId: MockReferralUser.Full.object.appUserId,
             isPremium: MockReferralUser.Full.object.isPremium,
             firstSeenAt: MockReferralUser.Full.object.firstSeenAt,

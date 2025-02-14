@@ -82,8 +82,8 @@ import Testing
         let provider = RemoteReferralUserProvider(baseEndpointURL: MockConstants.baseEndpointURL,
                                                   remoteRequestDispatcher: remoteRequestDispatcher)
 
-        let result = try await provider.create(referralUser: MockInsertReferralUser.Full.object,
-                                               projectKey: MockConstants.projectKey)
+        let result = try await provider.createOrUpdate(referralUser: MockReferralUserUpdate.Full.object,
+                                                       projectKey: MockConstants.projectKey)
         #expect(result == MockReferralUser.Full.object)
     }
     
@@ -93,9 +93,9 @@ import Testing
         let provider = RemoteReferralUserProvider(baseEndpointURL: MockConstants.baseEndpointURL,
                                                   remoteRequestDispatcher: remoteRequestDispatcher)
         
-        await #expect(throws: RemoteReferralUserProviderError.receivedNoDataOnCreate) {
-            try await provider.create(referralUser: MockInsertReferralUser.Full.object,
-                                      projectKey: MockConstants.projectKey)
+        await #expect(throws: RemoteReferralUserProviderError.receivedNoDataOnCreateOrUpdate) {
+            try await provider.createOrUpdate(referralUser: MockReferralUserUpdate.Full.object,
+                                              projectKey: MockConstants.projectKey)
         }
     }
     
@@ -106,8 +106,8 @@ import Testing
                                                   remoteRequestDispatcher: remoteRequestDispatcher)
         
         await #expect(throws: RemoteRequestDispatcherError.notFound) {
-            try await provider.create(referralUser: MockInsertReferralUser.Full.object,
-                                      projectKey: MockConstants.projectKey)
+            try await provider.createOrUpdate(referralUser: MockReferralUserUpdate.Full.object,
+                                              projectKey: MockConstants.projectKey)
         }
     }
     
@@ -118,8 +118,8 @@ import Testing
                                                   remoteRequestDispatcher: remoteRequestDispatcher)
         
         await #expect(throws: RemoteRequestDispatcherError.unauthorized) {
-            try await provider.create(referralUser: MockInsertReferralUser.Full.object,
-                                      projectKey: MockConstants.projectKey)
+            try await provider.createOrUpdate(referralUser: MockReferralUserUpdate.Full.object,
+                                              projectKey: MockConstants.projectKey)
         }
     }
     
@@ -130,8 +130,8 @@ import Testing
                                                   remoteRequestDispatcher: remoteRequestDispatcher)
         
         await #expect(throws: RemoteRequestDispatcherError.unknown) {
-            try await provider.create(referralUser: MockInsertReferralUser.Full.object,
-                                      projectKey: MockConstants.projectKey)
+            try await provider.createOrUpdate(referralUser: MockReferralUserUpdate.Full.object,
+                                              projectKey: MockConstants.projectKey)
         }
     }
 }

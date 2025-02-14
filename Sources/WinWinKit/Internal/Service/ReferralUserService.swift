@@ -44,7 +44,7 @@ final class ReferralUserService {
     }
     
     func set(isPremium: Bool) {
-        self.cacheUpdateReferralUser(
+        self.cacheReferralUserUpdate(
             self.pendingReferralUserUpdate?.set(isPremium: isPremium) ??
             ReferralUserUpdate(appUserId: self.appUserId,
                                isPremium: isPremium,
@@ -55,7 +55,7 @@ final class ReferralUserService {
     }
     
     func set(firstSeenAt: Date) {
-        self.cacheUpdateReferralUser(
+        self.cacheReferralUserUpdate(
             self.pendingReferralUserUpdate?.set(firstSeenAt: firstSeenAt) ??
             ReferralUserUpdate(appUserId: self.appUserId,
                                isPremium: nil,
@@ -66,7 +66,7 @@ final class ReferralUserService {
     }
     
     func set(lastSeenAt: Date) {
-        self.cacheUpdateReferralUser(
+        self.cacheReferralUserUpdate(
             self.pendingReferralUserUpdate?.set(lastSeenAt: lastSeenAt) ??
             ReferralUserUpdate(appUserId: self.appUserId,
                                isPremium: nil,
@@ -77,7 +77,7 @@ final class ReferralUserService {
     }
     
     func set(metadata: Metadata) {
-        self.cacheUpdateReferralUser(
+        self.cacheReferralUserUpdate(
             self.pendingReferralUserUpdate?.set(metadata: metadata) ??
             ReferralUserUpdate(appUserId: self.appUserId,
                                isPremium: nil,
@@ -120,21 +120,19 @@ final class ReferralUserService {
                 
                 if self.cachedReferralUser == nil {
                     // Create (or update) referral user if don't have it in cache
-                    let updateReferralUser = self.pendingReferralUserUpdate
-                    let referralUserInsert = updateReferralUser?.asReferralUserInsert ?? ReferralUserInsert(appUserId: self.appUserId, isPremium: nil, firstSeenAt: nil, lastSeenAt: nil, metadata: nil)
-                    let referralUser = try await self.referralUserProvider.create(referralUser: referralUserInsert,
-                                                                                  projectKey: self.projectKey)
+                    let referralUserUpdate = self.pendingReferralUserUpdate ?? ReferralUserUpdate(appUserId: self.appUserId, isPremium: nil, firstSeenAt: nil, lastSeenAt: nil, metadata: nil)
+                    let referralUser = try await self.referralUserProvider.createOrUpdate(referralUser: referralUserUpdate,
+                                                                                          projectKey: self.projectKey)
                     Logger.debug("ReferralUserService: Refresh did create referral user")
-                    self.resetUpdateReferralUser(with: updateReferralUser)
+                    self.resetReferralUserUpdate(with: referralUserUpdate)
                     self.cacheReferralUser(referralUser)
                 }
-                else if let updateReferralUser = self.pendingReferralUserUpdate {
+                else if let referralUserUpdate = self.pendingReferralUserUpdate {
                     // Update referral user if has anything to update
-                    let referralUserInsert = updateReferralUser.asReferralUserInsert
-                    let updatedReferralUser = try await self.referralUserProvider.create(referralUser: referralUserInsert,
-                                                                                         projectKey: self.projectKey)
+                    let updatedReferralUser = try await self.referralUserProvider.createOrUpdate(referralUser: referralUserUpdate,
+                                                                                                 projectKey: self.projectKey)
                     Logger.debug("ReferralUserService: Refresh did update referral user")
-                    self.resetUpdateReferralUser(with: updateReferralUser)
+                    self.resetReferralUserUpdate(with: referralUserUpdate)
                     self.cacheReferralUser(updatedReferralUser)
                 }
                 else if let referralUser = try await self.referralUserProvider.fetch(appUserId: self.appUserId, projectKey: self.projectKey) {
@@ -144,12 +142,11 @@ final class ReferralUserService {
                 }
                 else {
                     // Create referral user if received nil on fetch request.
-                    let updateReferralUser = self.pendingReferralUserUpdate
-                    let referralUserInsert = updateReferralUser?.asReferralUserInsert ?? ReferralUserInsert(appUserId: self.appUserId, isPremium: nil, firstSeenAt: nil, lastSeenAt: nil, metadata: nil)
-                    let referralUser = try await self.referralUserProvider.create(referralUser: referralUserInsert,
-                                                                                  projectKey: self.projectKey)
+                    let referralUserUpdate = self.pendingReferralUserUpdate ?? ReferralUserUpdate(appUserId: self.appUserId, isPremium: nil, firstSeenAt: nil, lastSeenAt: nil, metadata: nil)
+                    let referralUser = try await self.referralUserProvider.createOrUpdate(referralUser: referralUserUpdate,
+                                                                                          projectKey: self.projectKey)
                     Logger.debug("ReferralUserService: Refresh did re-create referral user")
-                    self.resetUpdateReferralUser(with: updateReferralUser)
+                    self.resetReferralUserUpdate(with: referralUserUpdate)
                     self.cacheReferralUser(referralUser)
                 }
                 
@@ -241,11 +238,11 @@ final class ReferralUserService {
         self.delegate?.referralUserService(self, receivedUpdated: referralUser)
     }
     
-    private func cacheUpdateReferralUser(_ referralUser: ReferralUserUpdate) {
+    private func cacheReferralUserUpdate(_ referralUser: ReferralUserUpdate) {
         self.referralUserCache.referralUserUpdate = referralUser
     }
     
-    private func resetUpdateReferralUser(with referralUser: ReferralUserUpdate?) {
+    private func resetReferralUserUpdate(with referralUser: ReferralUserUpdate?) {
         if self.referralUserCache.referralUserUpdate == referralUser {
             self.referralUserCache.referralUserUpdate = nil
         }
