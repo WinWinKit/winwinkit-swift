@@ -44,6 +44,7 @@ final class ReferralUserService {
     }
     
     func set(isPremium: Bool) {
+        Logger.debug("ReferralUserService: Set isPremium value")
         self.cacheReferralUserUpdate(
             self.pendingReferralUserUpdate?.set(isPremium: isPremium) ??
             ReferralUserUpdate(appUserId: self.appUserId,
@@ -55,6 +56,7 @@ final class ReferralUserService {
     }
     
     func set(firstSeenAt: Date) {
+        Logger.debug("ReferralUserService: Set firstSeenAt value")
         self.cacheReferralUserUpdate(
             self.pendingReferralUserUpdate?.set(firstSeenAt: firstSeenAt) ??
             ReferralUserUpdate(appUserId: self.appUserId,
@@ -66,6 +68,7 @@ final class ReferralUserService {
     }
     
     func set(lastSeenAt: Date) {
+        Logger.debug("ReferralUserService: Set lastSeenAt value")
         self.cacheReferralUserUpdate(
             self.pendingReferralUserUpdate?.set(lastSeenAt: lastSeenAt) ??
             ReferralUserUpdate(appUserId: self.appUserId,
@@ -77,6 +80,7 @@ final class ReferralUserService {
     }
     
     func set(metadata: Metadata) {
+        Logger.debug("ReferralUserService: Set metadata value")
         self.cacheReferralUserUpdate(
             self.pendingReferralUserUpdate?.set(metadata: metadata) ??
             ReferralUserUpdate(appUserId: self.appUserId,
@@ -94,6 +98,7 @@ final class ReferralUserService {
     func refresh() {
         
         if self.shouldSuspendIndefinitely {
+            Logger.debug("ReferralUserService: Refresh suspended indefinitely")
             return
         }
         
@@ -178,6 +183,7 @@ final class ReferralUserService {
     func claim(code: String, completion: @escaping (Result<ReferralClaimCodeResult, Error>) -> Void) {
         
         if self.shouldSuspendIndefinitely {
+            Logger.debug("ReferralUserService: Claim code suspended indefinitely")
             return
         }
         
