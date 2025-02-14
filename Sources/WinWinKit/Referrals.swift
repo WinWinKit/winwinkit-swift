@@ -217,6 +217,9 @@ public final class Referrals {
             Logger.warning("User identifier `appUserId` must be set before updating any other user properties.")
             return
         }
+        if referralUserService.cachedReferralUser?.isPremium == isPremium {
+            return
+        }
         referralUserService.set(isPremium: isPremium)
         referralUserService.refresh()
     }
@@ -236,6 +239,9 @@ public final class Referrals {
             firstSeenAt <= .now
         else {
             Logger.warning("First seen at date must not be in the future.")
+            return
+        }
+        if firstSeenAt.isPracticallyTheSame(as: referralUserService.cachedReferralUser?.firstSeenAt) {
             return
         }
         referralUserService.set(firstSeenAt: firstSeenAt)
@@ -259,8 +265,12 @@ public final class Referrals {
             Logger.warning("Last seen at date must not be in the future.")
             return
         }
+        if lastSeenAt.isPracticallyTheSame(as: referralUserService.cachedReferralUser?.lastSeenAt) {
+            return
+        }
         referralUserService.set(lastSeenAt: lastSeenAt)
         referralUserService.refresh()
+        
     }
     
     ///
@@ -272,6 +282,9 @@ public final class Referrals {
             let referralUserService
         else {
             Logger.warning("User identifier `appUserId` must be set before updating any other user properties.")
+            return
+        }
+        if referralUserService.cachedReferralUser?.metadata == metadata {
             return
         }
         referralUserService.set(metadata: metadata)
