@@ -82,7 +82,7 @@ import Testing
                 if !isRefreshing {
                     c.confirm()
                     
-                    #expect(referralUserProvider.fetchMethodCallsCounter == 1)
+                    #expect(referralUserProvider.fetchMethodCallsCounter == 0)
                     #expect(referralUserProvider.createMethodCallsCounter == 1)
                     #expect(referralUserProvider.updateMethodCallsCounter == 0)
                     #expect(referralUserProvider.claimMethodCallsCounter == 0)
@@ -114,7 +114,7 @@ import Testing
                 if !isRefreshing {
                     c.confirm()
                     
-                    #expect(referralUserProvider.fetchMethodCallsCounter == 1)
+                    #expect(referralUserProvider.fetchMethodCallsCounter == 0)
                     #expect(referralUserProvider.createMethodCallsCounter == 1)
                     #expect(referralUserProvider.updateMethodCallsCounter == 0)
                     #expect(referralUserProvider.claimMethodCallsCounter == 0)
@@ -148,8 +148,8 @@ import Testing
                 if !isRefreshing {
                     c.confirm()
                     
-                    #expect(referralUserProvider.fetchMethodCallsCounter == 1)
-                    #expect(referralUserProvider.createMethodCallsCounter == 0)
+                    #expect(referralUserProvider.fetchMethodCallsCounter == 0)
+                    #expect(referralUserProvider.createMethodCallsCounter == 1)
                     #expect(referralUserProvider.updateMethodCallsCounter == 0)
                     #expect(referralUserProvider.claimMethodCallsCounter == 0)
                     

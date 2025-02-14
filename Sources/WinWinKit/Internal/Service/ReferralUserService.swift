@@ -91,7 +91,7 @@ final class ReferralUserService {
         self.refreshTask != nil
     }
     
-    func refresh(shouldFetch: Bool = false) {
+    func refresh() {
         
         if self.shouldSuspendIndefinitely {
             return
@@ -99,14 +99,12 @@ final class ReferralUserService {
         
         if let delegate,
            !delegate.referralUserServiceCanPerformNextRefresh(self) {
-            self.shouldFetchOnNextRefresh = self.shouldFetchOnNextRefresh || shouldFetch
             Logger.debug("ReferralUserService: Refresh not allowed")
             return
         }
         
         if self.refreshTask != nil {
-            self.shouldFetchOnNextRefresh = self.shouldFetchOnNextRefresh || shouldFetch
-            Logger.debug("ReferralUserService: Refresh delayed because of already refreshing")
+            Logger.debug("ReferralUserService: Refresh already in progress")
             return
         }
         
@@ -118,41 +116,42 @@ final class ReferralUserService {
             
             var completedSuccessfully = false
             
-            let shouldPerformFetch = !self.hasRefreshedOnce || self.shouldFetchOnNextRefresh || shouldFetch
-            
             do {
-                if shouldPerformFetch,
-                   let referralUser = try await self.referralUserProvider.fetch(appUserId: self.appUserId, projectKey: self.projectKey) {
-                    Logger.debug("ReferralUserService: Refresh did fetch referral user")
-                    self.cacheReferralUser(referralUser)
-                    if let updateReferralUser = self.pendingReferralUserUpdate {
-                        let updatedReferralUser = try await self.referralUserProvider.update(referralUser: updateReferralUser,
-                                                                                             projectKey: self.projectKey)
-                        self.resetUpdateReferralUser(with: updateReferralUser)
-                        self.cacheReferralUser(updatedReferralUser)
-                        Logger.debug("ReferralUserService: Refresh did update referral user")
-                    }
-                }
-                else if !shouldPerformFetch && self.cachedReferralUser != nil {
-                    if let updateReferralUser = self.pendingReferralUserUpdate {
-                        let updatedReferralUser = try await self.referralUserProvider.update(referralUser: updateReferralUser,
-                                                                                             projectKey: self.projectKey)
-                        self.resetUpdateReferralUser(with: updateReferralUser)
-                        self.cacheReferralUser(updatedReferralUser)
-                        Logger.debug("ReferralUserService: Refresh did update referral user")
-                    }
-                }
-                else {
+                
+                if self.cachedReferralUser == nil {
+                    // Create (or update) referral user if don't have it in cache
                     let updateReferralUser = self.pendingReferralUserUpdate
                     let referralUserInsert = updateReferralUser?.asReferralUserInsert ?? ReferralUserInsert(appUserId: self.appUserId, isPremium: nil, firstSeenAt: nil, lastSeenAt: nil, metadata: nil)
                     let referralUser = try await self.referralUserProvider.create(referralUser: referralUserInsert,
                                                                                   projectKey: self.projectKey)
+                    Logger.debug("ReferralUserService: Refresh did create referral user")
                     self.resetUpdateReferralUser(with: updateReferralUser)
                     self.cacheReferralUser(referralUser)
-                    Logger.debug("ReferralUserService: Refresh did create referral user")
                 }
-                
-                self.hasRefreshedOnce = true
+                else if let updateReferralUser = self.pendingReferralUserUpdate {
+                    // Update referral user if has anything to update
+                    let referralUserInsert = updateReferralUser.asReferralUserInsert
+                    let updatedReferralUser = try await self.referralUserProvider.create(referralUser: referralUserInsert,
+                                                                                         projectKey: self.projectKey)
+                    Logger.debug("ReferralUserService: Refresh did update referral user")
+                    self.resetUpdateReferralUser(with: updateReferralUser)
+                    self.cacheReferralUser(updatedReferralUser)
+                }
+                else if let referralUser = try await self.referralUserProvider.fetch(appUserId: self.appUserId, projectKey: self.projectKey) {
+                    // Fetch referral user to get latest value.
+                    Logger.debug("ReferralUserService: Refresh did fetch referral user")
+                    self.cacheReferralUser(referralUser)
+                }
+                else {
+                    // Create referral user if received nil on fetch request.
+                    let updateReferralUser = self.pendingReferralUserUpdate
+                    let referralUserInsert = updateReferralUser?.asReferralUserInsert ?? ReferralUserInsert(appUserId: self.appUserId, isPremium: nil, firstSeenAt: nil, lastSeenAt: nil, metadata: nil)
+                    let referralUser = try await self.referralUserProvider.create(referralUser: referralUserInsert,
+                                                                                  projectKey: self.projectKey)
+                    Logger.debug("ReferralUserService: Refresh did re-create referral user")
+                    self.resetUpdateReferralUser(with: updateReferralUser)
+                    self.cacheReferralUser(referralUser)
+                }
                 
                 completedSuccessfully = true
                 
@@ -168,9 +167,8 @@ final class ReferralUserService {
             self.refreshTask = nil
             self.delegate?.referralUserService(self, isRefreshingChanged: false)
             
-            if completedSuccessfully && (self.shouldFetchOnNextRefresh || self.pendingReferralUserUpdate != nil) {
+            if completedSuccessfully && self.pendingReferralUserUpdate != nil {
                 Logger.debug("ReferralUserService: Refresh will start again")
-                self.shouldFetchOnNextRefresh = false
                 self.refresh()
             }
         }
@@ -221,10 +219,6 @@ final class ReferralUserService {
     // MARK: - Private
     
     private var shouldSuspendIndefinitely: Bool = false
-    
-    private var hasRefreshedOnce: Bool = false
-    
-    private var shouldFetchOnNextRefresh: Bool = false
     
     private var claimCodeTask: Task<Void, Never>?
     private var refreshTask: Task<Void, Never>?
