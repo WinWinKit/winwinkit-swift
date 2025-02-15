@@ -191,6 +191,72 @@ import Testing
         }
     }
     
+    @Test func createReferralUser() async throws {
+        let referralUserCache = MockReferralUserCache()
+        let referralUserProvider = MockReferralUserProvider()
+        referralUserProvider.referralUserToReturnOnCreate = MockReferralUser.Full.object
+        let referralClaimCodeProvider = MockReferralClaimCodeProvider()
+        let service = ReferralUserService(appUserId: MockReferralUser.Full.object.appUserId,
+                                          projectKey: MockConstants.projectKey,
+                                          referralUserCache: referralUserCache,
+                                          referralUserProvider: referralUserProvider,
+                                          referralClaimCodeProvider: referralClaimCodeProvider)
+        let delegate = MockReferralUserServiceDelegate()
+        service.delegate = delegate
+        
+        try await confirmation("creates referral user") { c in
+            delegate.isRefreshingChangedCallback = { isRefreshing in
+                if !isRefreshing {
+                    c.confirm()
+                    
+                    #expect(referralUserProvider.fetchMethodCallsCounter == 0)
+                    #expect(referralUserProvider.createMethodCallsCounter == 1)
+                    #expect(referralUserProvider.claimMethodCallsCounter == 0)
+                    
+                    #expect(service.cachedReferralUser == MockReferralUser.Full.object)
+                }
+            }
+            service.refresh()
+            
+            try await Task.sleep(for: .milliseconds(50))
+        }
+    }
+    
+    @Test func updateReferralUser() async throws {
+        let referralUserCache = MockReferralUserCache()
+        referralUserCache.referralUser = MockReferralUser.Full.object
+        let referralUserProvider = MockReferralUserProvider()
+        let updateMetadata: Metadata = ["value": 123]
+        let updatedReferralUser = MockReferralUser.Full.object.set(metadata: updateMetadata)
+        referralUserProvider.referralUserToReturnOnCreate = updatedReferralUser
+        let referralClaimCodeProvider = MockReferralClaimCodeProvider()
+        let service = ReferralUserService(appUserId: MockReferralUser.Full.object.appUserId,
+                                          projectKey: MockConstants.projectKey,
+                                          referralUserCache: referralUserCache,
+                                          referralUserProvider: referralUserProvider,
+                                          referralClaimCodeProvider: referralClaimCodeProvider)
+        let delegate = MockReferralUserServiceDelegate()
+        service.delegate = delegate
+        
+        try await confirmation("updates referral user") { c in
+            delegate.isRefreshingChangedCallback = { isRefreshing in
+                if !isRefreshing {
+                    c.confirm()
+                    
+                    #expect(referralUserProvider.fetchMethodCallsCounter == 0)
+                    #expect(referralUserProvider.createMethodCallsCounter == 1)
+                    #expect(referralUserProvider.claimMethodCallsCounter == 0)
+                    
+                    #expect(service.cachedReferralUser == updatedReferralUser)
+                }
+            }
+            service.set(metadata: updateMetadata)
+            service.refresh()
+            
+            try await Task.sleep(for: .milliseconds(50))
+        }
+    }
+    
     @Test func createAndUpdateReferralUser() {
     }
     
