@@ -14,7 +14,7 @@ import Foundation
 @testable import WinWinKit
 
 enum MockReferralClaimCodeProviderError: Error {
-    case noReferralUserToReturn
+    case noReferralClaimCodeResultToReturn
 }
 
 final class MockReferralClaimCodeProvider: ReferralClaimCodeProviderType {
@@ -31,6 +31,6 @@ final class MockReferralClaimCodeProvider: ReferralClaimCodeProviderType {
         if let referralClaimCodeResultToReturn {
             return referralClaimCodeResultToReturn
         }
-        throw MockReferralUserProviderError.noReferralUserToReturn
+        throw MockReferralClaimCodeProviderError.noReferralClaimCodeResultToReturn
     }
 }

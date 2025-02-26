@@ -32,7 +32,7 @@ struct RemoteReferralClaimCodeRequest: RemoteRequest {
         guard
             let url = URL(string: self.request.path, relativeTo: self.baseEndpointURL)
         else {
-            throw RemoteReferralUserRequestError.unableToCreateURL
+            throw RemoteReferralClaimCodeRequestError.unableToCreateURL
         }
         var urlRequest = URLRequest(url: url)
         urlRequest.httpMethod = self.request.httpMethod
