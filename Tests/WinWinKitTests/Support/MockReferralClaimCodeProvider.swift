@@ -23,7 +23,7 @@ final class MockReferralClaimCodeProvider: ReferralClaimCodeProviderType {
     var errorToThrow: Error? = nil
     var claimMethodCallsCounter: Int = 0
     
-    func claim(code: String, appUserId: String, projectKey: String) async throws -> ReferralClaimCodeResult {
+    func claim(code: String, appUserId: String, apiKey: String) async throws -> ReferralClaimCodeResult {
         self.claimMethodCallsCounter += 1
         if let errorToThrow {
             throw errorToThrow

@@ -20,7 +20,7 @@ import Testing
         let referralUserProvider = MockReferralUserProvider()
         let referralClaimCodeProvider = MockReferralClaimCodeProvider()
         let service = ReferralUserService(appUserId: MockReferralUser.Full.object.appUserId,
-                                          projectKey: MockConstants.projectKey,
+                                          apiKey: MockConstants.apiKey,
                                           referralUserCache: referralUserCache,
                                           referralUserProvider: referralUserProvider,
                                           referralClaimCodeProvider: referralClaimCodeProvider)
@@ -33,7 +33,7 @@ import Testing
         let referralUserProvider = MockReferralUserProvider()
         let referralClaimCodeProvider = MockReferralClaimCodeProvider()
         let service = ReferralUserService(appUserId: MockReferralUser.Full.object.appUserId,
-                                          projectKey: MockConstants.projectKey,
+                                          apiKey: MockConstants.apiKey,
                                           referralUserCache: referralUserCache,
                                           referralUserProvider: referralUserProvider,
                                           referralClaimCodeProvider: referralClaimCodeProvider)
@@ -49,7 +49,7 @@ import Testing
         let referralUserProvider = MockReferralUserProvider()
         let referralClaimCodeProvider = MockReferralClaimCodeProvider()
         let service = ReferralUserService(appUserId: MockReferralUser.Full.object.appUserId,
-                                          projectKey: MockConstants.projectKey,
+                                          apiKey: MockConstants.apiKey,
                                           referralUserCache: referralUserCache,
                                           referralUserProvider: referralUserProvider,
                                           referralClaimCodeProvider: referralClaimCodeProvider)
@@ -70,7 +70,7 @@ import Testing
         let referralUserProvider = MockReferralUserProvider()
         let referralClaimCodeProvider = MockReferralClaimCodeProvider()
         let service = ReferralUserService(appUserId: MockReferralUser.Full.object.appUserId,
-                                          projectKey: MockConstants.projectKey,
+                                          apiKey: MockConstants.apiKey,
                                           referralUserCache: referralUserCache,
                                           referralUserProvider: referralUserProvider,
                                           referralClaimCodeProvider: referralClaimCodeProvider)
@@ -101,7 +101,7 @@ import Testing
         let referralUserProvider = MockReferralUserProvider()
         let referralClaimCodeProvider = MockReferralClaimCodeProvider()
         let service = ReferralUserService(appUserId: MockReferralUser.Full.object.appUserId,
-                                          projectKey: MockConstants.projectKey,
+                                          apiKey: MockConstants.apiKey,
                                           referralUserCache: referralUserCache,
                                           referralUserProvider: referralUserProvider,
                                           referralClaimCodeProvider: referralClaimCodeProvider)
@@ -134,7 +134,7 @@ import Testing
         referralUserProvider.errorToThrowOnFetch = RemoteRequestDispatcherError.unauthorized
         let referralClaimCodeProvider = MockReferralClaimCodeProvider()
         let service = ReferralUserService(appUserId: MockReferralUser.Full.object.appUserId,
-                                          projectKey: MockConstants.projectKey,
+                                          apiKey: MockConstants.apiKey,
                                           referralUserCache: referralUserCache,
                                           referralUserProvider: referralUserProvider,
                                           referralClaimCodeProvider: referralClaimCodeProvider)
@@ -166,7 +166,7 @@ import Testing
         referralUserProvider.errorToThrowOnFetch = RemoteRequestDispatcherError.unauthorized
         let referralClaimCodeProvider = MockReferralClaimCodeProvider()
         let service = ReferralUserService(appUserId: MockReferralUser.Full.object.appUserId,
-                                          projectKey: MockConstants.projectKey,
+                                          apiKey: MockConstants.apiKey,
                                           referralUserCache: referralUserCache,
                                           referralUserProvider: referralUserProvider,
                                           referralClaimCodeProvider: referralClaimCodeProvider)
@@ -197,7 +197,7 @@ import Testing
         referralUserProvider.referralUserToReturnOnCreate = MockReferralUser.Full.object
         let referralClaimCodeProvider = MockReferralClaimCodeProvider()
         let service = ReferralUserService(appUserId: MockReferralUser.Full.object.appUserId,
-                                          projectKey: MockConstants.projectKey,
+                                          apiKey: MockConstants.apiKey,
                                           referralUserCache: referralUserCache,
                                           referralUserProvider: referralUserProvider,
                                           referralClaimCodeProvider: referralClaimCodeProvider)
@@ -231,7 +231,7 @@ import Testing
         referralUserProvider.referralUserToReturnOnCreate = updatedReferralUser
         let referralClaimCodeProvider = MockReferralClaimCodeProvider()
         let service = ReferralUserService(appUserId: MockReferralUser.Full.object.appUserId,
-                                          projectKey: MockConstants.projectKey,
+                                          apiKey: MockConstants.apiKey,
                                           referralUserCache: referralUserCache,
                                           referralUserProvider: referralUserProvider,
                                           referralClaimCodeProvider: referralClaimCodeProvider)
@@ -271,7 +271,7 @@ import Testing
         referralUserProvider.referralUserToReturnOnCreate = expectedReferralUser
         let referralClaimCodeProvider = MockReferralClaimCodeProvider()
         let service = ReferralUserService(appUserId: MockReferralUser.Full.object.appUserId,
-                                          projectKey: MockConstants.projectKey,
+                                          apiKey: MockConstants.apiKey,
                                           referralUserCache: referralUserCache,
                                           referralUserProvider: referralUserProvider,
                                           referralClaimCodeProvider: referralClaimCodeProvider)

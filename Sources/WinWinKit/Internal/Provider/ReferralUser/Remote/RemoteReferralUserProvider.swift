@@ -23,10 +23,10 @@ struct RemoteReferralUserProvider: ReferralUserProviderType {
     
     // MARK: - ReferralUserProviderType
     
-    func fetch(appUserId: String, projectKey: String) async throws -> ReferralUser? {
+    func fetch(appUserId: String, apiKey: String) async throws -> ReferralUser? {
         do {
             return try await self.perform(request: .get(appUserId: appUserId),
-                                          projectKey: projectKey)
+                                          apiKey: apiKey)
         }
         catch (let error as RemoteRequestDispatcherError) {
             if error == .notFound {
@@ -39,17 +39,17 @@ struct RemoteReferralUserProvider: ReferralUserProviderType {
         }
     }
     
-    func createOrUpdate(referralUser: ReferralUserUpdate, projectKey: String) async throws -> ReferralUser {
+    func createOrUpdate(referralUser: ReferralUserUpdate, apiKey: String) async throws -> ReferralUser {
         try await self.perform(request: .post(user: referralUser),
-                               projectKey: projectKey)
+                               apiKey: apiKey)
             .unwrap(orThrow: .receivedNoDataOnCreateOrUpdate)
     }
     
     // MARK: - Private
     
-    private func perform(request: RemoteReferralUserRequest.Request, projectKey: String) async throws -> ReferralUser? {
+    private func perform(request: RemoteReferralUserRequest.Request, apiKey: String) async throws -> ReferralUser? {
         let request = RemoteReferralUserRequest(baseEndpointURL: self.baseEndpointURL,
-                                                projectKey: projectKey,
+                                                apiKey: apiKey,
                                                 request: request)
         let response: RemoteReferralUserResponse? = try await self.remoteRequestDispatcher.perform(request: request)
         let referralUser = response?.data?.referralUser

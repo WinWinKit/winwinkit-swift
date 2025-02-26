@@ -23,17 +23,17 @@ struct RemoteReferralClaimCodeProvider: ReferralClaimCodeProviderType {
     
     // MARK: - ReferralUserProviderType
     
-    func claim(code: String, appUserId: String, projectKey: String) async throws -> ReferralClaimCodeResult {
+    func claim(code: String, appUserId: String, apiKey: String) async throws -> ReferralClaimCodeResult {
         try await self.perform(request: .claim(code: code, appUserId: appUserId),
-                               projectKey: projectKey)
+                               apiKey: apiKey)
             .unwrap(orThrow: .receivedNoDataOnClaimCode)
     }
     
     // MARK: - Private
     
-    private func perform(request: RemoteReferralClaimCodeRequest.Request, projectKey: String) async throws -> ReferralClaimCodeResult? {
+    private func perform(request: RemoteReferralClaimCodeRequest.Request, apiKey: String) async throws -> ReferralClaimCodeResult? {
         let request = RemoteReferralClaimCodeRequest(baseEndpointURL: self.baseEndpointURL,
-                                                     projectKey: projectKey,
+                                                     apiKey: apiKey,
                                                      request: request)
         let response: RemoteReferralClaimCodeResponse? = try await self.remoteRequestDispatcher.perform(request: request)
         guard

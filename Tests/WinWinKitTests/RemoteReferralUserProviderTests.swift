@@ -24,7 +24,7 @@ import Testing
                                                   remoteRequestDispatcher: remoteRequestDispatcher)
         
         let result = try await provider.fetch(appUserId: MockReferralUser.Full.object.appUserId,
-                                              projectKey: MockConstants.projectKey)
+                                              apiKey: MockConstants.apiKey)
         #expect(result == MockReferralUser.Full.object)
     }
     
@@ -35,7 +35,7 @@ import Testing
                                                   remoteRequestDispatcher: remoteRequestDispatcher)
         
         let result = try await provider.fetch(appUserId: MockReferralUser.Full.object.appUserId,
-                                              projectKey: MockConstants.projectKey)
+                                              apiKey: MockConstants.apiKey)
         #expect(result == nil)
     }
     
@@ -46,7 +46,7 @@ import Testing
                                                   remoteRequestDispatcher: remoteRequestDispatcher)
         
         let result = try await provider.fetch(appUserId: MockReferralUser.Full.object.appUserId,
-                                              projectKey: MockConstants.projectKey)
+                                              apiKey: MockConstants.apiKey)
         #expect(result == nil)
     }
     
@@ -58,7 +58,7 @@ import Testing
         
         await #expect(throws: RemoteRequestDispatcherError.unauthorized) {
             try await provider.fetch(appUserId: MockReferralUser.Full.object.appUserId,
-                                     projectKey: MockConstants.projectKey)
+                                     apiKey: MockConstants.apiKey)
         }
     }
     
@@ -70,7 +70,7 @@ import Testing
         
         await #expect(throws: RemoteRequestDispatcherError.unknown) {
             try await provider.fetch(appUserId: MockReferralUser.Full.object.appUserId,
-                                     projectKey: MockConstants.projectKey)
+                                     apiKey: MockConstants.apiKey)
         }
     }
     
@@ -83,7 +83,7 @@ import Testing
                                                   remoteRequestDispatcher: remoteRequestDispatcher)
 
         let result = try await provider.createOrUpdate(referralUser: MockReferralUserUpdate.Full.object,
-                                                       projectKey: MockConstants.projectKey)
+                                                       apiKey: MockConstants.apiKey)
         #expect(result == MockReferralUser.Full.object)
     }
     
@@ -95,7 +95,7 @@ import Testing
         
         await #expect(throws: RemoteReferralUserProviderError.receivedNoDataOnCreateOrUpdate) {
             try await provider.createOrUpdate(referralUser: MockReferralUserUpdate.Full.object,
-                                              projectKey: MockConstants.projectKey)
+                                              apiKey: MockConstants.apiKey)
         }
     }
     
@@ -107,7 +107,7 @@ import Testing
         
         await #expect(throws: RemoteRequestDispatcherError.notFound) {
             try await provider.createOrUpdate(referralUser: MockReferralUserUpdate.Full.object,
-                                              projectKey: MockConstants.projectKey)
+                                              apiKey: MockConstants.apiKey)
         }
     }
     
@@ -119,7 +119,7 @@ import Testing
         
         await #expect(throws: RemoteRequestDispatcherError.unauthorized) {
             try await provider.createOrUpdate(referralUser: MockReferralUserUpdate.Full.object,
-                                              projectKey: MockConstants.projectKey)
+                                              apiKey: MockConstants.apiKey)
         }
     }
     
@@ -131,7 +131,7 @@ import Testing
         
         await #expect(throws: RemoteRequestDispatcherError.unknown) {
             try await provider.createOrUpdate(referralUser: MockReferralUserUpdate.Full.object,
-                                              projectKey: MockConstants.projectKey)
+                                              apiKey: MockConstants.apiKey)
         }
     }
 }

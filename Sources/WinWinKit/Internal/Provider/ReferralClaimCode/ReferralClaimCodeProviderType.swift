@@ -16,5 +16,5 @@ struct ReferralClaimCodeResult {
 }
 
 protocol ReferralClaimCodeProviderType {
-    func claim(code: String, appUserId: String, projectKey: String) async throws -> ReferralClaimCodeResult
+    func claim(code: String, appUserId: String, apiKey: String) async throws -> ReferralClaimCodeResult
 }

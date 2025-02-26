@@ -20,7 +20,7 @@ import Testing
         let remoteDataFetcher = RemoteDataFetcher(session: .shared)
         let dispatcher = RemoteRequestDispatcher(remoteDataFetcher: remoteDataFetcher)
         let request = RemoteReferralUserRequest(baseEndpointURL: MockConstants.baseEndpointURL,
-                                                projectKey: MockConstants.projectKey,
+                                                apiKey: MockConstants.apiKey,
                                                 request: .get(appUserId: MockReferralUser.Full.object.appUserId))
         await #expect(throws: RemoteRequestDispatcherError.unauthorized) {
             let _: RemoteReferralUserResponse? = try await dispatcher.perform(request: request)

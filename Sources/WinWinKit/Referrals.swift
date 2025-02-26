@@ -23,7 +23,7 @@ public final class Referrals {
     ///
     /// Returns the already configured instance of ``Referrals``.
     /// - Warning: this method will crash with `fatalError` if ``Referrals`` has not been initialized through
-    /// ``Referrals/configure(projectKey:)`` or one of its overloads.
+    /// ``Referrals/configure(apiKey:)`` or one of its overloads.
     /// If there's a chance that may have not happened yet, you can use ``isConfigured`` to check if it's safe to call.
     ///
     /// ### Example
@@ -36,7 +36,7 @@ public final class Referrals {
         guard
             let instance
         else {
-            fatalError("Referrals has not been configured yet. To get started call `Referrals.configure(projectKey:).`")
+            fatalError("Referrals has not been configured yet. To get started call `Referrals.configure(apiKey:).`")
         }
         return instance
     }
@@ -44,7 +44,7 @@ public final class Referrals {
     ///
     /// Initialize an instance of the Referrals SDK.
     ///
-    /// - Parameter projectKey: The project key you wish to use to configure ``Referrals``.
+    /// - Parameter apiKey: The API key you wish to use to configure ``Referrals``.
     ///
     /// - Parameter keyValueCache: The key-value cache where ``Referrals`` can store data.
     /// The default value is `UserDefaults.standard`.
@@ -63,17 +63,17 @@ public final class Referrals {
     /// ### Example
     ///
     /// ```swift
-    /// Referrals.configure(projectKey: "<YOUR_PROJECT_KEY>")
+    /// Referrals.configure(apiKey: "<YOUR_API_KEY>")
     /// ```
     ///
     /// ```swift
-    /// Referrals.configure(projectKey: "<YOUR_PROJECT_KEY>",
+    /// Referrals.configure(apiKey: "<YOUR_API_KEY>",
     ///                     keyValueCache: UserDefaults(suiteName: "<YOUR_APP_GROUP>"),
     ///                     logLevel: .debug)
     /// ```
     ///
     @discardableResult
-    public static func configure(projectKey: String,
+    public static func configure(apiKey: String,
                                  keyValueCache: KeyValueCacheType = UserDefaults.standard,
                                  logLevel: Logger.Level = .info,
                                  baseEndpointURL: URL = URL(string: "https://api.winwinkit.com")!) -> Referrals {
@@ -85,7 +85,7 @@ public final class Referrals {
         
         Logger.logLevel = logLevel
         
-        let instance = Referrals(projectKey: projectKey,
+        let instance = Referrals(apiKey: apiKey,
                                  keyValueCache: keyValueCache,
                                  baseEndpointURL: baseEndpointURL)
         self.instance = instance
@@ -93,7 +93,7 @@ public final class Referrals {
     }
     
     ///
-    /// Returns `true` if Referrals has already been initialized through ``Referrals/configure(projectKey:)``.
+    /// Returns `true` if Referrals has already been initialized through ``Referrals/configure(apiKey:)``.
     ///
     public static var isConfigured: Bool {
         Self.instance != nil
@@ -193,7 +193,7 @@ public final class Referrals {
         self.startNetworkReachability()
         
         let referralUserService = ReferralUserService(appUserId: appUserId,
-                                                      projectKey: self.projectKey,
+                                                      apiKey: self.apiKey,
                                                       referralUserCache: self.referralUserCache,
                                                       referralUserProvider: self.referralUserProvider,
                                                       referralClaimCodeProvider: self.referralClaimCodeProvider)
@@ -320,7 +320,7 @@ public final class Referrals {
     @Atomic
     private static var instance: Referrals? = nil
     
-    private let projectKey: String
+    private let apiKey: String
     private let networkReachability: NetworkReachabilityType
     private let referralUserCache: ReferralUserCacheType
     private let referralUserProvider: ReferralUserProviderType
@@ -348,7 +348,7 @@ public final class Referrals {
     @Atomic
     private var referralUserService: ReferralUserService?
     
-    private convenience init(projectKey: String,
+    private convenience init(apiKey: String,
                              keyValueCache: KeyValueCacheType,
                              baseEndpointURL: URL) {
         
@@ -361,20 +361,20 @@ public final class Referrals {
         let referralClaimCodeProvider = RemoteReferralClaimCodeProvider(baseEndpointURL: baseEndpointURL,
                                                                         remoteRequestDispatcher: remoteRequestDispatcher)
         
-        self.init(projectKey: projectKey,
+        self.init(apiKey: apiKey,
                   networkReachability: networkReachability,
                   referralUserCache: referralUserCache,
                   referralUserProvider: referralUserProvider,
                   referralClaimCodeProvider: referralClaimCodeProvider)
     }
     
-    private init(projectKey: String,
+    private init(apiKey: String,
                  networkReachability: NetworkReachabilityType,
                  referralUserCache: ReferralUserCacheType,
                  referralUserProvider: ReferralUserProviderType,
                  referralClaimCodeProvider: ReferralClaimCodeProviderType) {
         
-        self.projectKey = projectKey
+        self.apiKey = apiKey
         self.networkReachability = networkReachability
         self.referralUserCache = referralUserCache
         self.referralUserProvider = referralUserProvider

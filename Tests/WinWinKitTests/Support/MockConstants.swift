@@ -14,5 +14,5 @@ import Foundation
 
 enum MockConstants {
     static let baseEndpointURL: URL = .init(string: "https://dev.api.winwinkit.com")!
-    static let projectKey: String = "project-key-1"
+    static let apiKey: String = "api-key-1"
 }

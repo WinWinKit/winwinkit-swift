@@ -24,7 +24,7 @@ struct RemoteReferralUserRequest: RemoteRequest {
     }
     
     let baseEndpointURL: URL
-    let projectKey: String
+    let apiKey: String
     let request: Request
     
     // MARK: - RemoteRequest
@@ -39,7 +39,7 @@ struct RemoteReferralUserRequest: RemoteRequest {
         urlRequest.httpMethod = self.request.httpMethod
         urlRequest.httpBody = try self.request.httpBody()
         urlRequest.setValue("application/json", forHTTPHeaderField: "Content-Type")
-        urlRequest.setValue(self.projectKey, forHTTPHeaderField: "X-API-Key")
+        urlRequest.setValue(self.apiKey, forHTTPHeaderField: "X-API-Key")
         return urlRequest
     }
 }
