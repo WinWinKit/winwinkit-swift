@@ -121,7 +121,16 @@ enum MockReferralUser {
                     credit: []
                 ),
                 expired: ReferralUser.Rewards.Expired(
-                    basic: [],
+                    basic: [
+                        ReferralUser.Rewards.Expired.BasicReward(
+                            key: "basic-reward-11",
+                            name: "Basic Reward 11",
+                            description: nil,
+                            metadata: nil,
+                            createdAt: Date(timeIntervalSince1970: 1733483759),
+                            expiredAt: nil
+                        )
+                    ],
                     credit: []
                 )
             ),
@@ -163,7 +172,16 @@ enum MockReferralUser {
                         "credit": [],
                     },
                     "expired": {
-                        "basic": [],
+                        "basic": [
+                            {
+                                "key": "basic-reward-11",
+                                "name": "Basic Reward 11",
+                                "description": null,
+                                "metadata": null,
+                                "expired_at": null,
+                                "created_at": "2024-12-06T11:15:59.000000+00:00"
+                            }
+                        ],
                         "credit": [],
                     }
                 },
