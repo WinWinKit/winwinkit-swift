@@ -10,16 +10,6 @@
 //  Created by Oleh Stasula on 21/01/2025.
 //
 
-import Foundation
+import OpenAPIRuntime
 
-public struct ReferralGrantedRewards: Codable {
-    public let basic: [BasicReward]
-    
-    public struct BasicReward: Codable {
-        public let key: String
-        public let name: String
-        public let description: String?
-        public let metadata: Metadata?
-        public let expiresAt: Date?
-    }
-}
+public typealias ReferralGrantedRewards = Components.Schemas.GrantedRewards
