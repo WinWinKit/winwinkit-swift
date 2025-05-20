@@ -177,7 +177,7 @@ public final class Referrals {
                 }
             }
             
-            completion(result.map { ($0.referralUser, $0.grantedRewards) })
+            completion(result.map { ($0.user, $0.grantedRewards) })
         }
     }
     
@@ -354,12 +354,8 @@ public final class Referrals {
         
         let networkReachability = NetworkReachability()
         let referralUserCache = ReferralUserCache(keyValueCache: keyValueCache)
-        let remoteDataFetcher = RemoteDataFetcher(session: .shared)
-        let remoteRequestDispatcher = RemoteRequestDispatcher(remoteDataFetcher: remoteDataFetcher)
-        let referralUserProvider = RemoteReferralUserProvider(baseEndpointURL: baseEndpointURL,
-                                                              remoteRequestDispatcher: remoteRequestDispatcher)
-        let referralClaimCodeProvider = RemoteReferralClaimCodeProvider(baseEndpointURL: baseEndpointURL,
-                                                                        remoteRequestDispatcher: remoteRequestDispatcher)
+        let referralUserProvider = ReferralUserProvider()
+        let referralClaimCodeProvider = ReferralClaimCodeProvider()
         
         self.init(apiKey: apiKey,
                   networkReachability: networkReachability,

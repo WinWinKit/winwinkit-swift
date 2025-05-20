@@ -126,7 +126,14 @@ final class ReferralUserService {
                 if self.cachedReferralUser == nil {
                     // Create (or update) referral user if don't have it in cache
                     let referralUserUpdate = self.pendingReferralUserUpdate ?? ReferralUserUpdate(appUserId: self.appUserId, isPremium: nil, firstSeenAt: nil, lastSeenAt: nil, metadata: nil)
-                    let referralUser = try await self.referralUserProvider.createOrUpdate(referralUser: referralUserUpdate,
+                    let request = UserCreateRequest(
+                        appUserId: referralUserUpdate.appUserId,
+                        isPremium: referralUserUpdate.isPremium,
+                        firstSeenAt: referralUserUpdate.firstSeenAt,
+                        lastSeenAt: referralUserUpdate.lastSeenAt,
+                        metadata: referralUserUpdate.metadata
+                    )
+                    let referralUser = try await self.referralUserProvider.createOrUpdate(request: request,
                                                                                           apiKey: self.apiKey)
                     Logger.debug("ReferralUserService: Refresh did create referral user")
                     self.resetReferralUserUpdate(with: referralUserUpdate)
@@ -134,21 +141,35 @@ final class ReferralUserService {
                 }
                 else if let referralUserUpdate = self.pendingReferralUserUpdate {
                     // Update referral user if has anything to update
-                    let updatedReferralUser = try await self.referralUserProvider.createOrUpdate(referralUser: referralUserUpdate,
+                    let request = UserCreateRequest(
+                        appUserId: referralUserUpdate.appUserId,
+                        isPremium: referralUserUpdate.isPremium,
+                        firstSeenAt: referralUserUpdate.firstSeenAt,
+                        lastSeenAt: referralUserUpdate.lastSeenAt,
+                        metadata: referralUserUpdate.metadata
+                    )
+                    let updatedReferralUser = try await self.referralUserProvider.createOrUpdate(request: request,
                                                                                                  apiKey: self.apiKey)
                     Logger.debug("ReferralUserService: Refresh did update referral user")
                     self.resetReferralUserUpdate(with: referralUserUpdate)
                     self.cacheReferralUser(updatedReferralUser)
                 }
-                else if let referralUser = try await self.referralUserProvider.fetch(appUserId: self.appUserId, apiKey: self.apiKey) {
-                    // Fetch referral user to get latest value.
-                    Logger.debug("ReferralUserService: Refresh did fetch referral user")
-                    self.cacheReferralUser(referralUser)
-                }
+//                else if let referralUser = try await self.referralUserProvider.fetch(appUserId: self.appUserId, apiKey: self.apiKey) {
+//                    // Fetch referral user to get latest value.
+//                    Logger.debug("ReferralUserService: Refresh did fetch referral user")
+//                    self.cacheReferralUser(referralUser)
+//                }
                 else {
                     // Create referral user if received nil on fetch request.
                     let referralUserUpdate = self.pendingReferralUserUpdate ?? ReferralUserUpdate(appUserId: self.appUserId, isPremium: nil, firstSeenAt: nil, lastSeenAt: nil, metadata: nil)
-                    let referralUser = try await self.referralUserProvider.createOrUpdate(referralUser: referralUserUpdate,
+                    let request = UserCreateRequest(
+                        appUserId: referralUserUpdate.appUserId,
+                        isPremium: referralUserUpdate.isPremium,
+                        firstSeenAt: referralUserUpdate.firstSeenAt,
+                        lastSeenAt: referralUserUpdate.lastSeenAt,
+                        metadata: referralUserUpdate.metadata
+                    )
+                    let referralUser = try await self.referralUserProvider.createOrUpdate(request: request,
                                                                                           apiKey: self.apiKey)
                     Logger.debug("ReferralUserService: Refresh did re-create referral user")
                     self.resetReferralUserUpdate(with: referralUserUpdate)
@@ -180,7 +201,7 @@ final class ReferralUserService {
         self.claimCodeTask != nil
     }
     
-    func claim(code: String, completion: @escaping (Result<ReferralClaimCodeResult, Error>) -> Void) {
+    func claim(code: String, completion: @escaping (Result<UserClaimReferralCodeResponse, Error>) -> Void) {
         
         if self.shouldSuspendIndefinitely {
             Logger.debug("ReferralUserService: Claim code suspended indefinitely")
@@ -194,13 +215,14 @@ final class ReferralUserService {
         
         self.claimCodeTask = Task { @MainActor in
             do {
-                let referralClaimCodeData = try await self.referralClaimCodeProvider.claim(code: code,
+                let request = UserClaimReferralCodeRequest(code: code)
+                let referralClaimCodeData = try await self.referralClaimCodeProvider.claim(request: request,
                                                                                            appUserId: self.appUserId,
                                                                                            apiKey: self.apiKey)
                 
                 Logger.debug("ReferralUserService: Claim code did finish")
                 
-                self.cacheReferralUser(referralClaimCodeData.referralUser)
+                self.cacheReferralUser(referralClaimCodeData.user)
                 
                 self.claimCodeTask = nil
                 
@@ -255,12 +277,16 @@ final class ReferralUserService {
     }
     
     private func handleTaskError(_ error: Error) {
-        if let dispatcherError = error as? RemoteRequestDispatcherError,
-           dispatcherError == .unauthorized {
-            self.referralUserCache.reset()
-            self.shouldSuspendIndefinitely = true
-            
-            Logger.error("Authorization with the provided API key has failed! Please obtain a new API key and use it when initializing the Referrals object.")
+        if let dispatcherError = error as? ErrorResponse {
+            switch dispatcherError {
+            case .error(let status, _, _, _):
+                if status == 401 {
+                    self.referralUserCache.reset()
+                    self.shouldSuspendIndefinitely = true
+                    
+                    Logger.error("Authorization with the provided API key has failed! Please obtain a new API key and use it when initializing the Referrals object.")
+                }
+            }
         }
         
         self.delegate?.referralUserService(self, receivedError: error)
