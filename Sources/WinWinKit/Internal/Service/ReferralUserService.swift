@@ -17,19 +17,19 @@ final class ReferralUserService {
     
     let appUserId: String
     let apiKey: String
-    let referralUserCache: ReferralUserCacheType
+    let userCache: UserCacheType
     let userProvider: UserProviderType
     let userClaimActionsProvider: UserClaimActionsProviderType
     
     init(appUserId: String,
          apiKey: String,
-         referralUserCache: ReferralUserCacheType,
+         userCache: UserCacheType,
          userProvider: UserProviderType,
          userClaimActionsProvider: UserClaimActionsProviderType) {
         
         self.appUserId = appUserId
         self.apiKey = apiKey
-        self.referralUserCache = referralUserCache
+        self.userCache = userCache
         self.userProvider = userProvider
         self.userClaimActionsProvider = userClaimActionsProvider
     }
@@ -37,7 +37,7 @@ final class ReferralUserService {
     weak var delegate: ReferralUserServiceDelegate?
     
     var cachedReferralUser: User? {
-        if let referralUser = self.referralUserCache.user,
+        if let referralUser = self.userCache.user,
            referralUser.appUserId == self.appUserId {
             return referralUser
         }
@@ -251,29 +251,29 @@ final class ReferralUserService {
     
     private var pendingReferralUserUpdate: UserUpdate? {
         get {
-            if let referralUser = self.referralUserCache.userUpdate,
+            if let referralUser = self.userCache.userUpdate,
                referralUser.appUserId == self.appUserId {
                 return referralUser
             }
             return nil
         }
         set {
-            self.referralUserCache.userUpdate = newValue
+            self.userCache.userUpdate = newValue
         }
     }
     
     private func cacheReferralUser(_ user: User) {
-        self.referralUserCache.user = user
+        self.userCache.user = user
         self.delegate?.referralUserService(self, receivedUpdated: user)
     }
     
     private func cacheReferralUserUpdate(_ userUpdate: UserUpdate) {
-        self.referralUserCache.userUpdate = userUpdate
+        self.userCache.userUpdate = userUpdate
     }
     
     private func resetReferralUserUpdate(with user: UserUpdate?) {
-        if self.referralUserCache.userUpdate == user {
-            self.referralUserCache.userUpdate = nil
+        if self.userCache.userUpdate == user {
+            self.userCache.userUpdate = nil
         }
     }
     
@@ -282,7 +282,7 @@ final class ReferralUserService {
             switch dispatcherError {
             case .error(let status, _, _, _):
                 if status == 401 {
-                    self.referralUserCache.reset()
+                    self.userCache.reset()
                     self.shouldSuspendIndefinitely = true
                     
                     Logger.error("Authorization with the provided API key has failed! Please obtain a new API key and use it when initializing the Referrals object.")

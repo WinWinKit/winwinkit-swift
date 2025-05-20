@@ -195,7 +195,7 @@ public final class Referrals {
         
         let referralUserService = ReferralUserService(appUserId: appUserId,
                                                       apiKey: self.apiKey,
-                                                      referralUserCache: self.referralUserCache,
+                                                      userCache: self.userCache,
                                                       userProvider: self.userProvider,
                                                       userClaimActionsProvider: self.userClaimActionsProvider)
         self.referralUserService = referralUserService
@@ -297,7 +297,7 @@ public final class Referrals {
     ///
     public func reset() {
         self.referralUserService = nil
-        self.referralUserCache.reset()
+        self.userCache.reset()
         self.delegate?.referrals(self, receivedUpdated: nil)
     }
     
@@ -323,7 +323,7 @@ public final class Referrals {
     
     private let apiKey: String
     private let networkReachability: NetworkReachabilityType
-    private let referralUserCache: ReferralUserCacheType
+    private let userCache: UserCacheType
     private let userProvider: UserProviderType
     private let userClaimActionsProvider: UserClaimActionsProviderType
     
@@ -354,26 +354,26 @@ public final class Referrals {
                              baseEndpointURL: URL) {
         
         let networkReachability = NetworkReachability()
-        let referralUserCache = ReferralUserCache(keyValueCache: keyValueCache)
+        let userCache = UserCache(keyValueCache: keyValueCache)
         let userProvider = UserProvider()
         let userClaimActionsProvider = UserClaimActionsProvider()
         
         self.init(apiKey: apiKey,
                   networkReachability: networkReachability,
-                  referralUserCache: referralUserCache,
+                  userCache: userCache,
                   userProvider: userProvider,
                   userClaimActionsProvider: userClaimActionsProvider)
     }
     
     private init(apiKey: String,
                  networkReachability: NetworkReachabilityType,
-                 referralUserCache: ReferralUserCacheType,
+                 userCache: UserCacheType,
                  userProvider: UserProviderType,
                  userClaimActionsProvider: UserClaimActionsProviderType) {
         
         self.apiKey = apiKey
         self.networkReachability = networkReachability
-        self.referralUserCache = referralUserCache
+        self.userCache = userCache
         self.userProvider = userProvider
         self.userClaimActionsProvider = userClaimActionsProvider
     }

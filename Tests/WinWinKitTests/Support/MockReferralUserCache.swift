@@ -13,7 +13,7 @@
 import Foundation
 @testable import WinWinKit
 
-final class MockReferralUserCache: ReferralUserCacheType {
+final class MockReferralUserCache: UserCacheType {
     var referralUser: ReferralUser?
     var referralUserUpdate: ReferralUserUpdate?
 }

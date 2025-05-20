@@ -16,12 +16,12 @@ import Testing
 @Suite struct ReferralUserServiceTests {
 
     @Test func initilization() {
-        let referralUserCache = MockReferralUserCache()
+        let userCache = MockReferralUserCache()
         let userProvider = MockReferralUserProvider()
         let userClaimActionsProvider = MockReferralClaimCodeProvider()
         let service = ReferralUserService(appUserId: MockReferralUser.Full.object.appUserId,
                                           apiKey: MockConstants.apiKey,
-                                          referralUserCache: referralUserCache,
+                                          userCache: userCache,
                                           userProvider: userProvider,
                                           userClaimActionsProvider: userClaimActionsProvider)
         #expect(service.cachedReferralUser == nil)
@@ -29,28 +29,28 @@ import Testing
     }
     
     @Test func cachedReferralUser() {
-        let referralUserCache = MockReferralUserCache()
+        let userCache = MockReferralUserCache()
         let userProvider = MockReferralUserProvider()
         let userClaimActionsProvider = MockReferralClaimCodeProvider()
         let service = ReferralUserService(appUserId: MockReferralUser.Full.object.appUserId,
                                           apiKey: MockConstants.apiKey,
-                                          referralUserCache: referralUserCache,
+                                          userCache: userCache,
                                           userProvider: userProvider,
                                           userClaimActionsProvider: userClaimActionsProvider)
         #expect(service.cachedReferralUser == nil)
-        referralUserCache.referralUser = MockReferralUser.Full.object
+        userCache.referralUser = MockReferralUser.Full.object
         #expect(service.cachedReferralUser == MockReferralUser.Full.object)
-        referralUserCache.referralUser = MockReferralUser.Empty.object
+        userCache.referralUser = MockReferralUser.Empty.object
         #expect(service.cachedReferralUser == nil)
     }
     
     @Test func delegate() {
-        let referralUserCache = MockReferralUserCache()
+        let userCache = MockReferralUserCache()
         let userProvider = MockReferralUserProvider()
         let userClaimActionsProvider = MockReferralClaimCodeProvider()
         let service = ReferralUserService(appUserId: MockReferralUser.Full.object.appUserId,
                                           apiKey: MockConstants.apiKey,
-                                          referralUserCache: referralUserCache,
+                                          userCache: userCache,
                                           userProvider: userProvider,
                                           userClaimActionsProvider: userClaimActionsProvider)
         #expect(service.delegate == nil)
@@ -66,12 +66,12 @@ import Testing
     }
     
     @Test func refreshFailsWithNoData() async throws {
-        let referralUserCache = MockReferralUserCache()
+        let userCache = MockReferralUserCache()
         let userProvider = MockReferralUserProvider()
         let userClaimActionsProvider = MockReferralClaimCodeProvider()
         let service = ReferralUserService(appUserId: MockReferralUser.Full.object.appUserId,
                                           apiKey: MockConstants.apiKey,
-                                          referralUserCache: referralUserCache,
+                                          userCache: userCache,
                                           userProvider: userProvider,
                                           userClaimActionsProvider: userClaimActionsProvider)
         let delegate = MockReferralUserServiceDelegate()
@@ -97,12 +97,12 @@ import Testing
     }
     
     @Test func refreshFailsWithNoDataAndHasNoFollowingRefresh() async throws {
-        let referralUserCache = MockReferralUserCache()
+        let userCache = MockReferralUserCache()
         let userProvider = MockReferralUserProvider()
         let userClaimActionsProvider = MockReferralClaimCodeProvider()
         let service = ReferralUserService(appUserId: MockReferralUser.Full.object.appUserId,
                                           apiKey: MockConstants.apiKey,
-                                          referralUserCache: referralUserCache,
+                                          userCache: userCache,
                                           userProvider: userProvider,
                                           userClaimActionsProvider: userClaimActionsProvider)
         let delegate = MockReferralUserServiceDelegate()
@@ -129,13 +129,13 @@ import Testing
     }
     
     @Test func refreshFailsWithUnauthorized() async throws {
-        let referralUserCache = MockReferralUserCache()
+        let userCache = MockReferralUserCache()
         let userProvider = MockReferralUserProvider()
         userProvider.errorToThrowOnFetch = RemoteRequestDispatcherError.unauthorized
         let userClaimActionsProvider = MockReferralClaimCodeProvider()
         let service = ReferralUserService(appUserId: MockReferralUser.Full.object.appUserId,
                                           apiKey: MockConstants.apiKey,
-                                          referralUserCache: referralUserCache,
+                                          userCache: userCache,
                                           userProvider: userProvider,
                                           userClaimActionsProvider: userClaimActionsProvider)
         let delegate = MockReferralUserServiceDelegate()
@@ -160,14 +160,14 @@ import Testing
     }
     
     @Test func refreshFailsAndResetsCacheWithUnauthorized() async throws {
-        let referralUserCache = MockReferralUserCache()
-        referralUserCache.referralUser = MockReferralUser.Full.object
+        let userCache = MockReferralUserCache()
+        userCache.referralUser = MockReferralUser.Full.object
         let userProvider = MockReferralUserProvider()
         userProvider.errorToThrowOnFetch = RemoteRequestDispatcherError.unauthorized
         let userClaimActionsProvider = MockReferralClaimCodeProvider()
         let service = ReferralUserService(appUserId: MockReferralUser.Full.object.appUserId,
                                           apiKey: MockConstants.apiKey,
-                                          referralUserCache: referralUserCache,
+                                          userCache: userCache,
                                           userProvider: userProvider,
                                           userClaimActionsProvider: userClaimActionsProvider)
         let delegate = MockReferralUserServiceDelegate()
@@ -192,13 +192,13 @@ import Testing
     }
     
     @Test func createReferralUser() async throws {
-        let referralUserCache = MockReferralUserCache()
+        let userCache = MockReferralUserCache()
         let userProvider = MockReferralUserProvider()
         userProvider.referralUserToReturnOnCreate = MockReferralUser.Full.object
         let userClaimActionsProvider = MockReferralClaimCodeProvider()
         let service = ReferralUserService(appUserId: MockReferralUser.Full.object.appUserId,
                                           apiKey: MockConstants.apiKey,
-                                          referralUserCache: referralUserCache,
+                                          userCache: userCache,
                                           userProvider: userProvider,
                                           userClaimActionsProvider: userClaimActionsProvider)
         let delegate = MockReferralUserServiceDelegate()
@@ -223,8 +223,8 @@ import Testing
     }
     
     @Test func updateReferralUser() async throws {
-        let referralUserCache = MockReferralUserCache()
-        referralUserCache.referralUser = MockReferralUser.Full.object
+        let userCache = MockReferralUserCache()
+        userCache.referralUser = MockReferralUser.Full.object
         let userProvider = MockReferralUserProvider()
         let updateMetadata: Metadata = ["value": 123]
         let updatedReferralUser = MockReferralUser.Full.object.set(metadata: updateMetadata)
@@ -232,7 +232,7 @@ import Testing
         let userClaimActionsProvider = MockReferralClaimCodeProvider()
         let service = ReferralUserService(appUserId: MockReferralUser.Full.object.appUserId,
                                           apiKey: MockConstants.apiKey,
-                                          referralUserCache: referralUserCache,
+                                          userCache: userCache,
                                           userProvider: userProvider,
                                           userClaimActionsProvider: userClaimActionsProvider)
         let delegate = MockReferralUserServiceDelegate()
@@ -264,15 +264,15 @@ import Testing
     }
     
     @Test func referralUserDeletedOnRemoteCreatesNewReferralUser() async throws {
-        let referralUserCache = MockReferralUserCache()
-        referralUserCache.referralUser = MockReferralUser.Full.object
+        let userCache = MockReferralUserCache()
+        userCache.referralUser = MockReferralUser.Full.object
         let userProvider = MockReferralUserProvider()
         let expectedReferralUser = MockReferralUser.Full.object.set(metadata: nil)
         userProvider.referralUserToReturnOnCreate = expectedReferralUser
         let userClaimActionsProvider = MockReferralClaimCodeProvider()
         let service = ReferralUserService(appUserId: MockReferralUser.Full.object.appUserId,
                                           apiKey: MockConstants.apiKey,
-                                          referralUserCache: referralUserCache,
+                                          userCache: userCache,
                                           userProvider: userProvider,
                                           userClaimActionsProvider: userClaimActionsProvider)
         let delegate = MockReferralUserServiceDelegate()

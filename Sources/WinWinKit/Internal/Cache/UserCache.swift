@@ -5,17 +5,17 @@
 //  You may not use this file except in compliance with the License.
 //  You may obtain a copy of the License at https://opensource.org/licenses/MIT
 //
-//  ReferralUserCache.swift
+//  UserCache.swift
 //
 //  Created by Oleh Stasula on 14/12/2024.
 //
 
-protocol ReferralUserCacheType: AnyObject {
+protocol UserCacheType: AnyObject {
     var user: User? { get set }
     var userUpdate: UserUpdate? { get set }
 }
 
-extension ReferralUserCacheType {
+extension UserCacheType {
     
     func reset() {
         self.user = nil
@@ -23,7 +23,7 @@ extension ReferralUserCacheType {
     }
 }
 
-final class ReferralUserCache: ReferralUserCacheType {
+final class UserCache: UserCacheType {
     
     let keyValueCache: KeyValueCacheType
     
@@ -31,7 +31,7 @@ final class ReferralUserCache: ReferralUserCacheType {
         self.keyValueCache = keyValueCache
     }
     
-    // MARK: - ReferralUserCacheType
+    // MARK: - UserCacheType
     
     var user: User? {
         get {
