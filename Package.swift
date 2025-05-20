@@ -23,7 +23,8 @@ let package = Package(
         .target(
             name: "WinWinKit",
             dependencies: [
-                .product(name: "Logging", package: "swift-log")
+                .product(name: "Logging", package: "swift-log"),
+                .product(name: "AnyCodable", package: "AnyCodable")
             ]
         ),
         .testTarget(

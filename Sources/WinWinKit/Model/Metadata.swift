@@ -10,4 +10,6 @@
 //  Created by Oleh Stasula on 19/12/2024.
 //
 
+import AnyCodable
+
 public typealias Metadata = AnyCodable
