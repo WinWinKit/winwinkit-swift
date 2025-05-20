@@ -19,7 +19,7 @@ public final class ReferralClaimCodeObservableObject {
     
     public private(set) var isClaimingCode: Bool = false
     public private(set) var didClaimCodeSuccesfully: Bool? = nil
-    public private(set) var grantedRewards: ReferralGrantedRewards? = nil
+    public private(set) var grantedRewards: UserRewardsGranted? = nil
     
     public func claim(code: String) {
         self.onClaimCode?(code)
@@ -40,7 +40,7 @@ public final class ReferralClaimCodeObservableObject {
         self.didClaimCodeSuccesfully = didClaimCodeSuccesfully
     }
     
-    internal func set(grantedRewards: ReferralGrantedRewards) {
+    internal func set(grantedRewards: UserRewardsGranted) {
         self.grantedRewards = grantedRewards
     }
 }

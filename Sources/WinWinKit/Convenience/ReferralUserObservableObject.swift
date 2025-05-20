@@ -17,7 +17,7 @@ import Observation
 @Observable
 public final class ReferralUserObservableObject {
     
-    public private(set) var referralUser: ReferralUser?
+    public private(set) var user: User?
     public private(set) var isRefreshing: Bool = false
     
     // MARK: - Internal
@@ -25,8 +25,8 @@ public final class ReferralUserObservableObject {
     internal init() {
     }
     
-    internal func set(referralUser: ReferralUser?) {
-        self.referralUser = referralUser
+    internal func set(user: User?) {
+        self.user = user
     }
     
     internal func set(isRefreshing: Bool) {

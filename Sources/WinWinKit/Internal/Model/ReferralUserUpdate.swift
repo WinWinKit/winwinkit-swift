@@ -10,20 +10,21 @@
 //  Created by Oleh Stasula on 05/12/2024.
 //
 
+import AnyCodable
 import Foundation
 
-struct ReferralUserUpdate: Codable, Hashable {
+struct UserUpdate: Codable, Hashable {
     let appUserId: String
     let isPremium: Bool?
     let firstSeenAt: Date?
     let lastSeenAt: Date?
-    let metadata: Metadata?
+    let metadata: AnyCodable?
 }
 
-extension ReferralUserUpdate {
+extension UserUpdate {
     
     func set(isPremium: Bool) -> Self {
-        ReferralUserUpdate(
+        UserUpdate(
             appUserId: self.appUserId,
             isPremium: isPremium,
             firstSeenAt: self.firstSeenAt,
@@ -33,7 +34,7 @@ extension ReferralUserUpdate {
     }
     
     func set(firstSeenAt: Date) -> Self {
-        ReferralUserUpdate(
+        UserUpdate(
             appUserId: self.appUserId,
             isPremium: self.isPremium,
             firstSeenAt: firstSeenAt,
@@ -43,7 +44,7 @@ extension ReferralUserUpdate {
     }
     
     func set(lastSeenAt: Date) -> Self {
-        ReferralUserUpdate(
+        UserUpdate(
             appUserId: self.appUserId,
             isPremium: self.isPremium,
             firstSeenAt: self.firstSeenAt,
@@ -52,8 +53,8 @@ extension ReferralUserUpdate {
         )
     }
     
-    func set(metadata: Metadata) -> Self {
-        ReferralUserUpdate(
+    func set(metadata: AnyCodable) -> Self {
+        UserUpdate(
             appUserId: self.appUserId,
             isPremium: self.isPremium,
             firstSeenAt: self.firstSeenAt,

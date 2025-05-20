@@ -11,15 +11,15 @@
 //
 
 protocol ReferralUserCacheType: AnyObject {
-    var referralUser: ReferralUser? { get set }
-    var referralUserUpdate: ReferralUserUpdate? { get set }
+    var user: User? { get set }
+    var userUpdate: UserUpdate? { get set }
 }
 
 extension ReferralUserCacheType {
     
     func reset() {
-        self.referralUser = nil
-        self.referralUserUpdate = nil
+        self.user = nil
+        self.userUpdate = nil
     }
 }
 
@@ -33,10 +33,10 @@ final class ReferralUserCache: ReferralUserCacheType {
     
     // MARK: - ReferralUserCacheType
     
-    var referralUser: ReferralUser? {
+    var user: User? {
         get {
             do {
-                return try self.keyValueCache[Keys.referralUser].map { try ReferralUser(jsonData: $0) }
+                return try self.keyValueCache[Keys.referralUser].map { try User(jsonData: $0) }
             }
             catch {
                 Logger.error("Unable to deserialize ReferralUser.")
@@ -53,10 +53,10 @@ final class ReferralUserCache: ReferralUserCacheType {
         }
     }
     
-    var referralUserUpdate: ReferralUserUpdate? {
+    var userUpdate: UserUpdate? {
         get {
             do {
-                return try self.keyValueCache[Keys.referralUserUpdate].map { try ReferralUserUpdate(jsonData: $0) }
+                return try self.keyValueCache[Keys.referralUserUpdate].map { try UserUpdate(jsonData: $0) }
             }
             catch {
                 Logger.error("Unable to deserialize update ReferralUser.")

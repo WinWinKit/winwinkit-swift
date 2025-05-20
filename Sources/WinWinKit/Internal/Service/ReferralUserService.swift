@@ -10,6 +10,7 @@
 //  Created by Oleh Stasula on 04/12/2024.
 //
 
+import AnyCodable
 import Foundation
 
 final class ReferralUserService {
@@ -35,8 +36,8 @@ final class ReferralUserService {
     
     weak var delegate: ReferralUserServiceDelegate?
     
-    var cachedReferralUser: ReferralUser? {
-        if let referralUser = self.referralUserCache.referralUser,
+    var cachedReferralUser: User? {
+        if let referralUser = self.referralUserCache.user,
            referralUser.appUserId == self.appUserId {
             return referralUser
         }
@@ -47,11 +48,11 @@ final class ReferralUserService {
         Logger.debug("ReferralUserService: Set isPremium value")
         self.cacheReferralUserUpdate(
             self.pendingReferralUserUpdate?.set(isPremium: isPremium) ??
-            ReferralUserUpdate(appUserId: self.appUserId,
-                               isPremium: isPremium,
-                               firstSeenAt: nil,
-                               lastSeenAt: nil,
-                               metadata: nil)
+            UserUpdate(appUserId: self.appUserId,
+                       isPremium: isPremium,
+                       firstSeenAt: nil,
+                       lastSeenAt: nil,
+                       metadata: nil)
         )
     }
     
@@ -59,11 +60,11 @@ final class ReferralUserService {
         Logger.debug("ReferralUserService: Set firstSeenAt value")
         self.cacheReferralUserUpdate(
             self.pendingReferralUserUpdate?.set(firstSeenAt: firstSeenAt) ??
-            ReferralUserUpdate(appUserId: self.appUserId,
-                               isPremium: nil,
-                               firstSeenAt: firstSeenAt,
-                               lastSeenAt: nil,
-                               metadata: nil)
+            UserUpdate(appUserId: self.appUserId,
+                       isPremium: nil,
+                       firstSeenAt: firstSeenAt,
+                       lastSeenAt: nil,
+                       metadata: nil)
         )
     }
     
@@ -71,23 +72,23 @@ final class ReferralUserService {
         Logger.debug("ReferralUserService: Set lastSeenAt value")
         self.cacheReferralUserUpdate(
             self.pendingReferralUserUpdate?.set(lastSeenAt: lastSeenAt) ??
-            ReferralUserUpdate(appUserId: self.appUserId,
-                               isPremium: nil,
-                               firstSeenAt: nil,
-                               lastSeenAt: lastSeenAt,
-                               metadata: nil)
+            UserUpdate(appUserId: self.appUserId,
+                       isPremium: nil,
+                       firstSeenAt: nil,
+                       lastSeenAt: lastSeenAt,
+                       metadata: nil)
         )
     }
     
-    func set(metadata: Metadata) {
+    func set(metadata: AnyCodable) {
         Logger.debug("ReferralUserService: Set metadata value")
         self.cacheReferralUserUpdate(
             self.pendingReferralUserUpdate?.set(metadata: metadata) ??
-            ReferralUserUpdate(appUserId: self.appUserId,
-                               isPremium: nil,
-                               firstSeenAt: nil,
-                               lastSeenAt: nil,
-                               metadata: metadata)
+            UserUpdate(appUserId: self.appUserId,
+                       isPremium: nil,
+                       firstSeenAt: nil,
+                       lastSeenAt: nil,
+                       metadata: metadata)
         )
     }
     
@@ -125,7 +126,7 @@ final class ReferralUserService {
                 
                 if self.cachedReferralUser == nil {
                     // Create (or update) referral user if don't have it in cache
-                    let referralUserUpdate = self.pendingReferralUserUpdate ?? ReferralUserUpdate(appUserId: self.appUserId, isPremium: nil, firstSeenAt: nil, lastSeenAt: nil, metadata: nil)
+                    let referralUserUpdate = self.pendingReferralUserUpdate ?? UserUpdate(appUserId: self.appUserId, isPremium: nil, firstSeenAt: nil, lastSeenAt: nil, metadata: nil)
                     let request = UserCreateRequest(
                         appUserId: referralUserUpdate.appUserId,
                         isPremium: referralUserUpdate.isPremium,
@@ -161,7 +162,7 @@ final class ReferralUserService {
 //                }
                 else {
                     // Create referral user if received nil on fetch request.
-                    let referralUserUpdate = self.pendingReferralUserUpdate ?? ReferralUserUpdate(appUserId: self.appUserId, isPremium: nil, firstSeenAt: nil, lastSeenAt: nil, metadata: nil)
+                    let referralUserUpdate = self.pendingReferralUserUpdate ?? UserUpdate(appUserId: self.appUserId, isPremium: nil, firstSeenAt: nil, lastSeenAt: nil, metadata: nil)
                     let request = UserCreateRequest(
                         appUserId: referralUserUpdate.appUserId,
                         isPremium: referralUserUpdate.isPremium,
@@ -248,31 +249,31 @@ final class ReferralUserService {
     private var claimCodeTask: Task<Void, Never>?
     private var refreshTask: Task<Void, Never>?
     
-    private var pendingReferralUserUpdate: ReferralUserUpdate? {
+    private var pendingReferralUserUpdate: UserUpdate? {
         get {
-            if let referralUser = self.referralUserCache.referralUserUpdate,
+            if let referralUser = self.referralUserCache.userUpdate,
                referralUser.appUserId == self.appUserId {
                 return referralUser
             }
             return nil
         }
         set {
-            self.referralUserCache.referralUserUpdate = newValue
+            self.referralUserCache.userUpdate = newValue
         }
     }
     
-    private func cacheReferralUser(_ referralUser: ReferralUser) {
-        self.referralUserCache.referralUser = referralUser
-        self.delegate?.referralUserService(self, receivedUpdated: referralUser)
+    private func cacheReferralUser(_ user: User) {
+        self.referralUserCache.user = user
+        self.delegate?.referralUserService(self, receivedUpdated: user)
     }
     
-    private func cacheReferralUserUpdate(_ referralUser: ReferralUserUpdate) {
-        self.referralUserCache.referralUserUpdate = referralUser
+    private func cacheReferralUserUpdate(_ userUpdate: UserUpdate) {
+        self.referralUserCache.userUpdate = userUpdate
     }
     
-    private func resetReferralUserUpdate(with referralUser: ReferralUserUpdate?) {
-        if self.referralUserCache.referralUserUpdate == referralUser {
-            self.referralUserCache.referralUserUpdate = nil
+    private func resetReferralUserUpdate(with user: UserUpdate?) {
+        if self.referralUserCache.userUpdate == user {
+            self.referralUserCache.userUpdate = nil
         }
     }
     

@@ -10,6 +10,7 @@
 //  Created by Oleh Stasula on 03/12/2024.
 //
 
+import AnyCodable
 import Foundation
 import Logging
 
@@ -120,9 +121,9 @@ public final class Referrals {
     }
     
     ///
-    /// Returns the latest available `ReferralUser` object.
+    /// Returns the latest available `User` object.
     ///
-    public var referralUser: ReferralUser? {
+    public var user: User? {
         self.referralUserService?.cachedReferralUser
     }
     
@@ -132,7 +133,7 @@ public final class Referrals {
             return retained
         }
         let created = ReferralUserObservableObject()
-        created.set(referralUser: self.referralUserService?.cachedReferralUser)
+        created.set(user: self.referralUserService?.cachedReferralUser)
         created.set(isRefreshing: self.referralUserService?.isRefreshing ?? false)
         self._referralUserObservableObject = created
         return created
@@ -152,7 +153,7 @@ public final class Referrals {
         return created
     }
     
-    public func claim(code: String, completion: @escaping (Result<(ReferralUser, ReferralGrantedRewards), Error>) -> Void) {
+    public func claim(code: String, completion: @escaping (Result<(User, UserRewardsGranted), Error>) -> Void) {
         guard
             let referralUserService
         else {
@@ -277,7 +278,7 @@ public final class Referrals {
     /// Sets user's metadata.
     /// - Parameter metadata: Metadata object.
     ///
-    public func set(metadata: Metadata) {
+    public func set(metadata: AnyCodable) {
         guard
             let referralUserService
         else {
@@ -399,11 +400,11 @@ extension Referrals: ReferralUserServiceDelegate {
         self.networkReachability.isReachable
     }
     
-    internal func referralUserService(_ service: ReferralUserService, receivedUpdated referralUser: ReferralUser) {
+    internal func referralUserService(_ service: ReferralUserService, receivedUpdated user: User) {
         if #available(iOS 17, macOS 14, *) {
-            self.retainedReferralUserObservableObject?.set(referralUser: referralUser)
+            self.retainedReferralUserObservableObject?.set(user: user)
         }
-        self.delegate?.referrals(self, receivedUpdated: referralUser)
+        self.delegate?.referrals(self, receivedUpdated: user)
     }
     
     internal func referralUserService(_ service: ReferralUserService, receivedError error: any Error) {
