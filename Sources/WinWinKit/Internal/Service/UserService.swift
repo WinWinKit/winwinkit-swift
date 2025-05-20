@@ -202,7 +202,7 @@ final class UserService {
         self.claimCodeTask != nil
     }
     
-    func claim(code: String, completion: @escaping (Result<UserClaimReferralCodeResponse, Error>) -> Void) {
+    func claim(referralCode code: String, completion: @escaping (Result<UserClaimReferralCodeResponse, Error>) -> Void) {
         
         if self.shouldSuspendIndefinitely {
             Logger.debug("UserService: Claim code suspended indefinitely")
@@ -217,7 +217,7 @@ final class UserService {
         self.claimCodeTask = Task { @MainActor in
             do {
                 let request = UserClaimReferralCodeRequest(code: code)
-                let referralClaimCodeData = try await self.userClaimActionsProvider.claim(request: request,
+                let referralClaimCodeData = try await self.userClaimActionsProvider.claim(referralCode: request,
                                                                                            appUserId: self.appUserId,
                                                                                            apiKey: self.apiKey)
                 

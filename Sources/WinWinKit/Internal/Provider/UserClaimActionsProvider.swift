@@ -11,14 +11,14 @@
 //
 
 protocol UserClaimActionsProviderType {
-    func claim(request: UserClaimReferralCodeRequest, appUserId: String, apiKey: String) async throws -> UserClaimReferralCodeResponse
+    func claim(referralCode request: UserClaimReferralCodeRequest, appUserId: String, apiKey: String) async throws -> UserClaimReferralCodeResponse
 }
 
 struct UserClaimActionsProvider: UserClaimActionsProviderType {
     
     // MARK: - UserClaimActionsProviderType
     
-    func claim(request: UserClaimReferralCodeRequest, appUserId: String, apiKey: String) async throws -> UserClaimReferralCodeResponse {
+    func claim(referralCode request: UserClaimReferralCodeRequest, appUserId: String, apiKey: String) async throws -> UserClaimReferralCodeResponse {
         try await ClaimActionsAPI.claimReferralCode(appUserId: appUserId, xApiKey: apiKey, userClaimReferralCodeRequest: request).data
     }
 }

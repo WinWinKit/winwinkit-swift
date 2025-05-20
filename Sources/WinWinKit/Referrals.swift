@@ -15,6 +15,13 @@ import Foundation
 import Logging
 
 ///
+/// The error type for ``Referrals``.
+///
+public enum ReferralsError: Error {
+    case appUserIdNotSet
+}
+
+///
 /// The entry point for WinWinKit SDK.
 /// Normally it should be instantiated as soon as your app has a unique user id for your user.
 /// This can be when a user logs in if you have accounts or on launch if you can generate a random user identifier.
@@ -147,17 +154,31 @@ public final class Referrals {
         let created = ClaimReferralCodeObservableObject()
         created.set(isClaimingCode: self.userService?.isClaimingCode ?? false)
         created.onClaimCode = { [weak self] code in
-            self?.claim(code: code, completion: { _ in })
+            self?.claim(referralCode: code, completion: { _ in })
         }
         self._claimReferralCodeObservableObject = created
         return created
     }
+
+    public func claim(referralCode code: String) async throws -> (User, UserRewardsGranted) {
+        try await withCheckedThrowingContinuation { continuation in
+            self.claim(referralCode: code, completion: { result in
+                switch result {
+                case .success(let data):
+                    continuation.resume(returning: data)
+                case .failure(let error):
+                    continuation.resume(throwing: error)
+                }
+            })
+        }
+    }
     
-    public func claim(code: String, completion: @escaping (Result<(User, UserRewardsGranted), Error>) -> Void) {
+    public func claim(referralCode code: String, completion: @escaping (Result<(User, UserRewardsGranted), Error>) -> Void) {
         guard
             let userService
         else {
             Logger.warning("User identifier `appUserId` must be set before claiming code.")
+            completion(.failure(ReferralsError.appUserIdNotSet))
             return
         }
         
@@ -165,7 +186,7 @@ public final class Referrals {
             self.retainedClaimReferralCodeObservableObject?.set(isClaimingCode: true)
         }
         
-        userService.claim(code: code) { [weak self] result in
+        userService.claim(referralCode: code) { [weak self] result in
             if #available(iOS 17.0, macOS 14.0, *) {
                 self?.retainedClaimReferralCodeObservableObject?.set(isClaimingCode: false)
                 
