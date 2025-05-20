@@ -25,20 +25,20 @@ final class MockReferralUserServiceDelegate: ReferralUserServiceDelegate {
     
     var isRefreshingChangedCallback: ((Bool) -> Void)?
     
-    func referralUserServiceCanPerformNextRefresh(_ service: ReferralUserService) -> Bool {
+    func referralUserServiceCanPerformNextRefresh(_ service: UserService) -> Bool {
         self.canPerformNextRequestMethodCallsCounter += 1
         return self.canPerformNextRefresh
     }
     
-    func referralUserService(_ service: ReferralUserService, receivedUpdated referralUser: ReferralUser) {
+    func referralUserService(_ service: UserService, receivedUpdated referralUser: ReferralUser) {
         self.referralUser = referralUser
         self.receivedUpdatedReferralUserMethodCallsCounter += 1
     }
     
-    func referralUserService(_ service: ReferralUserService, receivedError error: any Error) {
+    func referralUserService(_ service: UserService, receivedError error: any Error) {
     }
     
-    func referralUserService(_ service: ReferralUserService, isRefreshingChanged isRefreshing: Bool) {
+    func referralUserService(_ service: UserService, isRefreshingChanged isRefreshing: Bool) {
         self.isRefreshing = isRefreshing
         self.isRefreshingChangedMethodCallsCounter += 1
         self.isRefreshingChangedCallback?(isRefreshing)

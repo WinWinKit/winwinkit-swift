@@ -19,7 +19,7 @@ import Testing
         let userCache = MockReferralUserCache()
         let userProvider = MockReferralUserProvider()
         let userClaimActionsProvider = MockReferralClaimCodeProvider()
-        let service = ReferralUserService(appUserId: MockReferralUser.Full.object.appUserId,
+        let service = UserService(appUserId: MockReferralUser.Full.object.appUserId,
                                           apiKey: MockConstants.apiKey,
                                           userCache: userCache,
                                           userProvider: userProvider,
@@ -32,7 +32,7 @@ import Testing
         let userCache = MockReferralUserCache()
         let userProvider = MockReferralUserProvider()
         let userClaimActionsProvider = MockReferralClaimCodeProvider()
-        let service = ReferralUserService(appUserId: MockReferralUser.Full.object.appUserId,
+        let service = UserService(appUserId: MockReferralUser.Full.object.appUserId,
                                           apiKey: MockConstants.apiKey,
                                           userCache: userCache,
                                           userProvider: userProvider,
@@ -48,7 +48,7 @@ import Testing
         let userCache = MockReferralUserCache()
         let userProvider = MockReferralUserProvider()
         let userClaimActionsProvider = MockReferralClaimCodeProvider()
-        let service = ReferralUserService(appUserId: MockReferralUser.Full.object.appUserId,
+        let service = UserService(appUserId: MockReferralUser.Full.object.appUserId,
                                           apiKey: MockConstants.apiKey,
                                           userCache: userCache,
                                           userProvider: userProvider,
@@ -69,7 +69,7 @@ import Testing
         let userCache = MockReferralUserCache()
         let userProvider = MockReferralUserProvider()
         let userClaimActionsProvider = MockReferralClaimCodeProvider()
-        let service = ReferralUserService(appUserId: MockReferralUser.Full.object.appUserId,
+        let service = UserService(appUserId: MockReferralUser.Full.object.appUserId,
                                           apiKey: MockConstants.apiKey,
                                           userCache: userCache,
                                           userProvider: userProvider,
@@ -100,7 +100,7 @@ import Testing
         let userCache = MockReferralUserCache()
         let userProvider = MockReferralUserProvider()
         let userClaimActionsProvider = MockReferralClaimCodeProvider()
-        let service = ReferralUserService(appUserId: MockReferralUser.Full.object.appUserId,
+        let service = UserService(appUserId: MockReferralUser.Full.object.appUserId,
                                           apiKey: MockConstants.apiKey,
                                           userCache: userCache,
                                           userProvider: userProvider,
@@ -133,7 +133,7 @@ import Testing
         let userProvider = MockReferralUserProvider()
         userProvider.errorToThrowOnFetch = RemoteRequestDispatcherError.unauthorized
         let userClaimActionsProvider = MockReferralClaimCodeProvider()
-        let service = ReferralUserService(appUserId: MockReferralUser.Full.object.appUserId,
+        let service = UserService(appUserId: MockReferralUser.Full.object.appUserId,
                                           apiKey: MockConstants.apiKey,
                                           userCache: userCache,
                                           userProvider: userProvider,
@@ -165,7 +165,7 @@ import Testing
         let userProvider = MockReferralUserProvider()
         userProvider.errorToThrowOnFetch = RemoteRequestDispatcherError.unauthorized
         let userClaimActionsProvider = MockReferralClaimCodeProvider()
-        let service = ReferralUserService(appUserId: MockReferralUser.Full.object.appUserId,
+        let service = UserService(appUserId: MockReferralUser.Full.object.appUserId,
                                           apiKey: MockConstants.apiKey,
                                           userCache: userCache,
                                           userProvider: userProvider,
@@ -196,7 +196,7 @@ import Testing
         let userProvider = MockReferralUserProvider()
         userProvider.referralUserToReturnOnCreate = MockReferralUser.Full.object
         let userClaimActionsProvider = MockReferralClaimCodeProvider()
-        let service = ReferralUserService(appUserId: MockReferralUser.Full.object.appUserId,
+        let service = UserService(appUserId: MockReferralUser.Full.object.appUserId,
                                           apiKey: MockConstants.apiKey,
                                           userCache: userCache,
                                           userProvider: userProvider,
@@ -230,7 +230,7 @@ import Testing
         let updatedReferralUser = MockReferralUser.Full.object.set(metadata: updateMetadata)
         userProvider.referralUserToReturnOnCreate = updatedReferralUser
         let userClaimActionsProvider = MockReferralClaimCodeProvider()
-        let service = ReferralUserService(appUserId: MockReferralUser.Full.object.appUserId,
+        let service = UserService(appUserId: MockReferralUser.Full.object.appUserId,
                                           apiKey: MockConstants.apiKey,
                                           userCache: userCache,
                                           userProvider: userProvider,
@@ -270,7 +270,7 @@ import Testing
         let expectedReferralUser = MockReferralUser.Full.object.set(metadata: nil)
         userProvider.referralUserToReturnOnCreate = expectedReferralUser
         let userClaimActionsProvider = MockReferralClaimCodeProvider()
-        let service = ReferralUserService(appUserId: MockReferralUser.Full.object.appUserId,
+        let service = UserService(appUserId: MockReferralUser.Full.object.appUserId,
                                           apiKey: MockConstants.apiKey,
                                           userCache: userCache,
                                           userProvider: userProvider,
