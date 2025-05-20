@@ -17,20 +17,12 @@ let package = Package(
     ],
     dependencies: [
         .package(url: "https://github.com/apple/swift-log.git", from: "1.0.0"),
-        .package(url: "https://github.com/apple/swift-openapi-generator", from: "1.7.2"),
-        .package(url: "https://github.com/apple/swift-openapi-runtime", from: "1.8.2"),
-        .package(url: "https://github.com/apple/swift-openapi-urlsession", from: "1.1.0"),
     ],
     targets: [
         .target(
             name: "WinWinKit",
             dependencies: [
-                .product(name: "Logging", package: "swift-log"),
-                .product(name: "OpenAPIRuntime", package: "swift-openapi-runtime"),
-                .product(name: "OpenAPIURLSession", package: "swift-openapi-urlsession"),
-            ],
-            plugins: [
-                .plugin(name: "OpenAPIGenerator", package: "swift-openapi-generator"),
+                .product(name: "Logging", package: "swift-log")
             ]
         ),
         .testTarget(
