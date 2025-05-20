@@ -5,15 +5,11 @@
 //  You may not use this file except in compliance with the License.
 //  You may obtain a copy of the License at https://opensource.org/licenses/MIT
 //
-//  MockReferralUserCache.swift
+//  MockError.swift
 //
-//  Created by Oleh Stasula on 05/12/2024.
+//  Created by Oleh Stasula on 20/05/2025.
 //
 
 import Foundation
-@testable import WinWinKit
 
-final class MockReferralUserCache: UserCacheType {
-    var referralUser: ReferralUser?
-    var referralUserUpdate: ReferralUserUpdate?
-}
+struct MockError: Error {}

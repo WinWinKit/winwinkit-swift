@@ -13,197 +13,159 @@
 import Foundation
 @testable import WinWinKit
 
-enum MockReferralProgram {
-    
+enum MockProgram {
     enum Full {
-        
-        static let object: ReferralUser.ReferralProgram = .init(
+        static let object: Program = .init(
             id: "j34me52cznsa2wt6xwbgfimp",
             name: "Program #1",
             description: nil,
+            metadata: nil,
             distributionPercentage: 0,
             limit: 0,
-            metadata: nil,
-            rewards: ReferralUser.ReferralProgram.Rewards(
-                sender: ReferralUser.ReferralProgram.Rewards.Sender(
+            rewards: ProgramRewards(
+                sender: ProgramSenderRewards(
                     basic: [
-                        ReferralUser.ReferralProgram.Rewards.Sender.BasicReward(
-                        key: "basic-reward-1",
-                        name: "Basic Reward 1",
-                        description: nil,
-                        metadata: nil,
-                        activationConfigurations: ReferralUser.ReferralProgram.Rewards.Sender.BasicReward.ActivationConfigurations(
-                            variant: .claim,
-                            amount: 2
+                        ProgramSenderBasicReward(
+                            reward: BasicReward(
+                                key: "basic-reward-1",
+                                name: "Basic Reward 1",
+                                description: nil,
+                                metadata: nil,
+                                createdAt: Date(timeIntervalSince1970: 1_733_483_759),
+                                updatedAt: Date(timeIntervalSince1970: 1_733_483_759)
+                            ),
+                            activation: ProgramSenderBasicRewardActivation(
+                                variant: .claim,
+                                value: 2
+                            ),
+                            deactivation: .typeProgramSenderBasicRewardIntervalDeactivation(
+                                ProgramSenderBasicRewardIntervalDeactivation(
+                                    variant: .interval,
+                                    duration: 2,
+                                    period: .months
+                                )
+                            )
                         ),
-                        deactivationConfigurations: ReferralUser.ReferralProgram.Rewards.Sender.BasicReward.DeactivationConfigurations(
-                            variant: .interval,
-                            duration: 2,
-                            period: .months
-                        )
-                        )
                     ],
-                    credit: []
+                    credit: [],
+                    offerCode: []
                 ),
-                receiver: ReferralUser.ReferralProgram.Rewards.Receiver(
+                receiver: ProgramReceiverRewards(
                     basic: [],
-                    credit: []
+                    credit: [],
+                    offerCode: []
                 )
-            )
+            ),
+            createdAt: Date(timeIntervalSince1970: 1_733_483_759),
+            updatedAt: Date(timeIntervalSince1970: 1_733_483_759)
         )
-        
+
         static let jsonString: String = """
-            {
-                "id": "j34me52cznsa2wt6xwbgfimp",
-                "name": "Program #1",
-                "description": null,
-                "distribution_percentage": 0,
-                "limit": 0,
-                "metadata": null,
-                "rewards": {
-                    "sender": {
-                        "basic": [
-                            {
-                                "key": "basic-reward-1",
-                                "name": "Basic Reward 1",
-                                "description": null,
-                                "metadata": null,
-                                "activation_configurations": {
-                                    "variant": "claim",
-                                    "amount": 2
-                                },
-                                "deactivation_configurations": {
-                                    "variant": "interval",
-                                    "duration": 2,
-                                    "period": "months"
-                                }
+        {
+            "id": "j34me52cznsa2wt6xwbgfimp",
+            "name": "Program #1",
+            "description": null,
+            "distribution_percentage": 0,
+            "limit": 0,
+            "metadata": null,
+            "rewards": {
+                "sender": {
+                    "basic": [
+                        {
+                            "key": "basic-reward-1",
+                            "name": "Basic Reward 1",
+                            "description": null,
+                            "metadata": null,
+                            "activation_configurations": {
+                                "variant": "claim",
+                                "amount": 2
+                            },
+                            "deactivation_configurations": {
+                                "variant": "interval",
+                                "duration": 2,
+                                "period": "months"
                             }
-                        ],
-                        "credit": []
-                    },
-                    "receiver": {
-                        "basic": [],
-                        "credit": []
-                    }
+                        }
+                    ],
+                    "credit": []
+                },
+                "receiver": {
+                    "basic": [],
+                    "credit": []
                 }
             }
-            """
-        
+        }
+        """
+
         static let data: Data = Self.jsonString.data(using: .utf8)!
     }
 }
 
-enum MockReferralUser {
-    
+enum MockUser {
     enum Full {
-        
-        static let object: ReferralUser = .init(
+        static let object: User = .init(
             appUserId: "app-user-id-1",
             code: "XYZ123",
             previewLink: "https://usage.wwk.link/XYZ123",
             isPremium: true,
-            firstSeenAt: Date(timeIntervalSince1970: 1607253359),
-            lastSeenAt: Date(timeIntervalSince1970: 1733483759),
+            firstSeenAt: Date(timeIntervalSince1970: 1_607_253_359),
+            lastSeenAt: Date(timeIntervalSince1970: 1_733_483_759),
             metadata: ["1": 123],
-            program: MockReferralProgram.Full.object,
-            rewards: ReferralUser.Rewards(
-                active: ReferralUser.Rewards.Active(
-                    basic: [
-                        ReferralUser.Rewards.Active.BasicReward(
-                            key: "basic-reward-1",
-                            name: "Basic Reward 1",
-                            description: nil,
-                            metadata: nil,
-                            createdAt: Date(timeIntervalSince1970: 1733483759),
-                            expiresAt: nil
-                        )
-                    ],
-                    credit: []
-                ),
-                expired: ReferralUser.Rewards.Expired(
-                    basic: [
-                        ReferralUser.Rewards.Expired.BasicReward(
-                            key: "basic-reward-11",
-                            name: "Basic Reward 11",
-                            description: nil,
-                            metadata: nil,
-                            createdAt: Date(timeIntervalSince1970: 1733483759),
-                            expiredAt: nil
-                        )
-                    ],
-                    credit: []
-                )
+            claimCodeEligibility: UserClaimCodeEligibility(
+                eligible: true,
+                eligibleUntil: Date(timeIntervalSince1970: 1_733_483_759)
             ),
-            stats: ReferralUser.Stats(
+            stats: UserStats(
                 claims: 10,
                 conversions: 8,
                 churns: 2
             ),
-            claimCodeEligibility: ReferralUser.ClaimCodeEligibility(
-                eligible: true,
-                eligibleUntil: Date(timeIntervalSince1970: 1733483759)
-            )
+            rewards: UserRewards(
+                active: UserRewardsActive(
+                    basic: [
+                        UserBasicRewardActive(
+                            reward: BasicReward(
+                                key: "basic-reward-1",
+                                name: "Basic Reward 1",
+                                description: nil,
+                                metadata: nil,
+                                createdAt: Date(timeIntervalSince1970: 1_733_483_759),
+                                updatedAt: Date(timeIntervalSince1970: 1_733_483_759)
+                            ),
+                            expiresAt: nil,
+                            createdAt: Date(timeIntervalSince1970: 1_733_483_759),
+                            updatedAt: Date(timeIntervalSince1970: 1_733_483_759)
+                        ),
+                    ],
+                    credit: [],
+                    offerCode: []
+                ),
+                expired: UserRewardsExpired(
+                    basic: [
+                        UserBasicRewardExpired(
+                            reward: BasicReward(
+                                key: "basic-reward-11",
+                                name: "Basic Reward 11",
+                                description: nil,
+                                metadata: nil,
+                                createdAt: Date(timeIntervalSince1970: 1_733_483_759),
+                                updatedAt: Date(timeIntervalSince1970: 1_733_483_759)
+                            ),
+                            expiredAt: Date(timeIntervalSince1970: 1_733_483_759),
+                            createdAt: Date(timeIntervalSince1970: 1_733_483_759),
+                            updatedAt: Date(timeIntervalSince1970: 1_733_483_759)
+                        ),
+                    ],
+                    credit: [],
+                    offerCode: []
+                )
+            ),
+            program: MockProgram.Full.object
         )
-        
-        static let jsonString: String = """
-            {
-                "app_user_id": "app-user-id-1",
-                "code": "XYZ123",
-                "preview_link": "https://usage.wwk.link/XYZ123",
-                "is_premium": true,
-                "first_seen_at": "2020-12-06T11:15:59.000000+00:00",
-                "last_seen_at": "2024-12-06T11:15:59.000000+00:00",
-                "metadata": {
-                    "1": 123
-                },
-                "program": \(MockReferralProgram.Full.jsonString),
-                "rewards": {
-                    "active": {
-                        "basic": [
-                            {
-                                "key": "basic-reward-1",
-                                "name": "Basic Reward 1",
-                                "description": null,
-                                "metadata": null,
-                                "expires_at": null,
-                                "created_at": "2024-12-06T11:15:59.000000+00:00"
-                            }
-                        ],
-                        "credit": [],
-                    },
-                    "expired": {
-                        "basic": [
-                            {
-                                "key": "basic-reward-11",
-                                "name": "Basic Reward 11",
-                                "description": null,
-                                "metadata": null,
-                                "expired_at": null,
-                                "created_at": "2024-12-06T11:15:59.000000+00:00"
-                            }
-                        ],
-                        "credit": [],
-                    }
-                },
-                "stats": {
-                    "claims": 10,
-                    "conversions": 8,
-                    "churns": 2
-                },
-                "claim_code_eligibility": {
-                    "eligible": true,
-                    "eligible_until": "2024-12-06T11:15:59.000000+00:00"
-                }
-            }
-            """
-        
-        static let data: Data = Self.jsonString
-            .data(using: .utf8)!
     }
-    
+
     enum Empty {
-        
-        static let object: ReferralUser = .init(
+        static let object: User = .init(
             appUserId: "app-user-id-2",
             code: nil,
             previewLink: nil,
@@ -211,62 +173,40 @@ enum MockReferralUser {
             firstSeenAt: nil,
             lastSeenAt: nil,
             metadata: nil,
-            program: nil,
-            rewards: ReferralUser.Rewards(
-                active: ReferralUser.Rewards.Active(
-                    basic: [],
-                    credit: []
-                ),
-                expired: ReferralUser.Rewards.Expired(
-                    basic: [],
-                    credit: []
-                )
+            claimCodeEligibility: UserClaimCodeEligibility(
+                eligible: false,
+                eligibleUntil: nil
             ),
-            stats: ReferralUser.Stats(
+            stats: UserStats(
                 claims: 0,
                 conversions: 0,
                 churns: 0
             ),
-            claimCodeEligibility: ReferralUser.ClaimCodeEligibility(
-                eligible: false,
-                eligibleUntil: nil
-            )
+            rewards: UserRewards(
+                active: UserRewardsActive(
+                    basic: [],
+                    credit: [],
+                    offerCode: []
+                ),
+                expired: UserRewardsExpired(
+                    basic: [],
+                    credit: [],
+                    offerCode: []
+                )
+            ),
+            program: nil
         )
     }
 }
 
-enum MockReferralUserUpdate {
-    
+enum MockUserUpdate {
     enum Full {
-        
-        static let object: ReferralUserUpdate = .init(
-            appUserId: MockReferralUser.Full.object.appUserId,
-            isPremium: MockReferralUser.Full.object.isPremium,
-            firstSeenAt: MockReferralUser.Full.object.firstSeenAt,
-            lastSeenAt: MockReferralUser.Full.object.lastSeenAt,
-            metadata: MockReferralUser.Full.object.metadata
+        static let object: UserUpdate = .init(
+            appUserId: MockUser.Full.object.appUserId,
+            isPremium: MockUser.Full.object.isPremium,
+            firstSeenAt: MockUser.Full.object.firstSeenAt,
+            lastSeenAt: MockUser.Full.object.lastSeenAt,
+            metadata: MockUser.Full.object.metadata
         )
-    }
-}
-
-enum MockReferralUserResponse {
-    
-    enum Full {
-        
-        static let object: RemoteReferralUserResponse = .init(
-            data: RemoteReferralUserResponse.Data(
-                referralUser: MockReferralUser.Full.object
-            )
-        )
-        
-        static let jsonString: String = """
-            {
-                "data": {
-                    "referral_user": \(MockReferralUser.Full.jsonString)
-                }
-            }
-            """
-        
-        static let data: Data = Self.jsonString.data(using: .utf8)!
     }
 }

@@ -14,14 +14,13 @@ import Foundation
 @testable import WinWinKit
 
 final class MockNetworkReachability: NetworkReachabilityType {
-    
     var isReachable: Bool = false
-    
+
     var delegate: NetworkReachabilityDelegate?
-    
+
     func start() {
         self.startMethodCallsCounter += 1
     }
-    
+
     var startMethodCallsCounter: Int = 0
 }

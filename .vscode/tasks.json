@@ -8,6 +8,13 @@
         "args": ["build"],
         "env": {},
         "group": "build"
+      },
+      {
+        "type": "swift",
+        "label": "swift: Test",
+        "detail": "swift test",
+        "args": ["test"],
+        "group": "build"
       }
     ]
   }
