@@ -10,6 +10,4 @@
 //  Created by Oleh Stasula on 19/12/2024.
 //
 
-import OpenAPIRuntime
-
-public typealias Metadata = OpenAPIObjectContainer
+public typealias Metadata = AnyCodable
