@@ -1,0 +1,1665 @@
+openapi: 3.0.0
+paths:
+  /app-store/offer-codes/{offer_code_id}:
+    get:
+      description: Get an offer code with subscription and prices by the offer code id.
+      operationId: getOfferCode
+      parameters:
+        - name: offer_code_id
+          required: true
+          in: path
+          description: The offer code id to retrieve.
+          schema:
+            type: string
+        - name: x-api-key
+          in: header
+          required: true
+          schema:
+            type: string
+          description: The API key to authenticate with.
+      responses:
+        '200':
+          description: Offer Code object.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OfferCodeDataResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorsResponse'
+        '404':
+          description: The offer code has not been found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorsResponse'
+      summary: Get Offer Code
+      tags:
+        - App Store
+  /users:
+    post:
+      description: Create or update a user if already exists.
+      operationId: createOrUpdateUser
+      parameters:
+        - name: x-api-key
+          in: header
+          required: true
+          schema:
+            type: string
+          description: The API key to authenticate with.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserCreateRequest'
+      responses:
+        '200':
+          description: The user has been successfully updated.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserDataResponse'
+        '201':
+          description: The user has been successfully created.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserDataResponse'
+        '400':
+          description: The request is invalid.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorsResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorsResponse'
+        '422':
+          description: The request is invalid.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorsResponse'
+      summary: Create or Update User
+      tags:
+        - Users
+  /users/{app_user_id}:
+    get:
+      description: Retrieves a user by their app user id.
+      operationId: getUser
+      parameters:
+        - name: app_user_id
+          required: true
+          in: path
+          description: The app user id of the user to retrieve.
+          schema:
+            type: string
+        - name: x-api-key
+          in: header
+          required: true
+          schema:
+            type: string
+          description: The API key to authenticate with.
+      responses:
+        '200':
+          description: The user has been successfully retrieved.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserDataResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorsResponse'
+        '404':
+          description: The user has not been found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorsResponse'
+      summary: Get User
+      tags:
+        - Users
+  /users/{app_user_id}/rewards/withdraw:
+    post:
+      description: Withdraws credits from a user.
+      operationId: rewardsWithdraw
+      parameters:
+        - name: app_user_id
+          required: true
+          in: path
+          description: The app user id of the user to withdraw credits from.
+          schema:
+            type: string
+        - name: x-api-key
+          in: header
+          required: true
+          schema:
+            type: string
+          description: The API key to authenticate with.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserWithdrawCreditsRequest'
+      responses:
+        '200':
+          description: The result of the withdrawal of credits
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserWithdrawCreditsDataResponse'
+        '400':
+          description: The request is invalid.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorsResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorsResponse'
+        '404':
+          description: The user has not been found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorsResponse'
+        '422':
+          description: The request is invalid.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorsResponse'
+      summary: Withdraw Credits
+      tags:
+        - Rewards Actions
+  /users/{app_user_id}/claim/referral-code:
+    post:
+      description: Claims a referral code for a user.
+      operationId: claimReferralCode
+      parameters:
+        - name: app_user_id
+          required: true
+          in: path
+          description: The app user id of the user to claim the referral code for.
+          schema:
+            type: string
+        - name: x-api-key
+          in: header
+          required: true
+          schema:
+            type: string
+          description: The API key to authenticate with.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserClaimReferralCodeRequest'
+      responses:
+        '200':
+          description: The granted rewards
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserClaimReferralCodeDataResponse'
+        '400':
+          description: The request is invalid.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorsResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorsResponse'
+        '404':
+          description: The user has not been found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorsResponse'
+        '422':
+          description: The request is invalid.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorsResponse'
+      summary: Claim Referral Code
+      tags:
+        - Claim Actions
+info:
+  title: WinWinKit API
+  description: An API for interacting with WinWinKit.
+  version: '1.0'
+  contact:
+    name: WinWinKit
+    url: https://winwinkit.com
+    email: support@winwinkit.com
+tags:
+  - name: Users
+    description: User endpoints
+  - name: Claim Actions
+    description: Claim actions endpoints
+  - name: Rewards Actions
+    description: Rewards actions endpoints
+  - name: App Store
+    description: App Store related endpoints
+servers:
+  - url: https://api.winwinkit.com
+    description: Production
+components:
+  securitySchemes:
+    x-api-key:
+      type: apiKey
+      in: header
+      name: x-api-key
+  schemas:
+    ErrorObject:
+      type: object
+      properties:
+        code:
+          type: string
+        status:
+          type: number
+        message:
+          type: string
+        source:
+          type: string
+          nullable: true
+      description: Error Object
+      required:
+        - code
+        - status
+        - message
+        - source
+    ErrorsResponse:
+      type: object
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/ErrorObject'
+      description: Errors Response
+      required:
+        - errors
+    AppStorePrice:
+      type: object
+      properties:
+        territory:
+          type: string
+          example: USA
+          description: The price territory.
+        price:
+          type: string
+          example: '99.99'
+          description: The price amount.
+        currency:
+          type: string
+          example: USD
+          description: The price currency.
+      description: The price
+      required:
+        - territory
+        - price
+        - currency
+    AppStoreOfferCode:
+      type: object
+      properties:
+        id:
+          type: string
+          example: 123e4567-e89b-12d3-a456-426614174000
+          description: The offer code id.
+        name:
+          type: string
+          example: Three months at 50% off
+          description: The offer code name.
+        customer_eligibilities:
+          example:
+            - NEW
+            - EXISTING
+            - EXPIRED
+          description: The offer code customer eligibilities.
+          type: array
+          items:
+            type: string
+        offer_eligibility:
+          type: string
+          enum:
+            - STACK_WITH_INTRO_OFFERS
+            - REPLACE_INTRO_OFFERS
+          example: STACK_WITH_INTRO_OFFERS
+          description: The offer code offer eligibility.
+        duration:
+          type: string
+          enum:
+            - THREE_DAYS
+            - ONE_WEEK
+            - TWO_WEEKS
+            - ONE_MONTH
+            - TWO_MONTHS
+            - THREE_MONTHS
+            - SIX_MONTHS
+            - ONE_YEAR
+          example: THREE_MONTHS
+          description: The offer code duration.
+        offer_mode:
+          type: string
+          enum:
+            - PAY_AS_YOU_GO
+            - PAY_UP_FRONT
+            - FREE_TRIAL
+          example: PAY_AS_YOU_GO
+          description: The offer code offer mode.
+        number_of_periods:
+          type: number
+          example: 1
+          description: The offer code number of periods.
+        prices:
+          nullable: true
+          description: The offer code prices.
+          type: array
+          items:
+            $ref: '#/components/schemas/AppStorePrice'
+      description: The offer code
+      required:
+        - id
+        - name
+        - customer_eligibilities
+        - offer_eligibility
+        - duration
+        - offer_mode
+        - number_of_periods
+        - prices
+    AppStoreSubscription:
+      type: object
+      properties:
+        id:
+          type: string
+          example: '1234567890'
+          description: The subscription id.
+        product_id:
+          type: string
+          example: com.winwinkit.app.yearly
+          description: The product id.
+        name:
+          type: string
+          example: Yearly
+          description: The subscription name.
+        subscription_period:
+          type: string
+          enum:
+            - ONE_WEEK
+            - ONE_MONTH
+            - TWO_MONTHS
+            - THREE_MONTHS
+            - SIX_MONTHS
+            - ONE_YEAR
+          example: ONE_YEAR
+          description: The subscription period.
+        prices:
+          description: The prices of the subscription.
+          type: array
+          items:
+            $ref: '#/components/schemas/AppStorePrice'
+      description: The subscription on the App Store
+      required:
+        - id
+        - product_id
+        - name
+        - subscription_period
+        - prices
+    OfferCodeResponse:
+      type: object
+      properties:
+        offerCode:
+          description: The offer code
+          allOf:
+            - $ref: '#/components/schemas/AppStoreOfferCode'
+        subscription:
+          description: The subscription
+          allOf:
+            - $ref: '#/components/schemas/AppStoreSubscription'
+      required:
+        - offerCode
+        - subscription
+    OfferCodeDataResponse:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/OfferCodeResponse'
+      required:
+        - data
+    UserCreateRequest:
+      type: object
+      properties:
+        app_user_id:
+          type: string
+          nullable: false
+          example: 821fae4b5-1a2d-4c1e-9152-5297086a161c
+          description: The unique identifier of the referral user in your app.
+        is_premium:
+          type: boolean
+          nullable: true
+          example: false
+          description: Whether the user is a premium user.
+        first_seen_at:
+          format: date-time
+          type: string
+          nullable: true
+          example: '2024-11-10T10:28:18.104Z'
+          description: The date when the user was first seen at.
+        last_seen_at:
+          format: date-time
+          type: string
+          nullable: true
+          example: '2024-11-10T10:28:18.104Z'
+          description: The date when the user was last seen at.
+        metadata:
+          type: object
+          nullable: true
+          example: {}
+          description: The metadata of the user.
+      required:
+        - app_user_id
+    UserClaimCodeEligibility:
+      type: object
+      properties:
+        eligible:
+          type: boolean
+          example: true
+          description: The claim code eligibility flag.
+        eligible_until:
+          format: date-time
+          type: string
+          nullable: true
+          example: '2024-11-10T10:28:18.104Z'
+          description: The claim code eligibility until date.
+      description: User's eligibility to claim referral code.
+      required:
+        - eligible
+        - eligible_until
+    UserStats:
+      type: object
+      properties:
+        claims:
+          type: number
+          example: 0
+          description: The number of users who have claimed the referral code.
+        conversions:
+          type: number
+          example: 0
+          description: The number of users who have converted to premium.
+        churns:
+          type: number
+          example: 0
+          description: The number of users who have churned.
+      description: The stats of the user.
+      required:
+        - claims
+        - conversions
+        - churns
+    BasicReward:
+      type: object
+      properties:
+        key:
+          type: string
+          description: The key of the reward
+          example: basic-reward
+        name:
+          type: string
+          description: The name of the reward
+          example: Basic Reward
+        description:
+          type: string
+          nullable: true
+          example: This is a basic reward
+          description: The description of the reward
+        metadata:
+          type: object
+          nullable: true
+          example: {}
+          description: The metadata of the reward
+        created_at:
+          format: date-time
+          type: string
+          example: '2021-01-01T00:00:00.000Z'
+          description: The created at of the reward
+        updated_at:
+          format: date-time
+          type: string
+          nullable: true
+          example: '2021-01-01T00:00:00.000Z'
+          description: The updated at of the reward
+      required:
+        - key
+        - name
+        - description
+        - metadata
+        - created_at
+        - updated_at
+    UserBasicRewardActive:
+      type: object
+      properties:
+        reward:
+          description: The reward
+          allOf:
+            - $ref: '#/components/schemas/BasicReward'
+        expires_at:
+          format: date-time
+          type: string
+          nullable: true
+          example: '2021-01-01T00:00:00.000Z'
+          description: The expiration date of the reward
+        created_at:
+          format: date-time
+          type: string
+          example: '2021-01-01T00:00:00.000Z'
+          description: The created at of the reward
+        updated_at:
+          format: date-time
+          type: string
+          nullable: true
+          example: '2021-01-01T00:00:00.000Z'
+          description: The updated at of the reward
+      required:
+        - reward
+        - expires_at
+        - created_at
+        - updated_at
+    CreditReward:
+      type: object
+      properties:
+        key:
+          type: string
+          example: credit-reward
+          description: The key of the reward
+        credits:
+          type: number
+          example: 100
+          description: The credits of the reward
+        name:
+          type: string
+          example: Credit Reward
+          description: The name of the reward
+        description:
+          type: string
+          nullable: true
+          example: This is a credit reward
+          description: The description of the reward
+        metadata:
+          type: object
+          nullable: true
+          example: {}
+          description: The metadata of the reward
+        created_at:
+          format: date-time
+          type: string
+          example: '2021-01-01T00:00:00.000Z'
+          description: The created at of the reward
+        updated_at:
+          format: date-time
+          type: string
+          nullable: true
+          example: '2021-01-01T00:00:00.000Z'
+          description: The updated at of the reward
+      required:
+        - key
+        - credits
+        - name
+        - description
+        - metadata
+        - created_at
+        - updated_at
+    UserCreditRewardActive:
+      type: object
+      properties:
+        reward:
+          description: The reward
+          allOf:
+            - $ref: '#/components/schemas/CreditReward'
+        credits:
+          type: number
+          example: 100
+          description: The amount of the reward
+        expires_at:
+          format: date-time
+          type: string
+          nullable: true
+          example: '2021-01-01T00:00:00.000Z'
+          description: The expiration date of the reward
+        created_at:
+          format: date-time
+          type: string
+          example: '2021-01-01T00:00:00.000Z'
+          description: The created at of the reward
+        updated_at:
+          format: date-time
+          type: string
+          nullable: true
+          example: '2021-01-01T00:00:00.000Z'
+          description: The updated at of the reward
+      required:
+        - reward
+        - credits
+        - expires_at
+        - created_at
+        - updated_at
+    OfferCodeReward:
+      type: object
+      properties:
+        key:
+          type: string
+          example: offer-code-reward
+          description: The key of the reward
+        offer_code_id:
+          type: string
+          example: 123e4567-e89b-12d3-a456-426614174000
+          description: The offer code id of the reward
+        name:
+          type: string
+          example: Offer Code Reward
+          description: The name of the reward
+        description:
+          type: string
+          nullable: true
+          example: This is an offer code reward
+          description: The description of the reward
+        metadata:
+          type: object
+          nullable: true
+          example: {}
+          description: The metadata of the reward
+        created_at:
+          format: date-time
+          type: string
+          example: '2021-01-01T00:00:00.000Z'
+          description: The created at of the reward
+        updated_at:
+          format: date-time
+          type: string
+          nullable: true
+          example: '2021-01-01T00:00:00.000Z'
+          description: The updated at of the reward
+      required:
+        - key
+        - offer_code_id
+        - name
+        - description
+        - metadata
+        - created_at
+        - updated_at
+    OfferCodeValue:
+      type: object
+      properties:
+        value:
+          type: string
+          example: ABCDEFGHIJKLMNOPQR
+          description: The offer code value
+        link:
+          type: string
+          example: >-
+            https://apps.apple.com/redeem?ctx=offercodes&id=1234567890&code=ABCDEFGHIJKLMNOPQR
+          description: The offer code redeem link
+        expires_at:
+          format: date-time
+          type: string
+          example: '2021-01-01T00:00:00.000Z'
+          description: The offer code value expiration date
+      required:
+        - value
+        - link
+        - expires_at
+    UserOfferCodeRewardActive:
+      type: object
+      properties:
+        reward:
+          description: The reward
+          allOf:
+            - $ref: '#/components/schemas/OfferCodeReward'
+        value:
+          nullable: true
+          description: The offer code value
+          allOf:
+            - $ref: '#/components/schemas/OfferCodeValue'
+        expires_at:
+          format: date-time
+          type: string
+          nullable: true
+          example: '2021-01-01T00:00:00.000Z'
+          description: The expiration date of the reward
+        created_at:
+          format: date-time
+          type: string
+          example: '2021-01-01T00:00:00.000Z'
+          description: The created at of the reward
+        updated_at:
+          format: date-time
+          type: string
+          nullable: true
+          example: '2021-01-01T00:00:00.000Z'
+          description: The updated at of the reward
+      required:
+        - reward
+        - value
+        - expires_at
+        - created_at
+        - updated_at
+    UserRewardsActive:
+      type: object
+      properties:
+        basic:
+          description: The referral user basic rewards
+          type: array
+          items:
+            $ref: '#/components/schemas/UserBasicRewardActive'
+        credit:
+          description: The referral user credit rewards
+          type: array
+          items:
+            $ref: '#/components/schemas/UserCreditRewardActive'
+        offer_code:
+          description: The referral user offer code rewards
+          type: array
+          items:
+            $ref: '#/components/schemas/UserOfferCodeRewardActive'
+      required:
+        - basic
+        - credit
+        - offer_code
+    UserBasicRewardExpired:
+      type: object
+      properties:
+        reward:
+          description: The reward
+          allOf:
+            - $ref: '#/components/schemas/BasicReward'
+        expired_at:
+          format: date-time
+          type: string
+          example: '2021-01-01T00:00:00.000Z'
+          description: The expiration date of the reward
+        created_at:
+          format: date-time
+          type: string
+          example: '2021-01-01T00:00:00.000Z'
+          description: The created at of the reward
+        updated_at:
+          format: date-time
+          type: string
+          nullable: true
+          example: '2021-01-01T00:00:00.000Z'
+          description: The updated at of the reward
+      required:
+        - reward
+        - expired_at
+        - created_at
+        - updated_at
+    UserCreditRewardExpired:
+      type: object
+      properties:
+        reward:
+          description: The reward
+          allOf:
+            - $ref: '#/components/schemas/CreditReward'
+        expired_at:
+          format: date-time
+          type: string
+          example: '2021-01-01T00:00:00.000Z'
+          description: The expiration date of the reward
+        created_at:
+          format: date-time
+          type: string
+          example: '2021-01-01T00:00:00.000Z'
+          description: The created at of the reward
+        updated_at:
+          format: date-time
+          type: string
+          nullable: true
+          example: '2021-01-01T00:00:00.000Z'
+          description: The updated at of the reward
+      required:
+        - reward
+        - expired_at
+        - created_at
+        - updated_at
+    UserOfferCodeRewardExpired:
+      type: object
+      properties:
+        reward:
+          description: The reward
+          allOf:
+            - $ref: '#/components/schemas/OfferCodeReward'
+        expired_at:
+          format: date-time
+          type: string
+          example: '2021-01-01T00:00:00.000Z'
+          description: The expiration date of the reward
+        created_at:
+          format: date-time
+          type: string
+          example: '2021-01-01T00:00:00.000Z'
+          description: The created at of the reward
+        updated_at:
+          format: date-time
+          type: string
+          nullable: true
+          example: '2021-01-01T00:00:00.000Z'
+          description: The updated at of the reward
+      required:
+        - reward
+        - expired_at
+        - created_at
+        - updated_at
+    UserRewardsExpired:
+      type: object
+      properties:
+        basic:
+          description: The referral user basic rewards
+          type: array
+          items:
+            $ref: '#/components/schemas/UserBasicRewardExpired'
+        credit:
+          description: The referral user credit rewards
+          type: array
+          items:
+            $ref: '#/components/schemas/UserCreditRewardExpired'
+        offer_code:
+          description: The referral user offer code rewards
+          type: array
+          items:
+            $ref: '#/components/schemas/UserOfferCodeRewardExpired'
+      required:
+        - basic
+        - credit
+        - offer_code
+    UserRewards:
+      type: object
+      properties:
+        active:
+          description: The referral user active rewards
+          allOf:
+            - $ref: '#/components/schemas/UserRewardsActive'
+        expired:
+          description: The referral user expired rewards
+          allOf:
+            - $ref: '#/components/schemas/UserRewardsExpired'
+      required:
+        - active
+        - expired
+    ProgramSenderBasicRewardNeverDeactivation:
+      type: object
+      properties:
+        variant:
+          type: string
+          enum:
+            - never
+          example: never
+          description: The variant of the deactivation configuration
+      required:
+        - variant
+    ProgramSenderBasicRewardIntervalDeactivation:
+      type: object
+      properties:
+        variant:
+          type: string
+          enum:
+            - interval
+          example: interval
+          description: The variant of the deactivation configuration
+        duration:
+          type: number
+          example: 1
+          description: The duration of the deactivation configuration
+        period:
+          type: string
+          enum:
+            - days
+            - months
+            - years
+          example: days
+          description: The period of the deactivation configuration
+      required:
+        - variant
+        - duration
+        - period
+    ProgramSenderBasicRewardActivation:
+      type: object
+      properties:
+        variant:
+          type: string
+          enum:
+            - claim
+            - conversion
+          example: claim
+          description: The variant of the activation configuration
+        value:
+          type: number
+          example: 1
+          description: The value of the activation configuration
+      required:
+        - variant
+        - value
+    ProgramSenderBasicReward:
+      type: object
+      properties:
+        reward:
+          description: The reward
+          allOf:
+            - $ref: '#/components/schemas/BasicReward'
+        activation:
+          description: The activation configuration
+          allOf:
+            - $ref: '#/components/schemas/ProgramSenderBasicRewardActivation'
+        deactivation:
+          oneOf:
+            - $ref: '#/components/schemas/ProgramSenderBasicRewardNeverDeactivation'
+            - $ref: >-
+                #/components/schemas/ProgramSenderBasicRewardIntervalDeactivation
+          example:
+            variant: never
+          description: The deactivation configuration
+      required:
+        - reward
+        - activation
+        - deactivation
+    ProgramSenderCreditRewardNeverDeactivation:
+      type: object
+      properties:
+        variant:
+          type: string
+          enum:
+            - never
+          example: never
+          description: The variant of the deactivation configuration
+      required:
+        - variant
+    ProgramSenderCreditRewardIntervalDeactivation:
+      type: object
+      properties:
+        variant:
+          type: string
+          enum:
+            - interval
+          example: interval
+          description: The variant of the deactivation configuration
+        duration:
+          type: number
+          example: 1
+          description: The duration of the deactivation configuration
+        period:
+          type: string
+          enum:
+            - days
+            - months
+            - years
+          example: days
+          description: The period of the deactivation configuration
+      required:
+        - variant
+        - duration
+        - period
+    ProgramSenderCreditRewardActivation:
+      type: object
+      properties:
+        variant:
+          type: string
+          enum:
+            - claim
+            - conversion
+          example: claim
+          description: The variant of the activation configuration
+        value:
+          type: number
+          example: 1
+          description: The value of the activation configuration
+        limit:
+          type: number
+          example: 1
+          description: The limit of the activation configuration
+      required:
+        - variant
+        - value
+        - limit
+    ProgramSenderCreditReward:
+      type: object
+      properties:
+        reward:
+          description: The reward
+          allOf:
+            - $ref: '#/components/schemas/CreditReward'
+        activation:
+          description: The activation configuration
+          allOf:
+            - $ref: '#/components/schemas/ProgramSenderCreditRewardActivation'
+        deactivation:
+          oneOf:
+            - $ref: '#/components/schemas/ProgramSenderCreditRewardNeverDeactivation'
+            - $ref: >-
+                #/components/schemas/ProgramSenderCreditRewardIntervalDeactivation
+          example:
+            variant: never
+          description: The deactivation configuration
+      required:
+        - reward
+        - activation
+        - deactivation
+    ProgramSenderOfferCodeRewardNeverDeactivation:
+      type: object
+      properties:
+        variant:
+          type: string
+          enum:
+            - never
+          example: never
+          description: The variant of the deactivation configuration
+      required:
+        - variant
+    ProgramSenderOfferCodeRewardIntervalDeactivation:
+      type: object
+      properties:
+        variant:
+          type: string
+          enum:
+            - interval
+          example: interval
+          description: The variant of the deactivation configuration
+        duration:
+          type: number
+          description: The duration of the deactivation configuration
+          example: 1
+        period:
+          type: string
+          enum:
+            - days
+            - months
+            - years
+          example: days
+          description: The period of the deactivation configuration
+      required:
+        - variant
+        - duration
+        - period
+    ProgramSenderOfferCodeRewardActivation:
+      type: object
+      properties:
+        variant:
+          type: string
+          enum:
+            - claim
+            - conversion
+          example: claim
+          description: The variant of the activation configuration
+        value:
+          type: number
+          example: 1
+          description: The value of the activation configuration
+        limit:
+          type: number
+          example: 1
+          description: The limit of the activation configuration
+      required:
+        - variant
+        - value
+        - limit
+    ProgramSenderOfferCodeReward:
+      type: object
+      properties:
+        reward:
+          description: The reward
+          allOf:
+            - $ref: '#/components/schemas/OfferCodeReward'
+        activation:
+          description: The activation configuration
+          allOf:
+            - $ref: '#/components/schemas/ProgramSenderOfferCodeRewardActivation'
+        deactivation:
+          oneOf:
+            - $ref: >-
+                #/components/schemas/ProgramSenderOfferCodeRewardNeverDeactivation
+            - $ref: >-
+                #/components/schemas/ProgramSenderOfferCodeRewardIntervalDeactivation
+          example:
+            variant: never
+          description: The deactivation configuration
+      required:
+        - reward
+        - activation
+        - deactivation
+    ProgramSenderRewards:
+      type: object
+      properties:
+        basic:
+          description: The program basic rewards
+          type: array
+          items:
+            $ref: '#/components/schemas/ProgramSenderBasicReward'
+        credit:
+          description: The program credit rewards
+          type: array
+          items:
+            $ref: '#/components/schemas/ProgramSenderCreditReward'
+        offer_code:
+          description: The program offer code rewards
+          type: array
+          items:
+            $ref: '#/components/schemas/ProgramSenderOfferCodeReward'
+      required:
+        - basic
+        - credit
+        - offer_code
+    ProgramReceiverBasicRewardNeverDeactivation:
+      type: object
+      properties:
+        variant:
+          type: string
+          enum:
+            - never
+          example: never
+          description: The variant of the deactivation configuration
+      required:
+        - variant
+    ProgramReceiverBasicRewardIntervalDeactivation:
+      type: object
+      properties:
+        variant:
+          type: string
+          enum:
+            - interval
+          description: The variant of the deactivation configuration
+          example: interval
+        duration:
+          type: number
+          example: 1
+          description: The duration of the deactivation configuration
+        period:
+          type: string
+          enum:
+            - days
+            - months
+            - years
+          example: days
+          description: The period of the deactivation configuration
+      required:
+        - variant
+        - duration
+        - period
+    ProgramReceiverBasicRewardActivation:
+      type: object
+      properties:
+        variant:
+          type: string
+          enum:
+            - claim
+            - conversion
+          example: claim
+          description: The variant of the activation configuration
+      required:
+        - variant
+    ProgramReceiverBasicReward:
+      type: object
+      properties:
+        reward:
+          description: The reward
+          allOf:
+            - $ref: '#/components/schemas/BasicReward'
+        activation:
+          description: The activation configuration
+          allOf:
+            - $ref: '#/components/schemas/ProgramReceiverBasicRewardActivation'
+        deactivation:
+          oneOf:
+            - $ref: '#/components/schemas/ProgramReceiverBasicRewardNeverDeactivation'
+            - $ref: >-
+                #/components/schemas/ProgramReceiverBasicRewardIntervalDeactivation
+          example:
+            variant: never
+          description: The deactivation configuration
+      required:
+        - reward
+        - activation
+        - deactivation
+    ProgramReceiverCreditRewardNeverDeactivation:
+      type: object
+      properties:
+        variant:
+          type: string
+          enum:
+            - never
+          example: never
+          description: The variant of the deactivation configuration
+      required:
+        - variant
+    ProgramReceiverCreditRewardIntervalDeactivation:
+      type: object
+      properties:
+        variant:
+          type: string
+          enum:
+            - interval
+          example: interval
+          description: The variant of the deactivation configuration
+        duration:
+          type: number
+          example: 1
+          description: The duration of the deactivation configuration
+        period:
+          type: string
+          enum:
+            - days
+            - months
+            - years
+          example: days
+          description: The period of the deactivation configuration
+      required:
+        - variant
+        - duration
+        - period
+    ProgramReceiverCreditRewardActivation:
+      type: object
+      properties:
+        variant:
+          type: string
+          enum:
+            - claim
+            - conversion
+          example: claim
+          description: The variant of the activation configuration
+      required:
+        - variant
+    ProgramReceiverCreditReward:
+      type: object
+      properties:
+        reward:
+          description: The reward
+          allOf:
+            - $ref: '#/components/schemas/CreditReward'
+        activation:
+          description: The activation configuration
+          allOf:
+            - $ref: '#/components/schemas/ProgramReceiverCreditRewardActivation'
+        deactivation:
+          oneOf:
+            - $ref: >-
+                #/components/schemas/ProgramReceiverCreditRewardNeverDeactivation
+            - $ref: >-
+                #/components/schemas/ProgramReceiverCreditRewardIntervalDeactivation
+          example:
+            variant: never
+          description: The deactivation configuration
+      required:
+        - reward
+        - activation
+        - deactivation
+    ProgramReceiverOfferCodeRewardNeverDeactivation:
+      type: object
+      properties:
+        variant:
+          type: string
+          enum:
+            - never
+          example: never
+          description: The variant of the deactivation configuration
+      required:
+        - variant
+    ProgramReceiverOfferCodeRewardIntervalDeactivation:
+      type: object
+      properties:
+        variant:
+          type: string
+          enum:
+            - interval
+          example: interval
+          description: The variant of the deactivation configuration
+        duration:
+          type: number
+          example: 1
+          description: The duration of the deactivation configuration
+        period:
+          type: string
+          enum:
+            - days
+            - months
+            - years
+          example: days
+          description: The period of the deactivation configuration
+      required:
+        - variant
+        - duration
+        - period
+    ProgramReceiverOfferCodeRewardActivation:
+      type: object
+      properties:
+        variant:
+          type: string
+          enum:
+            - claim
+          example: claim
+          description: The variant of the activation configuration
+      required:
+        - variant
+    ProgramReceiverOfferCodeReward:
+      type: object
+      properties:
+        reward:
+          description: The reward
+          allOf:
+            - $ref: '#/components/schemas/OfferCodeReward'
+        activation:
+          description: The activation configuration
+          allOf:
+            - $ref: '#/components/schemas/ProgramReceiverOfferCodeRewardActivation'
+        deactivation:
+          oneOf:
+            - $ref: >-
+                #/components/schemas/ProgramReceiverOfferCodeRewardNeverDeactivation
+            - $ref: >-
+                #/components/schemas/ProgramReceiverOfferCodeRewardIntervalDeactivation
+          example:
+            variant: never
+          description: The deactivation configuration
+      required:
+        - reward
+        - activation
+        - deactivation
+    ProgramReceiverRewards:
+      type: object
+      properties:
+        basic:
+          description: The program basic rewards
+          type: array
+          items:
+            $ref: '#/components/schemas/ProgramReceiverBasicReward'
+        credit:
+          description: The program credit rewards
+          type: array
+          items:
+            $ref: '#/components/schemas/ProgramReceiverCreditReward'
+        offer_code:
+          description: The program offer code rewards
+          type: array
+          items:
+            $ref: '#/components/schemas/ProgramReceiverOfferCodeReward'
+      required:
+        - basic
+        - credit
+        - offer_code
+    ProgramRewards:
+      type: object
+      properties:
+        sender:
+          description: The program sender rewards
+          allOf:
+            - $ref: '#/components/schemas/ProgramSenderRewards'
+        receiver:
+          description: The program receiver rewards
+          allOf:
+            - $ref: '#/components/schemas/ProgramReceiverRewards'
+      required:
+        - sender
+        - receiver
+    Program:
+      type: object
+      properties:
+        id:
+          type: string
+          example: 123e4567-e89b-12d3-a456-426614174000
+          description: The program id
+        name:
+          type: string
+          example: 'Referral Program #1'
+          description: The program name
+        description:
+          type: string
+          nullable: true
+          example: This is a referral program
+          description: The program description
+        metadata:
+          type: object
+          nullable: true
+          example: {}
+          description: The program metadata
+        distribution_percentage:
+          type: number
+          example: 100
+          description: The program distribution percentage
+        limit:
+          type: number
+          example: 0
+          description: The program limit
+        rewards:
+          description: The program rewards
+          allOf:
+            - $ref: '#/components/schemas/ProgramRewards'
+        created_at:
+          format: date-time
+          type: string
+          example: '2021-01-01T00:00:00.000Z'
+          description: The program created at
+        updated_at:
+          format: date-time
+          type: string
+          nullable: true
+          example: '2021-01-01T00:00:00.000Z'
+          description: The program updated at
+      required:
+        - id
+        - name
+        - description
+        - metadata
+        - distribution_percentage
+        - limit
+        - rewards
+        - created_at
+        - updated_at
+    User:
+      type: object
+      properties:
+        app_user_id:
+          type: string
+          example: 821fae4b5-1a2d-4c1e-9152-5297086a161c
+          description: The unique identifier of the user in your app.
+        code:
+          type: string
+          example: XYZ123
+          nullable: true
+          description: The referral code of the user.
+        preview_link:
+          type: string
+          nullable: true
+          example: https://appname.wwk.link/XYZ123
+          description: The preview link of the user.
+        is_premium:
+          type: boolean
+          nullable: true
+          example: false
+          description: Whether the user is a premium user.
+        first_seen_at:
+          format: date-time
+          type: string
+          nullable: true
+          example: '2024-11-10T10:28:18.104Z'
+          description: The date when the user was first seen at.
+        last_seen_at:
+          format: date-time
+          type: string
+          nullable: true
+          example: '2024-11-10T10:28:18.104Z'
+          description: The date when the user was last seen at.
+        metadata:
+          type: object
+          nullable: true
+          example: {}
+          description: The metadata of the user.
+        claim_code_eligibility:
+          description: The claim code eligibility of the user.
+          allOf:
+            - $ref: '#/components/schemas/UserClaimCodeEligibility'
+        stats:
+          description: The stats of the user.
+          allOf:
+            - $ref: '#/components/schemas/UserStats'
+        rewards:
+          description: The rewards of the user.
+          allOf:
+            - $ref: '#/components/schemas/UserRewards'
+        program:
+          nullable: true
+          description: The program of the user.
+          allOf:
+            - $ref: '#/components/schemas/Program'
+      required:
+        - app_user_id
+        - code
+        - preview_link
+        - is_premium
+        - first_seen_at
+        - last_seen_at
+        - metadata
+        - claim_code_eligibility
+        - stats
+        - rewards
+        - program
+    UserResponse:
+      type: object
+      properties:
+        user:
+          description: The user
+          allOf:
+            - $ref: '#/components/schemas/User'
+      required:
+        - user
+    UserDataResponse:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/UserResponse'
+      required:
+        - data
+    UserWithdrawCreditsRequest:
+      type: object
+      properties:
+        key:
+          type: string
+          example: credit-reward
+          description: The key of the credit reward to withdraw
+        amount:
+          type: number
+          example: 100
+          description: The amount of credits to withdraw
+          minimum: 1
+      required:
+        - key
+        - amount
+    UserWithdrawCreditsResult:
+      type: object
+      properties:
+        credits_available_at_start:
+          type: number
+          example: 100
+          description: The amount of credits available at the start
+        credits_available_at_end:
+          type: number
+          example: 90
+          description: The amount of credits available at the end
+        credits_requested_to_withdraw:
+          type: number
+          example: 10
+          description: The amount of credits requested to withdraw
+        credits_withdrawn:
+          type: number
+          example: 10
+          description: The amount of credits withdrawn
+      required:
+        - credits_available_at_start
+        - credits_available_at_end
+        - credits_requested_to_withdraw
+        - credits_withdrawn
+    UserWithdrawCreditsResponse:
+      type: object
+      properties:
+        withdraw_result:
+          description: The withdraw result
+          allOf:
+            - $ref: '#/components/schemas/UserWithdrawCreditsResult'
+        user:
+          description: The user
+          allOf:
+            - $ref: '#/components/schemas/User'
+      required:
+        - withdraw_result
+        - user
+    UserWithdrawCreditsDataResponse:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/UserWithdrawCreditsResponse'
+      required:
+        - data
+    UserClaimReferralCodeRequest:
+      type: object
+      properties:
+        code:
+          type: string
+          example: XYZ123
+          description: The referral code to claim
+      required:
+        - code
+    UserRewardsGranted:
+      type: object
+      properties:
+        basic:
+          description: The referral user basic rewards
+          type: array
+          items:
+            $ref: '#/components/schemas/UserBasicRewardActive'
+        credit:
+          description: The referral user credit rewards
+          type: array
+          items:
+            $ref: '#/components/schemas/UserCreditRewardActive'
+        offer_code:
+          description: The referral user offer code rewards
+          type: array
+          items:
+            $ref: '#/components/schemas/UserOfferCodeRewardActive'
+      required:
+        - basic
+        - credit
+        - offer_code
+    UserClaimReferralCodeResponse:
+      type: object
+      properties:
+        granted_rewards:
+          description: The granted rewards
+          allOf:
+            - $ref: '#/components/schemas/UserRewardsGranted'
+        user:
+          description: The user
+          allOf:
+            - $ref: '#/components/schemas/User'
+      required:
+        - granted_rewards
+        - user
+    UserClaimReferralCodeDataResponse:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/UserClaimReferralCodeResponse'
+      required:
+        - data

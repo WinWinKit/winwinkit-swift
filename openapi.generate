@@ -1,0 +1,39 @@
+#!/bin/bash
+
+# Generate the OpenAPI client
+openapi-generator generate -i openapi.yaml -g swift5 -o tmp/OpenAPI  --additional-properties=responseAs=AsyncAwait,projectName=WinWinKit,readonlyProperties=true,useJsonEncodable=false
+
+# Remove the previous OpenAPI folder
+rm -rf Sources/WinWinKit/Generated/OpenAPI/*
+
+# Move OpenAPIs files to the correct folder
+mv tmp/OpenAPI/WinWinKit/Classes/OpenAPIs/* Sources/WinWinKit/Generated/OpenAPI/
+
+# Remove the OpenAPI folder
+rm -rf tmp
+
+# m
+mkdir Sources/WinWinKit/Generated/OpenAPI/Public
+mkdir Sources/WinWinKit/Generated/OpenAPI/Public/Utils
+mkdir Sources/WinWinKit/Generated/OpenAPI/Internal
+
+mv Sources/WinWinKit/Generated/OpenAPI/Models Sources/WinWinKit/Generated/OpenAPI/Public
+mv Sources/WinWinKit/Generated/OpenAPI/Extensions.swift Sources/WinWinKit/Generated/OpenAPI/Public/Utils
+mv Sources/WinWinKit/Generated/OpenAPI/Models.swift Sources/WinWinKit/Generated/OpenAPI/Public/Utils
+
+mv Sources/WinWinKit/Generated/OpenAPI/Public/Models/*Request.swift Sources/WinWinKit/Generated/OpenAPI/Internal
+mv Sources/WinWinKit/Generated/OpenAPI/Public/Models/*Response.swift Sources/WinWinKit/Generated/OpenAPI/Internal
+mv Sources/WinWinKit/Generated/OpenAPI/APIs/* Sources/WinWinKit/Generated/OpenAPI/Internal
+mv Sources/WinWinKit/Generated/OpenAPI/*.swift Sources/WinWinKit/Generated/OpenAPI/Internal
+
+# Remove public access from utility files
+sed -i '' 's/open class /internal class /g' Sources/WinWinKit/Generated/OpenAPI/Internal/*.swift
+sed -i '' 's/public class /internal class /g' Sources/WinWinKit/Generated/OpenAPI/Internal/*.swift
+sed -i '' 's/public struct /internal struct /g' Sources/WinWinKit/Generated/OpenAPI/Internal/*.swift
+sed -i '' 's/public protocol /internal protocol /g' Sources/WinWinKit/Generated/OpenAPI/Internal/*.swift
+sed -i '' 's/public static /internal static /g' Sources/WinWinKit/Generated/OpenAPI/Internal/*.swift
+sed -i '' 's/public func /internal func /g' Sources/WinWinKit/Generated/OpenAPI/Internal/*.swift
+sed -i '' 's/public let /internal let /g' Sources/WinWinKit/Generated/OpenAPI/Internal/*.swift
+sed -i '' 's/public var /internal var /g' Sources/WinWinKit/Generated/OpenAPI/Internal/*.swift
+
+rm -rf Sources/WinWinKit/Generated/OpenAPI/APIs
