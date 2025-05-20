@@ -36,7 +36,7 @@ final class UserCache: UserCacheType {
     var user: User? {
         get {
             do {
-                return try self.keyValueCache[Keys.referralUser].map { try User(jsonData: $0) }
+                return try self.keyValueCache[Keys.user].map { try User(jsonData: $0) }
             }
             catch {
                 Logger.error("Unable to deserialize ReferralUser.")
@@ -45,7 +45,7 @@ final class UserCache: UserCacheType {
         }
         set {
             do {
-                self.keyValueCache[Keys.referralUser] = try newValue?.jsonData()
+                self.keyValueCache[Keys.user] = try newValue?.jsonData()
             }
             catch {
                 Logger.error("Unable to serialize ReferralUser.")
@@ -56,7 +56,7 @@ final class UserCache: UserCacheType {
     var userUpdate: UserUpdate? {
         get {
             do {
-                return try self.keyValueCache[Keys.referralUserUpdate].map { try UserUpdate(jsonData: $0) }
+                return try self.keyValueCache[Keys.userUpdate].map { try UserUpdate(jsonData: $0) }
             }
             catch {
                 Logger.error("Unable to deserialize update ReferralUser.")
@@ -65,7 +65,7 @@ final class UserCache: UserCacheType {
         }
         set {
             do {
-                self.keyValueCache[Keys.referralUserUpdate] = try newValue?.jsonData()
+                self.keyValueCache[Keys.userUpdate] = try newValue?.jsonData()
             }
             catch {
                 Logger.error("Unable to serialize update ReferralUser.")
@@ -76,7 +76,7 @@ final class UserCache: UserCacheType {
     // MARK: - Private
     
     private enum Keys {
-        static let referralUser = "com.winwinkit.cache.referralUser"
-        static let referralUserUpdate = "com.winwinkit.cache.referralUserUpdate"
+        static let user = "com.winwinkit.cache.user"
+        static let userUpdate = "com.winwinkit.cache.userUpdate"
     }
 }
