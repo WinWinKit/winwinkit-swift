@@ -5,7 +5,7 @@
 //  You may not use this file except in compliance with the License.
 //  You may obtain a copy of the License at https://opensource.org/licenses/MIT
 //
-//  ReferralUserUpdate.swift
+//  UserUpdate.swift
 //
 //  Created by Oleh Stasula on 05/12/2024.
 //
