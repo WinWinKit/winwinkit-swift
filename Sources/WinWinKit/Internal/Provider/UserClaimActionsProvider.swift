@@ -5,18 +5,18 @@
 //  You may not use this file except in compliance with the License.
 //  You may obtain a copy of the License at https://opensource.org/licenses/MIT
 //
-//  ReferralClaimCodeProviderType.swift
+//  UserClaimActionsProvider.swift
 //
 //  Created by Oleh Stasula on 21/01/2025.
 //
 
-protocol ReferralClaimCodeProviderType {
+protocol UserClaimActionsProviderType {
     func claim(request: UserClaimReferralCodeRequest, appUserId: String, apiKey: String) async throws -> UserClaimReferralCodeResponse
 }
 
-struct ReferralClaimCodeProvider: ReferralClaimCodeProviderType {
+struct UserClaimActionsProvider: UserClaimActionsProviderType {
     
-    // MARK: - ReferralClaimCodeProviderType
+    // MARK: - UserClaimActionsProviderType
     
     func claim(request: UserClaimReferralCodeRequest, appUserId: String, apiKey: String) async throws -> UserClaimReferralCodeResponse {
         try await ClaimActionsAPI.claimReferralCode(appUserId: appUserId, xApiKey: apiKey, userClaimReferralCodeRequest: request).data

@@ -5,19 +5,19 @@
 //  You may not use this file except in compliance with the License.
 //  You may obtain a copy of the License at https://opensource.org/licenses/MIT
 //
-//  ReferralUserProviderType.swift
+//  UserProvider.swift
 //
 //  Created by Oleh Stasula on 05/12/2024.
 //
     
-protocol ReferralUserProviderType {
+protocol UserProviderType {
     func fetch(appUserId: String, apiKey: String) async throws -> User
     func createOrUpdate(request: UserCreateRequest, apiKey: String) async throws -> User
 }
 
-struct ReferralUserProvider: ReferralUserProviderType {
+struct UserProvider: UserProviderType {
     
-    // MARK: - ReferralUserProviderType
+    // MARK: - UserProviderType
     
     func fetch(appUserId: String, apiKey: String) async throws -> User {
         try await UsersAPI.getUser(appUserId: appUserId, xApiKey: apiKey).data.user

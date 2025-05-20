@@ -17,7 +17,7 @@ enum MockReferralUserProviderError: Error {
     case noReferralUserToReturn
 }
 
-final class MockReferralUserProvider: ReferralUserProviderType {
+final class MockReferralUserProvider: UserProviderType {
 
     var referralUserToReturnOnFetch: ReferralUser? = nil
     var errorToThrowOnFetch: Error? = nil

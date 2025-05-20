@@ -17,7 +17,7 @@ enum MockReferralClaimCodeProviderError: Error {
     case noReferralClaimCodeResultToReturn
 }
 
-final class MockReferralClaimCodeProvider: ReferralClaimCodeProviderType {
+final class MockReferralClaimCodeProvider: UserClaimActionsProviderType {
     
     var referralClaimCodeResultToReturn: ReferralClaimCodeResult? = nil
     var errorToThrow: Error? = nil

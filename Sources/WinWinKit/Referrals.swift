@@ -196,8 +196,8 @@ public final class Referrals {
         let referralUserService = ReferralUserService(appUserId: appUserId,
                                                       apiKey: self.apiKey,
                                                       referralUserCache: self.referralUserCache,
-                                                      referralUserProvider: self.referralUserProvider,
-                                                      referralClaimCodeProvider: self.referralClaimCodeProvider)
+                                                      userProvider: self.userProvider,
+                                                      userClaimActionsProvider: self.userClaimActionsProvider)
         self.referralUserService = referralUserService
         
         referralUserService.delegate = self
@@ -324,8 +324,8 @@ public final class Referrals {
     private let apiKey: String
     private let networkReachability: NetworkReachabilityType
     private let referralUserCache: ReferralUserCacheType
-    private let referralUserProvider: ReferralUserProviderType
-    private let referralClaimCodeProvider: ReferralClaimCodeProviderType
+    private let userProvider: UserProviderType
+    private let userClaimActionsProvider: UserClaimActionsProviderType
     
     private weak var _delegate: ReferralsDelegate? = nil
     
@@ -355,27 +355,27 @@ public final class Referrals {
         
         let networkReachability = NetworkReachability()
         let referralUserCache = ReferralUserCache(keyValueCache: keyValueCache)
-        let referralUserProvider = ReferralUserProvider()
-        let referralClaimCodeProvider = ReferralClaimCodeProvider()
+        let userProvider = UserProvider()
+        let userClaimActionsProvider = UserClaimActionsProvider()
         
         self.init(apiKey: apiKey,
                   networkReachability: networkReachability,
                   referralUserCache: referralUserCache,
-                  referralUserProvider: referralUserProvider,
-                  referralClaimCodeProvider: referralClaimCodeProvider)
+                  userProvider: userProvider,
+                  userClaimActionsProvider: userClaimActionsProvider)
     }
     
     private init(apiKey: String,
                  networkReachability: NetworkReachabilityType,
                  referralUserCache: ReferralUserCacheType,
-                 referralUserProvider: ReferralUserProviderType,
-                 referralClaimCodeProvider: ReferralClaimCodeProviderType) {
+                 userProvider: UserProviderType,
+                 userClaimActionsProvider: UserClaimActionsProviderType) {
         
         self.apiKey = apiKey
         self.networkReachability = networkReachability
         self.referralUserCache = referralUserCache
-        self.referralUserProvider = referralUserProvider
-        self.referralClaimCodeProvider = referralClaimCodeProvider
+        self.userProvider = userProvider
+        self.userClaimActionsProvider = userClaimActionsProvider
     }
     
     private func startNetworkReachability() {

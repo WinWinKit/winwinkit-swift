@@ -18,20 +18,20 @@ final class ReferralUserService {
     let appUserId: String
     let apiKey: String
     let referralUserCache: ReferralUserCacheType
-    let referralUserProvider: ReferralUserProviderType
-    let referralClaimCodeProvider: ReferralClaimCodeProviderType
+    let userProvider: UserProviderType
+    let userClaimActionsProvider: UserClaimActionsProviderType
     
     init(appUserId: String,
          apiKey: String,
          referralUserCache: ReferralUserCacheType,
-         referralUserProvider: ReferralUserProviderType,
-         referralClaimCodeProvider: ReferralClaimCodeProviderType) {
+         userProvider: UserProviderType,
+         userClaimActionsProvider: UserClaimActionsProviderType) {
         
         self.appUserId = appUserId
         self.apiKey = apiKey
         self.referralUserCache = referralUserCache
-        self.referralUserProvider = referralUserProvider
-        self.referralClaimCodeProvider = referralClaimCodeProvider
+        self.userProvider = userProvider
+        self.userClaimActionsProvider = userClaimActionsProvider
     }
     
     weak var delegate: ReferralUserServiceDelegate?
@@ -134,7 +134,7 @@ final class ReferralUserService {
                         lastSeenAt: referralUserUpdate.lastSeenAt,
                         metadata: referralUserUpdate.metadata
                     )
-                    let referralUser = try await self.referralUserProvider.createOrUpdate(request: request,
+                    let referralUser = try await self.userProvider.createOrUpdate(request: request,
                                                                                           apiKey: self.apiKey)
                     Logger.debug("ReferralUserService: Refresh did create referral user")
                     self.resetReferralUserUpdate(with: referralUserUpdate)
@@ -149,13 +149,13 @@ final class ReferralUserService {
                         lastSeenAt: referralUserUpdate.lastSeenAt,
                         metadata: referralUserUpdate.metadata
                     )
-                    let updatedReferralUser = try await self.referralUserProvider.createOrUpdate(request: request,
+                    let updatedReferralUser = try await self.userProvider.createOrUpdate(request: request,
                                                                                                  apiKey: self.apiKey)
                     Logger.debug("ReferralUserService: Refresh did update referral user")
                     self.resetReferralUserUpdate(with: referralUserUpdate)
                     self.cacheReferralUser(updatedReferralUser)
                 }
-//                else if let referralUser = try await self.referralUserProvider.fetch(appUserId: self.appUserId, apiKey: self.apiKey) {
+//                else if let referralUser = try await self.userProvider.fetch(appUserId: self.appUserId, apiKey: self.apiKey) {
 //                    // Fetch referral user to get latest value.
 //                    Logger.debug("ReferralUserService: Refresh did fetch referral user")
 //                    self.cacheReferralUser(referralUser)
@@ -170,7 +170,7 @@ final class ReferralUserService {
                         lastSeenAt: referralUserUpdate.lastSeenAt,
                         metadata: referralUserUpdate.metadata
                     )
-                    let referralUser = try await self.referralUserProvider.createOrUpdate(request: request,
+                    let referralUser = try await self.userProvider.createOrUpdate(request: request,
                                                                                           apiKey: self.apiKey)
                     Logger.debug("ReferralUserService: Refresh did re-create referral user")
                     self.resetReferralUserUpdate(with: referralUserUpdate)
@@ -217,7 +217,7 @@ final class ReferralUserService {
         self.claimCodeTask = Task { @MainActor in
             do {
                 let request = UserClaimReferralCodeRequest(code: code)
-                let referralClaimCodeData = try await self.referralClaimCodeProvider.claim(request: request,
+                let referralClaimCodeData = try await self.userClaimActionsProvider.claim(request: request,
                                                                                            appUserId: self.appUserId,
                                                                                            apiKey: self.apiKey)
                 
