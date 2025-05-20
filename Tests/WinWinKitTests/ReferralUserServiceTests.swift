@@ -16,27 +16,35 @@ import Testing
 
 @Suite struct ReferralUserServiceTests {
     @Test func initilization() {
+        let offerCodeProvider = MockOfferCodeProvider()
         let userCache = MockUserCache()
-        let userProvider = MockUserProvider()
         let userClaimActionsProvider = MockUserClaimActionsProvider()
-        let service = UserService(appUserId: MockUser.Full.object.appUserId,
-                                  apiKey: MockConstants.apiKey,
-                                  userCache: userCache,
-                                  userProvider: userProvider,
-                                  userClaimActionsProvider: userClaimActionsProvider)
+        let userProvider = MockUserProvider()
+        let service = UserService(
+            appUserId: MockUser.Full.object.appUserId,
+            apiKey: MockConstants.apiKey,
+            offerCodeProvider: offerCodeProvider,
+            userCache: userCache,
+            userClaimActionsProvider: userClaimActionsProvider,
+            userProvider: userProvider
+        )
         #expect(service.cachedUser == nil)
         #expect(service.delegate == nil)
     }
 
     @Test func cachedUser() {
+        let offerCodeProvider = MockOfferCodeProvider()
         let userCache = MockUserCache()
-        let userProvider = MockUserProvider()
         let userClaimActionsProvider = MockUserClaimActionsProvider()
-        let service = UserService(appUserId: MockUser.Full.object.appUserId,
-                                  apiKey: MockConstants.apiKey,
-                                  userCache: userCache,
-                                  userProvider: userProvider,
-                                  userClaimActionsProvider: userClaimActionsProvider)
+        let userProvider = MockUserProvider()
+        let service = UserService(
+            appUserId: MockUser.Full.object.appUserId,
+            apiKey: MockConstants.apiKey,
+            offerCodeProvider: offerCodeProvider,
+            userCache: userCache,
+            userClaimActionsProvider: userClaimActionsProvider,
+            userProvider: userProvider
+        )
         #expect(service.cachedUser == nil)
         userCache.user = MockUser.Full.object
         #expect(service.cachedUser == MockUser.Full.object)
@@ -45,14 +53,18 @@ import Testing
     }
 
     @Test func delegate() {
+        let offerCodeProvider = MockOfferCodeProvider()
         let userCache = MockUserCache()
-        let userProvider = MockUserProvider()
         let userClaimActionsProvider = MockUserClaimActionsProvider()
-        let service = UserService(appUserId: MockUser.Full.object.appUserId,
-                                  apiKey: MockConstants.apiKey,
-                                  userCache: userCache,
-                                  userProvider: userProvider,
-                                  userClaimActionsProvider: userClaimActionsProvider)
+        let userProvider = MockUserProvider()
+        let service = UserService(
+            appUserId: MockUser.Full.object.appUserId,
+            apiKey: MockConstants.apiKey,
+            offerCodeProvider: offerCodeProvider,
+            userCache: userCache,
+            userClaimActionsProvider: userClaimActionsProvider,
+            userProvider: userProvider
+        )
         #expect(service.delegate == nil)
         let delegate = MockUserServiceDelegate()
         service.delegate = delegate
@@ -66,14 +78,18 @@ import Testing
     }
 
     @Test func refreshFailsWithNoData() async throws {
+        let offerCodeProvider = MockOfferCodeProvider()
         let userCache = MockUserCache()
-        let userProvider = MockUserProvider()
         let userClaimActionsProvider = MockUserClaimActionsProvider()
-        let service = UserService(appUserId: MockUser.Full.object.appUserId,
-                                  apiKey: MockConstants.apiKey,
-                                  userCache: userCache,
-                                  userProvider: userProvider,
-                                  userClaimActionsProvider: userClaimActionsProvider)
+        let userProvider = MockUserProvider()
+        let service = UserService(
+            appUserId: MockUser.Full.object.appUserId,
+            apiKey: MockConstants.apiKey,
+            offerCodeProvider: offerCodeProvider,
+            userCache: userCache,
+            userClaimActionsProvider: userClaimActionsProvider,
+            userProvider: userProvider
+        )
         let delegate = MockUserServiceDelegate()
         service.delegate = delegate
 
@@ -96,14 +112,18 @@ import Testing
     }
 
     @Test func refreshFailsWithNoDataAndHasNoFollowingRefresh() async throws {
+        let offerCodeProvider = MockOfferCodeProvider()
         let userCache = MockUserCache()
-        let userProvider = MockUserProvider()
         let userClaimActionsProvider = MockUserClaimActionsProvider()
-        let service = UserService(appUserId: MockUser.Full.object.appUserId,
-                                  apiKey: MockConstants.apiKey,
-                                  userCache: userCache,
-                                  userProvider: userProvider,
-                                  userClaimActionsProvider: userClaimActionsProvider)
+        let userProvider = MockUserProvider()
+        let service = UserService(
+            appUserId: MockUser.Full.object.appUserId,
+            apiKey: MockConstants.apiKey,
+            offerCodeProvider: offerCodeProvider,
+            userCache: userCache,
+            userClaimActionsProvider: userClaimActionsProvider,
+            userProvider: userProvider
+        )
         let delegate = MockUserServiceDelegate()
         service.delegate = delegate
 
@@ -126,15 +146,19 @@ import Testing
     }
 
     @Test func refreshFailsWithUnauthorized() async throws {
+        let offerCodeProvider = MockOfferCodeProvider()
         let userCache = MockUserCache()
+        let userClaimActionsProvider = MockUserClaimActionsProvider()
         let userProvider = MockUserProvider()
         userProvider.errorToThrow = ErrorResponse.error(401, nil, nil, MockError())
-        let userClaimActionsProvider = MockUserClaimActionsProvider()
-        let service = UserService(appUserId: MockUser.Full.object.appUserId,
-                                  apiKey: MockConstants.apiKey,
-                                  userCache: userCache,
-                                  userProvider: userProvider,
-                                  userClaimActionsProvider: userClaimActionsProvider)
+        let service = UserService(
+            appUserId: MockUser.Full.object.appUserId,
+            apiKey: MockConstants.apiKey,
+            offerCodeProvider: offerCodeProvider,
+            userCache: userCache,
+            userClaimActionsProvider: userClaimActionsProvider,
+            userProvider: userProvider
+        )
         let delegate = MockUserServiceDelegate()
         service.delegate = delegate
 
@@ -156,16 +180,20 @@ import Testing
     }
 
     @Test func refreshFailsAndResetsCacheWithUnauthorized() async throws {
+        let offerCodeProvider = MockOfferCodeProvider()
         let userCache = MockUserCache()
         userCache.user = MockUser.Full.object
+        let userClaimActionsProvider = MockUserClaimActionsProvider()
         let userProvider = MockUserProvider()
         userProvider.errorToThrow = ErrorResponse.error(401, nil, nil, MockError())
-        let userClaimActionsProvider = MockUserClaimActionsProvider()
-        let service = UserService(appUserId: MockUser.Full.object.appUserId,
-                                  apiKey: MockConstants.apiKey,
-                                  userCache: userCache,
-                                  userProvider: userProvider,
-                                  userClaimActionsProvider: userClaimActionsProvider)
+        let service = UserService(
+            appUserId: MockUser.Full.object.appUserId,
+            apiKey: MockConstants.apiKey,
+            offerCodeProvider: offerCodeProvider,
+            userCache: userCache,
+            userClaimActionsProvider: userClaimActionsProvider,
+            userProvider: userProvider
+        )
         let delegate = MockUserServiceDelegate()
         service.delegate = delegate
 
@@ -187,15 +215,19 @@ import Testing
     }
 
     @Test func createReferralUser() async throws {
+        let offerCodeProvider = MockOfferCodeProvider()
         let userCache = MockUserCache()
+        let userClaimActionsProvider = MockUserClaimActionsProvider()
         let userProvider = MockUserProvider()
         userProvider.userToReturn = MockUser.Full.object
-        let userClaimActionsProvider = MockUserClaimActionsProvider()
-        let service = UserService(appUserId: MockUser.Full.object.appUserId,
-                                  apiKey: MockConstants.apiKey,
-                                  userCache: userCache,
-                                  userProvider: userProvider,
-                                  userClaimActionsProvider: userClaimActionsProvider)
+        let service = UserService(
+            appUserId: MockUser.Full.object.appUserId,
+            apiKey: MockConstants.apiKey,
+            offerCodeProvider: offerCodeProvider,
+            userCache: userCache,
+            userClaimActionsProvider: userClaimActionsProvider,
+            userProvider: userProvider
+        )
         let delegate = MockUserServiceDelegate()
         service.delegate = delegate
 
@@ -217,18 +249,22 @@ import Testing
     }
 
     @Test func updateReferralUser() async throws {
+        let offerCodeProvider = MockOfferCodeProvider()
         let userCache = MockUserCache()
         userCache.user = MockUser.Full.object
+        let userClaimActionsProvider = MockUserClaimActionsProvider()
         let userProvider = MockUserProvider()
         let updateMetadata: AnyCodable = ["value": 123]
         let updatedReferralUser = MockUser.Full.object.set(metadata: updateMetadata)
         userProvider.userToReturn = updatedReferralUser
-        let userClaimActionsProvider = MockUserClaimActionsProvider()
-        let service = UserService(appUserId: MockUser.Full.object.appUserId,
-                                  apiKey: MockConstants.apiKey,
-                                  userCache: userCache,
-                                  userProvider: userProvider,
-                                  userClaimActionsProvider: userClaimActionsProvider)
+        let service = UserService(
+            appUserId: MockUser.Full.object.appUserId,
+            apiKey: MockConstants.apiKey,
+            offerCodeProvider: offerCodeProvider,
+            userCache: userCache,
+            userClaimActionsProvider: userClaimActionsProvider,
+            userProvider: userProvider
+        )
         let delegate = MockUserServiceDelegate()
         service.delegate = delegate
 
@@ -255,17 +291,21 @@ import Testing
     @Test func claimReferralCode() {}
 
     @Test func referralUserDeletedOnRemoteCreatesNewReferralUser() async throws {
+        let offerCodeProvider = MockOfferCodeProvider()
         let userCache = MockUserCache()
         userCache.user = MockUser.Full.object
+        let userClaimActionsProvider = MockUserClaimActionsProvider()
         let userProvider = MockUserProvider()
         let expectedReferralUser = MockUser.Full.object.set(metadata: nil)
         userProvider.userToReturn = expectedReferralUser
-        let userClaimActionsProvider = MockUserClaimActionsProvider()
-        let service = UserService(appUserId: MockUser.Full.object.appUserId,
-                                  apiKey: MockConstants.apiKey,
-                                  userCache: userCache,
-                                  userProvider: userProvider,
-                                  userClaimActionsProvider: userClaimActionsProvider)
+        let service = UserService(
+            appUserId: MockUser.Full.object.appUserId,
+            apiKey: MockConstants.apiKey,
+            offerCodeProvider: offerCodeProvider,
+            userCache: userCache,
+            userClaimActionsProvider: userClaimActionsProvider,
+            userProvider: userProvider
+        )
         let delegate = MockUserServiceDelegate()
         service.delegate = delegate
 

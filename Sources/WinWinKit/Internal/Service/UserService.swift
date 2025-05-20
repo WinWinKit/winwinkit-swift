@@ -16,21 +16,24 @@ import Foundation
 final class UserService {
     let appUserId: String
     let apiKey: String
+    let offerCodeProvider: OfferCodeProviderType
     let userCache: UserCacheType
-    let userProvider: UserProviderType
     let userClaimActionsProvider: UserClaimActionsProviderType
+    let userProvider: UserProviderType
 
     init(appUserId: String,
          apiKey: String,
+         offerCodeProvider: OfferCodeProviderType,
          userCache: UserCacheType,
-         userProvider: UserProviderType,
-         userClaimActionsProvider: UserClaimActionsProviderType)
+         userClaimActionsProvider: UserClaimActionsProviderType,
+         userProvider: UserProviderType)
     {
         self.appUserId = appUserId
         self.apiKey = apiKey
+        self.offerCodeProvider = offerCodeProvider
         self.userCache = userCache
-        self.userProvider = userProvider
         self.userClaimActionsProvider = userClaimActionsProvider
+        self.userProvider = userProvider
     }
 
     weak var delegate: UserServiceDelegate?
@@ -201,11 +204,36 @@ final class UserService {
         }
     }
 
+    func fetchOfferCode(offerCodeId: String, completion: @escaping (Result<OfferCodeResponse, Error>) -> Void) {
+        self.offerCodeTask = Task { @MainActor in
+            do {
+                let offerCode = try await self.offerCodeProvider.fetch(offerCodeId: offerCodeId, apiKey: self.apiKey)
+
+                Logger.debug("UserService: Fetch offer code did finish")
+
+                self.offerCodeTask = nil
+
+                completion(.success(offerCode))
+            }
+            catch {
+                Logger.debug("UserService: Fetch offer code did fail")
+                Logger.error("Failed to fetch offer code: \(String(describing: error))")
+
+                self.handleTaskError(error)
+
+                self.offerCodeTask = nil
+
+                completion(.failure(error))
+            }
+        }
+    }
+
     // MARK: - Private
 
     private var shouldSuspendIndefinitely: Bool = false
 
     private var claimCodeTask: Task<Void, Never>?
+    private var offerCodeTask: Task<Void, Never>?
     private var refreshTask: Task<Void, Never>?
 
     private var pendingReferralUserUpdate: UserUpdate? {

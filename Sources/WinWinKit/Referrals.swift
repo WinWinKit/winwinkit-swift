@@ -27,7 +27,6 @@ public enum ReferralsError: Error {
 /// This can be when a user logs in if you have accounts or on launch if you can generate a random user identifier.
 ///
 public final class Referrals {
-    
     ///
     /// Returns the already configured instance of ``Referrals``.
     /// - Warning: this method will crash with `fatalError` if ``Referrals`` has not been initialized through
@@ -48,7 +47,7 @@ public final class Referrals {
         }
         return instance
     }
-    
+
     ///
     /// Initialize an instance of the Referrals SDK.
     ///
@@ -83,30 +82,30 @@ public final class Referrals {
     @discardableResult
     public static func configure(apiKey: String,
                                  keyValueCache: KeyValueCacheType = UserDefaults.standard,
-                                 logLevel: Logger.Level = .info,
-                                 baseEndpointURL: URL = URL(string: "https://api.winwinkit.com")!) -> Referrals {
-        
+                                 logLevel: Logger.Level = .info) -> Referrals
+    {
         if let instance {
             Logger.error("Referrals has already been configured. Calling `configure` again has no effect.")
             return instance
         }
-        
+
         Logger.logLevel = logLevel
-        
-        let instance = Referrals(apiKey: apiKey,
-                                 keyValueCache: keyValueCache,
-                                 baseEndpointURL: baseEndpointURL)
+
+        let instance = Referrals(
+            apiKey: apiKey,
+            keyValueCache: keyValueCache
+        )
         self.instance = instance
         return instance
     }
-    
+
     ///
     /// Returns `true` if Referrals has already been initialized through ``Referrals/configure(apiKey:)``.
     ///
     public static var isConfigured: Bool {
-        Self.instance != nil
+        instance != nil
     }
-    
+
     public var delegate: ReferralsDelegate? {
         get { self._delegate }
         set {
@@ -114,26 +113,26 @@ public final class Referrals {
                 Logger.warning("Referrals delegate has already been set.")
                 return
             }
-            
+
             if newValue == nil {
                 Logger.info("Referrals delegate is being set to nil, you probably don't want to do this.")
             }
-            
+
             self._delegate = newValue
-            
+
             if newValue != nil {
                 Logger.debug("Referrals delegate is set.")
             }
         }
     }
-    
+
     ///
     /// Returns the latest available `User` object.
     ///
     public var user: User? {
         self.userService?.cachedUser
     }
-    
+
     @available(iOS 17.0, macOS 14.0, *)
     public var userObservableObject: UserObservableObject {
         if let retained = self.retainedUserObservableObject {
@@ -145,7 +144,7 @@ public final class Referrals {
         self._userObservableObject = created
         return created
     }
-    
+
     @available(iOS 17.0, macOS 14.0, *)
     public var claimReferralCodeObservableObject: ClaimReferralCodeObservableObject {
         if let retained = self.retainedClaimReferralCodeObservableObject {
@@ -164,15 +163,15 @@ public final class Referrals {
         try await withCheckedThrowingContinuation { continuation in
             self.claim(referralCode: code, completion: { result in
                 switch result {
-                case .success(let data):
+                case let .success(data):
                     continuation.resume(returning: data)
-                case .failure(let error):
+                case let .failure(error):
                     continuation.resume(throwing: error)
                 }
             })
         }
     }
-    
+
     public func claim(referralCode code: String, completion: @escaping (Result<(User, UserRewardsGranted), Error>) -> Void) {
         guard
             let userService
@@ -181,28 +180,54 @@ public final class Referrals {
             completion(.failure(ReferralsError.appUserIdNotSet))
             return
         }
-        
+
         if #available(iOS 17.0, macOS 14.0, *) {
             self.retainedClaimReferralCodeObservableObject?.set(isClaimingCode: true)
         }
-        
+
         userService.claim(referralCode: code) { [weak self] result in
             if #available(iOS 17.0, macOS 14.0, *) {
                 self?.retainedClaimReferralCodeObservableObject?.set(isClaimingCode: false)
-                
+
                 switch result {
-                case .success(let data):
+                case let .success(data):
                     self?.retainedClaimReferralCodeObservableObject?.set(didClaimCodeSuccesfully: true)
                     self?.retainedClaimReferralCodeObservableObject?.set(rewardsGranted: data.grantedRewards)
                 case .failure:
                     self?.retainedClaimReferralCodeObservableObject?.set(didClaimCodeSuccesfully: false)
                 }
             }
-            
+
             completion(result.map { ($0.user, $0.grantedRewards) })
         }
     }
-    
+
+    public func fetchOfferCode(offerCodeId: String) async throws -> (AppStoreOfferCode, AppStoreSubscription) {
+        try await withCheckedThrowingContinuation { continuation in
+            self.fetchOfferCode(offerCodeId: offerCodeId, completion: { result in
+                switch result {
+                case let .success(data):
+                    continuation.resume(returning: data)
+                case let .failure(error):
+                    continuation.resume(throwing: error)
+                }
+            })
+        }
+    }
+
+    public func fetchOfferCode(offerCodeId: String, completion: @escaping (Result<(AppStoreOfferCode, AppStoreSubscription), Error>) -> Void) {
+        guard
+            let userService
+        else {
+            Logger.warning("User identifier `appUserId` must be set before fetching offer code.")
+            return
+        }
+
+        userService.fetchOfferCode(offerCodeId: offerCodeId) { result in
+            completion(result.map { ($0.offerCode, $0.subscription) })
+        }
+    }
+
     ///
     /// Sets your app's user unique identifier.
     /// - Parameter appUserId: Unique identifier of your app's user.
@@ -211,25 +236,25 @@ public final class Referrals {
     /// **Avoid setting person identifying information**, like email or name.
     ///
     public func set(appUserId: String) {
-        
         self.startNetworkReachability()
-        
+
         let userService = UserService(
-            appUserId: appUserId, 
+            appUserId: appUserId,
             apiKey: self.apiKey,
+            offerCodeProvider: self.offerCodeProvider,
             userCache: self.userCache,
-            userProvider: self.userProvider,
-            userClaimActionsProvider: self.userClaimActionsProvider
+            userClaimActionsProvider: self.userClaimActionsProvider,
+            userProvider: self.userProvider
         )
         self.userService = userService
-        
+
         userService.delegate = self
         if self.shouldAutoUpdateLastSeenAt {
             userService.set(lastSeenAt: .now)
         }
         userService.refresh()
     }
-    
+
     ///
     /// Sets user's premium status.
     /// - Parameter isPremium: Is user premium.
@@ -247,7 +272,7 @@ public final class Referrals {
         userService.set(isPremium: isPremium)
         userService.refresh()
     }
-    
+
     ///
     /// Sets user's first seen at date.
     /// - Parameter firstSeenAt: Date when user has been seen at first. Must not be date in the future.
@@ -271,7 +296,7 @@ public final class Referrals {
         userService.set(firstSeenAt: firstSeenAt)
         userService.refresh()
     }
-    
+
     ///
     /// Sets user's last seen at date.
     /// - Parameter lastSeenAt: Date when user has been seen at first. Must not be date in the future.
@@ -294,9 +319,8 @@ public final class Referrals {
         }
         userService.set(lastSeenAt: lastSeenAt)
         userService.refresh()
-        
     }
-    
+
     ///
     /// Sets user's metadata.
     /// - Parameter metadata: Metadata object.
@@ -314,7 +338,7 @@ public final class Referrals {
         userService.set(metadata: metadata)
         userService.refresh()
     }
-    
+
     ///
     /// Resets internal state attached to previously set `appUserId`.
     ///
@@ -323,7 +347,7 @@ public final class Referrals {
         self.userCache.reset()
         self.delegate?.referrals(self, receivedUpdated: nil)
     }
-    
+
     ///
     /// A flag controlling whether `lastSeenAt` should be auto-updated or not.
     /// Set to `false` **before** calling `set(appUserId:)` if you do not want user's `lastSeenAt` property be auto-updated at initialization.
@@ -338,69 +362,75 @@ public final class Referrals {
             self._shouldAutoUpdateLastSeenAt = newValue
         }
     }
-    
+
     // MARK: - Private
-    
+
     @Atomic
     private static var instance: Referrals? = nil
-    
+
     private let apiKey: String
     private let networkReachability: NetworkReachabilityType
+    private let offerCodeProvider: OfferCodeProviderType
     private let userCache: UserCacheType
-    private let userProvider: UserProviderType
     private let userClaimActionsProvider: UserClaimActionsProviderType
-    
-    private weak var _delegate: ReferralsDelegate? = nil
-    
+    private let userProvider: UserProviderType
+
+    private weak var _delegate: ReferralsDelegate?
+
     @Atomic
     private var _shouldAutoUpdateLastSeenAt: Bool = true
-    
+
     private weak var _userObservableObject: AnyObject?
-    
+
     @available(iOS 17.0, macOS 14.0, *)
     private var retainedUserObservableObject: UserObservableObject? {
         self._userObservableObject as? UserObservableObject
     }
-    
+
     private weak var _claimReferralCodeObservableObject: AnyObject?
-    
+
     @available(iOS 17.0, macOS 14.0, *)
     private var retainedClaimReferralCodeObservableObject: ClaimReferralCodeObservableObject? {
         self._claimReferralCodeObservableObject as? ClaimReferralCodeObservableObject
     }
-    
+
     @Atomic
     private var userService: UserService?
-    
+
     private convenience init(apiKey: String,
-                             keyValueCache: KeyValueCacheType,
-                             baseEndpointURL: URL) {
-        
+                             keyValueCache: KeyValueCacheType)
+    {
         let networkReachability = NetworkReachability()
+        let offerCodeProvider = OfferCodeProvider()
         let userCache = UserCache(keyValueCache: keyValueCache)
-        let userProvider = UserProvider()
         let userClaimActionsProvider = UserClaimActionsProvider()
-        
-        self.init(apiKey: apiKey,
-                  networkReachability: networkReachability,
-                  userCache: userCache,
-                  userProvider: userProvider,
-                  userClaimActionsProvider: userClaimActionsProvider)
+        let userProvider = UserProvider()
+
+        self.init(
+            apiKey: apiKey,
+            networkReachability: networkReachability,
+            offerCodeProvider: offerCodeProvider,
+            userCache: userCache,
+            userClaimActionsProvider: userClaimActionsProvider,
+            userProvider: userProvider
+        )
     }
-    
+
     private init(apiKey: String,
                  networkReachability: NetworkReachabilityType,
+                 offerCodeProvider: OfferCodeProviderType,
                  userCache: UserCacheType,
-                 userProvider: UserProviderType,
-                 userClaimActionsProvider: UserClaimActionsProviderType) {
-        
+                 userClaimActionsProvider: UserClaimActionsProviderType,
+                 userProvider: UserProviderType)
+    {
         self.apiKey = apiKey
         self.networkReachability = networkReachability
+        self.offerCodeProvider = offerCodeProvider
         self.userCache = userCache
-        self.userProvider = userProvider
         self.userClaimActionsProvider = userClaimActionsProvider
+        self.userProvider = userProvider
     }
-    
+
     private func startNetworkReachability() {
         guard
             self.networkReachability.delegate == nil
@@ -411,30 +441,28 @@ public final class Referrals {
 }
 
 extension Referrals: NetworkReachabilityDelegate {
-    
-    internal func networkHasBecomeReachable(_ networkReachability: any NetworkReachabilityType) {
+    func networkHasBecomeReachable(_: any NetworkReachabilityType) {
         self.userService?.refresh()
     }
 }
 
 extension Referrals: UserServiceDelegate {
-    
-    internal func userServiceCanPerformNextRefresh(_ service: UserService) -> Bool {
+    func userServiceCanPerformNextRefresh(_: UserService) -> Bool {
         self.networkReachability.isReachable
     }
-    
-    internal func userService(_ service: UserService, receivedUpdated user: User) {
+
+    func userService(_: UserService, receivedUpdated user: User) {
         if #available(iOS 17, macOS 14, *) {
             self.retainedUserObservableObject?.set(user: user)
         }
         self.delegate?.referrals(self, receivedUpdated: user)
     }
-    
-    internal func userService(_ service: UserService, receivedError error: any Error) {
+
+    func userService(_: UserService, receivedError error: any Error) {
         self.delegate?.referrals(self, receivedError: error)
     }
-    
-    internal func userService(_ service: UserService, isRefreshingChanged isRefreshing: Bool) {
+
+    func userService(_: UserService, isRefreshingChanged isRefreshing: Bool) {
         if #available(iOS 17, macOS 14, *) {
             self.retainedUserObservableObject?.set(isRefreshing: isRefreshing)
         }
