@@ -5,7 +5,7 @@
 //  You may not use this file except in compliance with the License.
 //  You may obtain a copy of the License at https://opensource.org/licenses/MIT
 //
-//  ReferralClaimCodeObservableObject.swift
+//  ClaimReferralCodeObservableObject.swift
 //
 //  Created by Oleh Stasula on 21/01/2025.
 //
@@ -15,11 +15,11 @@ import Observation
 @available(iOS 17.0, *)
 @available(macOS 14.0, *)
 @Observable
-public final class ReferralClaimCodeObservableObject {
+public final class ClaimReferralCodeObservableObject {
     
     public private(set) var isClaimingCode: Bool = false
     public private(set) var didClaimCodeSuccesfully: Bool? = nil
-    public private(set) var grantedRewards: UserRewardsGranted? = nil
+    public private(set) var rewardsGranted: UserRewardsGranted? = nil
     
     public func claim(code: String) {
         self.onClaimCode?(code)
@@ -40,7 +40,7 @@ public final class ReferralClaimCodeObservableObject {
         self.didClaimCodeSuccesfully = didClaimCodeSuccesfully
     }
     
-    internal func set(grantedRewards: UserRewardsGranted) {
-        self.grantedRewards = grantedRewards
+    internal func set(rewardsGranted: UserRewardsGranted) {
+        self.rewardsGranted = rewardsGranted
     }
 }

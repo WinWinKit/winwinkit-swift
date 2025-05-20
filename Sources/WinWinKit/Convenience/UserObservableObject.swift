@@ -5,7 +5,7 @@
 //  You may not use this file except in compliance with the License.
 //  You may obtain a copy of the License at https://opensource.org/licenses/MIT
 //
-//  ReferralUserObservableObject.swift
+//  UserObservableObject.swift
 //
 //  Created by Oleh Stasula on 16/12/2024.
 //
@@ -15,7 +15,7 @@ import Observation
 @available(iOS 17.0, *)
 @available(macOS 14.0, *)
 @Observable
-public final class ReferralUserObservableObject {
+public final class UserObservableObject {
     
     public private(set) var user: User?
     public private(set) var isRefreshing: Bool = false
