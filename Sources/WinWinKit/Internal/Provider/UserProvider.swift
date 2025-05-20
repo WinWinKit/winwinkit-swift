@@ -9,20 +9,12 @@
 //
 //  Created by Oleh Stasula on 05/12/2024.
 //
-    
+
 protocol UserProviderType {
-    func fetch(appUserId: String, apiKey: String) async throws -> User
     func createOrUpdate(request: UserCreateRequest, apiKey: String) async throws -> User
 }
 
 struct UserProvider: UserProviderType {
-    
-    // MARK: - UserProviderType
-    
-    func fetch(appUserId: String, apiKey: String) async throws -> User {
-        try await UsersAPI.getUser(appUserId: appUserId, xApiKey: apiKey).data.user
-    }
-    
     func createOrUpdate(request: UserCreateRequest, apiKey: String) async throws -> User {
         try await UsersAPI.createOrUpdateUser(xApiKey: apiKey, userCreateRequest: request).data.user
     }
