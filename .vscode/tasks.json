@@ -14,7 +14,7 @@
         "label": "swift: Test",
         "detail": "swift test",
         "args": ["test"],
-        "group": "build"
+        "group": "test"
       }
     ]
   }
