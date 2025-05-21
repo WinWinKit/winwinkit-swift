@@ -16,31 +16,29 @@ import Observation
 @available(macOS 14.0, *)
 @Observable
 public final class ClaimReferralCodeObservableObject {
-    
     public private(set) var isClaimingCode: Bool = false
-    public private(set) var didClaimCodeSuccesfully: Bool? = nil
-    public private(set) var rewardsGranted: UserRewardsGranted? = nil
-    
+    public private(set) var didClaimCodeSuccesfully: Bool?
+    public private(set) var rewardsGranted: UserRewardsGranted?
+
     public func claim(code: String) {
         self.onClaimCode?(code)
     }
-    
+
     // MARK: - Internal
-    
-    internal init() {
-    }
-    
-    internal var onClaimCode: ((String) -> Void)?
-    
-    internal func set(isClaimingCode: Bool) {
+
+    init() {}
+
+    var onClaimCode: ((String) -> Void)?
+
+    func set(isClaimingCode: Bool) {
         self.isClaimingCode = isClaimingCode
     }
-    
-    internal func set(didClaimCodeSuccesfully: Bool) {
+
+    func set(didClaimCodeSuccesfully: Bool) {
         self.didClaimCodeSuccesfully = didClaimCodeSuccesfully
     }
-    
-    internal func set(rewardsGranted: UserRewardsGranted) {
+
+    func set(rewardsGranted: UserRewardsGranted) {
         self.rewardsGranted = rewardsGranted
     }
 }
