@@ -192,13 +192,13 @@ public final class Referrals {
                 switch result {
                 case let .success(data):
                     self?.retainedClaimReferralCodeObservableObject?.set(didClaimCodeSuccesfully: true)
-                    self?.retainedClaimReferralCodeObservableObject?.set(rewardsGranted: data.grantedRewards)
+                    self?.retainedClaimReferralCodeObservableObject?.set(rewardsGranted: data.rewardsGranted)
                 case .failure:
                     self?.retainedClaimReferralCodeObservableObject?.set(didClaimCodeSuccesfully: false)
                 }
             }
 
-            completion(result.map { ($0.user, $0.grantedRewards) })
+            completion(result.map { ($0.user, $0.rewardsGranted) })
         }
     }
 

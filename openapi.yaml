@@ -1645,8 +1645,8 @@ components:
     UserClaimReferralCodeResponse:
       type: object
       properties:
-        granted_rewards:
-          description: The granted rewards
+        rewards_granted:
+          description: The rewards granted to the user
           allOf:
             - $ref: '#/components/schemas/UserRewardsGranted'
         user:
@@ -1654,7 +1654,7 @@ components:
           allOf:
             - $ref: '#/components/schemas/User'
       required:
-        - granted_rewards
+        - rewards_granted
         - user
     UserClaimReferralCodeDataResponse:
       type: object

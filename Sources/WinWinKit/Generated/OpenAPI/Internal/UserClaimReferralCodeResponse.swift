@@ -12,18 +12,18 @@ import AnyCodable
 
 internal struct UserClaimReferralCodeResponse: Codable, Hashable {
 
-    /** The granted rewards */
-    public private(set) var grantedRewards: UserRewardsGranted
+    /** The rewards granted to the user */
+    public private(set) var rewardsGranted: UserRewardsGranted
     /** The user */
     public private(set) var user: User
 
-    public init(grantedRewards: UserRewardsGranted, user: User) {
-        self.grantedRewards = grantedRewards
+    public init(rewardsGranted: UserRewardsGranted, user: User) {
+        self.rewardsGranted = rewardsGranted
         self.user = user
     }
 
     public enum CodingKeys: String, CodingKey, CaseIterable {
-        case grantedRewards = "granted_rewards"
+        case rewardsGranted = "rewards_granted"
         case user
     }
 
@@ -31,7 +31,7 @@ internal struct UserClaimReferralCodeResponse: Codable, Hashable {
 
     internal func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
-        try container.encode(grantedRewards, forKey: .grantedRewards)
+        try container.encode(rewardsGranted, forKey: .rewardsGranted)
         try container.encode(user, forKey: .user)
     }
 }
