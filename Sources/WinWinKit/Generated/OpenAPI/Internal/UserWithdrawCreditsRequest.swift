@@ -7,12 +7,11 @@
 
 import Foundation
 #if canImport(AnyCodable)
-import AnyCodable
+    import AnyCodable
 #endif
 
-internal struct UserWithdrawCreditsRequest: Codable, Hashable {
-
-    internal static let amountRule = NumericRule<Double>(minimum: 1, exclusiveMinimum: false, maximum: nil, exclusiveMaximum: false, multipleOf: nil)
+struct UserWithdrawCreditsRequest: Codable, Hashable {
+    static let amountRule = NumericRule<Double>(minimum: 1, exclusiveMinimum: false, maximum: nil, exclusiveMaximum: false, multipleOf: nil)
     /** The key of the credit reward to withdraw */
     public private(set) var key: String
     /** The amount of credits to withdraw */
@@ -30,10 +29,9 @@ internal struct UserWithdrawCreditsRequest: Codable, Hashable {
 
     // Encodable protocol methods
 
-    internal func encode(to encoder: Encoder) throws {
+    func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
-        try container.encode(key, forKey: .key)
-        try container.encode(amount, forKey: .amount)
+        try container.encode(self.key, forKey: .key)
+        try container.encode(self.amount, forKey: .amount)
     }
 }
-

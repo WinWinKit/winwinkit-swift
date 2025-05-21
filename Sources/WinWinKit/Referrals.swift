@@ -202,6 +202,33 @@ public final class Referrals {
         }
     }
 
+    public func withdraw(credits: Int, key: String) async throws -> (User, UserWithdrawCreditsResult) {
+        try await withCheckedThrowingContinuation { continuation in
+            self.withdraw(credits: credits, key: key, completion: { result in
+                switch result {
+                case let .success(data):
+                    continuation.resume(returning: data)
+                case let .failure(error):
+                    continuation.resume(throwing: error)
+                }
+            })
+        }
+    }
+
+    public func withdraw(credits: Int, key: String, completion: @escaping (Result<(User, UserWithdrawCreditsResult), Error>) -> Void) {
+        guard
+            let userService
+        else {
+            Logger.warning("User identifier `appUserId` must be set before withdrawing credits.")
+            completion(.failure(ReferralsError.appUserIdNotSet))
+            return
+        }
+
+        userService.withdraw(credits: credits, key: key) { result in
+            completion(result.map { ($0.user, $0.withdrawResult) })
+        }
+    }
+
     public func fetchOfferCode(offerCodeId: String) async throws -> (AppStoreOfferCode, AppStoreSubscription) {
         try await withCheckedThrowingContinuation { continuation in
             self.fetchOfferCode(offerCodeId: offerCodeId, completion: { result in
@@ -244,7 +271,8 @@ public final class Referrals {
             offerCodeProvider: self.offerCodeProvider,
             userCache: self.userCache,
             userClaimActionsProvider: self.userClaimActionsProvider,
-            userProvider: self.userProvider
+            userProvider: self.userProvider,
+            userRewardActionsProvider: self.userRewardActionsProvider
         )
         self.userService = userService
 
@@ -374,6 +402,7 @@ public final class Referrals {
     private let userCache: UserCacheType
     private let userClaimActionsProvider: UserClaimActionsProviderType
     private let userProvider: UserProviderType
+    private let userRewardActionsProvider: UserRewardActionsProviderType
 
     private weak var _delegate: ReferralsDelegate?
 
@@ -405,6 +434,7 @@ public final class Referrals {
         let userCache = UserCache(keyValueCache: keyValueCache)
         let userClaimActionsProvider = UserClaimActionsProvider()
         let userProvider = UserProvider()
+        let userRewardActionsProvider = UserRewardActionsProvider()
 
         self.init(
             apiKey: apiKey,
@@ -412,7 +442,8 @@ public final class Referrals {
             offerCodeProvider: offerCodeProvider,
             userCache: userCache,
             userClaimActionsProvider: userClaimActionsProvider,
-            userProvider: userProvider
+            userProvider: userProvider,
+            userRewardActionsProvider: userRewardActionsProvider
         )
     }
 
@@ -421,7 +452,8 @@ public final class Referrals {
                  offerCodeProvider: OfferCodeProviderType,
                  userCache: UserCacheType,
                  userClaimActionsProvider: UserClaimActionsProviderType,
-                 userProvider: UserProviderType)
+                 userProvider: UserProviderType,
+                 userRewardActionsProvider: UserRewardActionsProviderType)
     {
         self.apiKey = apiKey
         self.networkReachability = networkReachability
@@ -429,6 +461,7 @@ public final class Referrals {
         self.userCache = userCache
         self.userClaimActionsProvider = userClaimActionsProvider
         self.userProvider = userProvider
+        self.userRewardActionsProvider = userRewardActionsProvider
     }
 
     private func startNetworkReachability() {

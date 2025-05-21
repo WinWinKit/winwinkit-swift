@@ -20,13 +20,15 @@ final class UserService {
     let userCache: UserCacheType
     let userClaimActionsProvider: UserClaimActionsProviderType
     let userProvider: UserProviderType
+    let userRewardActionsProvider: UserRewardActionsProviderType
 
     init(appUserId: String,
          apiKey: String,
          offerCodeProvider: OfferCodeProviderType,
          userCache: UserCacheType,
          userClaimActionsProvider: UserClaimActionsProviderType,
-         userProvider: UserProviderType)
+         userProvider: UserProviderType,
+         userRewardActionsProvider: UserRewardActionsProviderType)
     {
         self.appUserId = appUserId
         self.apiKey = apiKey
@@ -34,6 +36,7 @@ final class UserService {
         self.userCache = userCache
         self.userClaimActionsProvider = userClaimActionsProvider
         self.userProvider = userProvider
+        self.userRewardActionsProvider = userRewardActionsProvider
     }
 
     weak var delegate: UserServiceDelegate?
@@ -200,6 +203,41 @@ final class UserService {
                 self.handleTaskError(error)
 
                 self.claimCodeTask = nil
+
+                completion(.failure(error))
+            }
+        }
+    }
+
+    func withdraw(credits amount: Int, key: String, completion: @escaping (Result<UserWithdrawCreditsResponse, Error>) -> Void) {
+        if self.shouldSuspendIndefinitely {
+            Logger.debug("UserService: Withdraw credits suspended indefinitely")
+            return
+        }
+
+        Task { @MainActor in
+            do {
+                let request = UserWithdrawCreditsRequest(
+                    key: key,
+                    amount: Double(amount)
+                )
+                let userWithdrawCreditsResponse = try await self.userRewardActionsProvider.withdraw(
+                    request: request,
+                    appUserId: self.appUserId,
+                    apiKey: self.apiKey
+                )
+
+                Logger.debug("UserService: Withdraw credits did finish")
+
+                self.cacheUser(userWithdrawCreditsResponse.user)
+
+                completion(.success(userWithdrawCreditsResponse))
+            }
+            catch {
+                Logger.debug("UserService: Withdraw credits did fail")
+                Logger.error("Failed to withdraw credits: \(String(describing: error))")
+
+                self.handleTaskError(error)
 
                 completion(.failure(error))
             }

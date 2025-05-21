@@ -20,13 +20,15 @@ import Testing
         let userCache = MockUserCache()
         let userClaimActionsProvider = MockUserClaimActionsProvider()
         let userProvider = MockUserProvider()
+        let userRewardActionsProvider = MockUserRewardActionsProvider()
         let service = UserService(
             appUserId: MockUser.appUserId,
             apiKey: MockConstants.apiKey,
             offerCodeProvider: offerCodeProvider,
             userCache: userCache,
             userClaimActionsProvider: userClaimActionsProvider,
-            userProvider: userProvider
+            userProvider: userProvider,
+            userRewardActionsProvider: userRewardActionsProvider
         )
         #expect(service.cachedUser == nil)
         #expect(service.delegate == nil)
@@ -37,13 +39,15 @@ import Testing
         let userCache = MockUserCache()
         let userClaimActionsProvider = MockUserClaimActionsProvider()
         let userProvider = MockUserProvider()
+        let userRewardActionsProvider = MockUserRewardActionsProvider()
         let service = UserService(
             appUserId: MockUser.appUserId,
             apiKey: MockConstants.apiKey,
             offerCodeProvider: offerCodeProvider,
             userCache: userCache,
             userClaimActionsProvider: userClaimActionsProvider,
-            userProvider: userProvider
+            userProvider: userProvider,
+            userRewardActionsProvider: userRewardActionsProvider
         )
         #expect(service.cachedUser == nil)
         userCache.user = MockUser.mock()
@@ -57,13 +61,15 @@ import Testing
         let userCache = MockUserCache()
         let userClaimActionsProvider = MockUserClaimActionsProvider()
         let userProvider = MockUserProvider()
+        let userRewardActionsProvider = MockUserRewardActionsProvider()
         let service = UserService(
             appUserId: MockUser.appUserId,
             apiKey: MockConstants.apiKey,
             offerCodeProvider: offerCodeProvider,
             userCache: userCache,
             userClaimActionsProvider: userClaimActionsProvider,
-            userProvider: userProvider
+            userProvider: userProvider,
+            userRewardActionsProvider: userRewardActionsProvider
         )
         #expect(service.delegate == nil)
         let delegate = MockUserServiceDelegate()
@@ -82,13 +88,15 @@ import Testing
         let userCache = MockUserCache()
         let userClaimActionsProvider = MockUserClaimActionsProvider()
         let userProvider = MockUserProvider()
+        let userRewardActionsProvider = MockUserRewardActionsProvider()
         let service = UserService(
             appUserId: MockUser.appUserId,
             apiKey: MockConstants.apiKey,
             offerCodeProvider: offerCodeProvider,
             userCache: userCache,
             userClaimActionsProvider: userClaimActionsProvider,
-            userProvider: userProvider
+            userProvider: userProvider,
+            userRewardActionsProvider: userRewardActionsProvider
         )
         let delegate = MockUserServiceDelegate()
         service.delegate = delegate
@@ -116,13 +124,15 @@ import Testing
         let userCache = MockUserCache()
         let userClaimActionsProvider = MockUserClaimActionsProvider()
         let userProvider = MockUserProvider()
+        let userRewardActionsProvider = MockUserRewardActionsProvider()
         let service = UserService(
             appUserId: MockUser.appUserId,
             apiKey: MockConstants.apiKey,
             offerCodeProvider: offerCodeProvider,
             userCache: userCache,
             userClaimActionsProvider: userClaimActionsProvider,
-            userProvider: userProvider
+            userProvider: userProvider,
+            userRewardActionsProvider: userRewardActionsProvider
         )
         let delegate = MockUserServiceDelegate()
         service.delegate = delegate
@@ -150,6 +160,7 @@ import Testing
         let userCache = MockUserCache()
         let userClaimActionsProvider = MockUserClaimActionsProvider()
         let userProvider = MockUserProvider()
+        let userRewardActionsProvider = MockUserRewardActionsProvider()
         userProvider.userToReturn = MockUser.mock()
         let service = UserService(
             appUserId: MockUser.appUserId,
@@ -157,7 +168,8 @@ import Testing
             offerCodeProvider: offerCodeProvider,
             userCache: userCache,
             userClaimActionsProvider: userClaimActionsProvider,
-            userProvider: userProvider
+            userProvider: userProvider,
+            userRewardActionsProvider: userRewardActionsProvider
         )
         let delegate = MockUserServiceDelegate()
         service.delegate = delegate
@@ -187,13 +199,15 @@ import Testing
         let userProvider = MockUserProvider()
         let updatedUser = MockUser.mock(metadata: ["value": 123])
         userProvider.userToReturn = updatedUser
+        let userRewardActionsProvider = MockUserRewardActionsProvider()
         let service = UserService(
             appUserId: MockUser.appUserId,
             apiKey: MockConstants.apiKey,
             offerCodeProvider: offerCodeProvider,
             userCache: userCache,
             userClaimActionsProvider: userClaimActionsProvider,
-            userProvider: userProvider
+            userProvider: userProvider,
+            userRewardActionsProvider: userRewardActionsProvider
         )
         let delegate = MockUserServiceDelegate()
         service.delegate = delegate
@@ -229,13 +243,15 @@ import Testing
         let userProvider = MockUserProvider()
         let expectedUser = MockUser.mock(code: "XYZ123")
         userProvider.userToReturn = expectedUser
+        let userRewardActionsProvider = MockUserRewardActionsProvider()
         let service = UserService(
             appUserId: MockUser.appUserId,
             apiKey: MockConstants.apiKey,
             offerCodeProvider: offerCodeProvider,
             userCache: userCache,
             userClaimActionsProvider: userClaimActionsProvider,
-            userProvider: userProvider
+            userProvider: userProvider,
+            userRewardActionsProvider: userRewardActionsProvider
         )
         let delegate = MockUserServiceDelegate()
         service.delegate = delegate
@@ -264,13 +280,15 @@ import Testing
         let userClaimActionsProvider = MockUserClaimActionsProvider()
         let userProvider = MockUserProvider()
         userProvider.errorToThrow = ErrorResponse.error(401, nil, nil, MockError())
+        let userRewardActionsProvider = MockUserRewardActionsProvider()
         let service = UserService(
             appUserId: MockUser.appUserId,
             apiKey: MockConstants.apiKey,
             offerCodeProvider: offerCodeProvider,
             userCache: userCache,
             userClaimActionsProvider: userClaimActionsProvider,
-            userProvider: userProvider
+            userProvider: userProvider,
+            userRewardActionsProvider: userRewardActionsProvider
         )
         let delegate = MockUserServiceDelegate()
         service.delegate = delegate
@@ -298,13 +316,15 @@ import Testing
         let userProvider = MockUserProvider()
         let errorResponse = ErrorsResponse(errors: [ErrorObject(code: "UNAUTHORIZED", status: 401, message: "Unauthorized", source: nil)])
         userProvider.errorToThrow = ErrorResponse.error(401, try? errorResponse.jsonData(), nil, MockError())
+        let userRewardActionsProvider = MockUserRewardActionsProvider()
         let service = UserService(
             appUserId: MockUser.appUserId,
             apiKey: MockConstants.apiKey,
             offerCodeProvider: offerCodeProvider,
             userCache: userCache,
             userClaimActionsProvider: userClaimActionsProvider,
-            userProvider: userProvider
+            userProvider: userProvider,
+            userRewardActionsProvider: userRewardActionsProvider
         )
         let delegate = MockUserServiceDelegate()
         service.delegate = delegate
@@ -330,6 +350,7 @@ import Testing
         userCache.user = MockUser.mock()
         let userClaimActionsProvider = MockUserClaimActionsProvider()
         let userProvider = MockUserProvider()
+        let userRewardActionsProvider = MockUserRewardActionsProvider()
         let errorResponse = ErrorsResponse(errors: [ErrorObject(code: "APP_STORE_CONNECT.UNAUTHORIZED", status: 401, message: "Unauthorized", source: nil)])
         userProvider.errorToThrow = ErrorResponse.error(401, try? errorResponse.jsonData(), nil, MockError())
         let service = UserService(
@@ -338,7 +359,8 @@ import Testing
             offerCodeProvider: offerCodeProvider,
             userCache: userCache,
             userClaimActionsProvider: userClaimActionsProvider,
-            userProvider: userProvider
+            userProvider: userProvider,
+            userRewardActionsProvider: userRewardActionsProvider
         )
         let delegate = MockUserServiceDelegate()
         service.delegate = delegate
