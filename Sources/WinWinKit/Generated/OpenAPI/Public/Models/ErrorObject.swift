@@ -7,11 +7,12 @@
 
 import Foundation
 #if canImport(AnyCodable)
-    import AnyCodable
+import AnyCodable
 #endif
 
 /** Error Object */
 public struct ErrorObject: Codable, Hashable {
+
     public private(set) var code: String
     public private(set) var status: Double
     public private(set) var message: String
@@ -35,9 +36,10 @@ public struct ErrorObject: Codable, Hashable {
 
     public func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
-        try container.encode(self.code, forKey: .code)
-        try container.encode(self.status, forKey: .status)
-        try container.encode(self.message, forKey: .message)
-        try container.encode(self.source, forKey: .source)
+        try container.encode(code, forKey: .code)
+        try container.encode(status, forKey: .status)
+        try container.encode(message, forKey: .message)
+        try container.encode(source, forKey: .source)
     }
 }
+
