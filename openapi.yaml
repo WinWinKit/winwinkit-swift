@@ -948,13 +948,13 @@ components:
             - conversion
           example: claim
           description: The variant of the activation configuration
-        value:
+        amount:
           type: number
           example: 1
-          description: The value of the activation configuration
+          description: The amount of the activation configuration
       required:
         - variant
-        - value
+        - amount
     ProgramSenderBasicReward:
       type: object
       properties:
@@ -1024,17 +1024,17 @@ components:
             - conversion
           example: claim
           description: The variant of the activation configuration
-        value:
+        amount:
           type: number
           example: 1
-          description: The value of the activation configuration
+          description: The amount of the activation configuration
         limit:
           type: number
           example: 1
           description: The limit of the activation configuration
       required:
         - variant
-        - value
+        - amount
         - limit
     ProgramSenderCreditReward:
       type: object
@@ -1105,17 +1105,17 @@ components:
             - conversion
           example: claim
           description: The variant of the activation configuration
-        value:
+        amount:
           type: number
           example: 1
-          description: The value of the activation configuration
+          description: The amount of the activation configuration
         limit:
           type: number
           example: 1
           description: The limit of the activation configuration
       required:
         - variant
-        - value
+        - amount
         - limit
     ProgramSenderOfferCodeReward:
       type: object

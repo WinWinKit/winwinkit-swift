@@ -18,17 +18,17 @@ public struct ProgramSenderBasicRewardActivation: Codable, Hashable {
     }
     /** The variant of the activation configuration */
     public private(set) var variant: Variant
-    /** The value of the activation configuration */
-    public private(set) var value: Double
+    /** The amount of the activation configuration */
+    public private(set) var amount: Double
 
-    public init(variant: Variant, value: Double) {
+    public init(variant: Variant, amount: Double) {
         self.variant = variant
-        self.value = value
+        self.amount = amount
     }
 
     public enum CodingKeys: String, CodingKey, CaseIterable {
         case variant
-        case value
+        case amount
     }
 
     // Encodable protocol methods
@@ -36,7 +36,7 @@ public struct ProgramSenderBasicRewardActivation: Codable, Hashable {
     public func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
         try container.encode(variant, forKey: .variant)
-        try container.encode(value, forKey: .value)
+        try container.encode(amount, forKey: .amount)
     }
 }
 
