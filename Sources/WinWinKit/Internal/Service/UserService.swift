@@ -310,23 +310,11 @@ final class UserService {
     }
 
     private func handleTaskError(_ error: Error) {
-        if let dispatcherError = error as? ErrorResponse {
-            switch dispatcherError {
-            case let .error(status, data, _, _):
-                // Because 401 can be UNAUTHORIZED or APP_STORE_CONNECT.UNAUTHORIZED, they should be handled the differently
-                // UNAUTHORIZED - when the API key is invalid - should suspend indefinitely
-                // APP_STORE_CONNECT.UNAUTHORIZED - when the App Store Connect API key is invalid
-                if let data,
-                   let errorsResponse = try? JSONDecoder().decode(ErrorsResponse.self, from: data)
-                {
-                    if errorsResponse.errors.contains(where: { $0.code == "UNAUTHORIZED" }) {
-                        self.handleUnauthorizedError()
-                    }
-                }
-                else if status == 401 {
-                    self.handleUnauthorizedError()
-                }
-            }
+        if let dispatcherError = error as? ErrorResponse,
+           case let .error(status, _, _, _) = dispatcherError,
+           status == 401
+        {
+            self.handleUnauthorizedError()
         }
 
         self.delegate?.userService(self, receivedError: error)

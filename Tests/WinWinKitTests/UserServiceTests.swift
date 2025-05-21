@@ -343,40 +343,4 @@ import Testing
             try await Task.sleep(for: .milliseconds(50))
         }
     }
-
-    @Test func refreshFailsWithAppStoreConnectUnauthorized() async throws {
-        let offerCodeProvider = MockOfferCodeProvider()
-        let userCache = MockUserCache()
-        userCache.user = MockUser.mock()
-        let userClaimActionsProvider = MockUserClaimActionsProvider()
-        let userProvider = MockUserProvider()
-        let userRewardActionsProvider = MockUserRewardActionsProvider()
-        let errorResponse = ErrorsResponse(errors: [ErrorObject(code: "APP_STORE_CONNECT.UNAUTHORIZED", status: 401, message: "Unauthorized", source: nil)])
-        userProvider.errorToThrow = ErrorResponse.error(401, try? errorResponse.jsonData(), nil, MockError())
-        let service = UserService(
-            appUserId: MockUser.appUserId,
-            apiKey: MockConstants.apiKey,
-            offerCodeProvider: offerCodeProvider,
-            userCache: userCache,
-            userClaimActionsProvider: userClaimActionsProvider,
-            userProvider: userProvider,
-            userRewardActionsProvider: userRewardActionsProvider
-        )
-        let delegate = MockUserServiceDelegate()
-        service.delegate = delegate
-
-        try await confirmation("stops indefinetely") { c in
-            delegate.isRefreshingChangedCallback = { isRefreshing in
-                if !isRefreshing {
-                    c.confirm()
-
-                    #expect(service.cachedUser != nil)
-                    #expect(service.shouldSuspendIndefinitely == false)
-                }
-            }
-            service.refresh()
-
-            try await Task.sleep(for: .milliseconds(50))
-        }
-    }
 }

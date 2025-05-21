@@ -30,8 +30,10 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorsResponse'
-        '404':
-          description: The offer code has not been found.
+        '424':
+          description: >-
+            Failed to fetch offer code because request to the App Store Connect
+            API failed.
           content:
             application/json:
               schema:
