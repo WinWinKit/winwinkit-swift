@@ -21,7 +21,7 @@ import Testing
         let userClaimActionsProvider = MockUserClaimActionsProvider()
         let userProvider = MockUserProvider()
         let service = UserService(
-            appUserId: MockUser.Full.object.appUserId,
+            appUserId: MockUser.appUserId,
             apiKey: MockConstants.apiKey,
             offerCodeProvider: offerCodeProvider,
             userCache: userCache,
@@ -38,7 +38,7 @@ import Testing
         let userClaimActionsProvider = MockUserClaimActionsProvider()
         let userProvider = MockUserProvider()
         let service = UserService(
-            appUserId: MockUser.Full.object.appUserId,
+            appUserId: MockUser.appUserId,
             apiKey: MockConstants.apiKey,
             offerCodeProvider: offerCodeProvider,
             userCache: userCache,
@@ -46,9 +46,9 @@ import Testing
             userProvider: userProvider
         )
         #expect(service.cachedUser == nil)
-        userCache.user = MockUser.Full.object
-        #expect(service.cachedUser == MockUser.Full.object)
-        userCache.user = MockUser.Empty.object
+        userCache.user = MockUser.mock()
+        #expect(service.cachedUser == MockUser.mock())
+        userCache.user = nil
         #expect(service.cachedUser == nil)
     }
 
@@ -58,7 +58,7 @@ import Testing
         let userClaimActionsProvider = MockUserClaimActionsProvider()
         let userProvider = MockUserProvider()
         let service = UserService(
-            appUserId: MockUser.Full.object.appUserId,
+            appUserId: MockUser.appUserId,
             apiKey: MockConstants.apiKey,
             offerCodeProvider: offerCodeProvider,
             userCache: userCache,
@@ -83,7 +83,7 @@ import Testing
         let userClaimActionsProvider = MockUserClaimActionsProvider()
         let userProvider = MockUserProvider()
         let service = UserService(
-            appUserId: MockUser.Full.object.appUserId,
+            appUserId: MockUser.appUserId,
             apiKey: MockConstants.apiKey,
             offerCodeProvider: offerCodeProvider,
             userCache: userCache,
@@ -117,7 +117,7 @@ import Testing
         let userClaimActionsProvider = MockUserClaimActionsProvider()
         let userProvider = MockUserProvider()
         let service = UserService(
-            appUserId: MockUser.Full.object.appUserId,
+            appUserId: MockUser.appUserId,
             apiKey: MockConstants.apiKey,
             offerCodeProvider: offerCodeProvider,
             userCache: userCache,
@@ -152,7 +152,7 @@ import Testing
         let userProvider = MockUserProvider()
         userProvider.errorToThrow = ErrorResponse.error(401, nil, nil, MockError())
         let service = UserService(
-            appUserId: MockUser.Full.object.appUserId,
+            appUserId: MockUser.appUserId,
             apiKey: MockConstants.apiKey,
             offerCodeProvider: offerCodeProvider,
             userCache: userCache,
@@ -182,12 +182,12 @@ import Testing
     @Test func refreshFailsAndResetsCacheWithUnauthorized() async throws {
         let offerCodeProvider = MockOfferCodeProvider()
         let userCache = MockUserCache()
-        userCache.user = MockUser.Full.object
+        userCache.user = MockUser.mock()
         let userClaimActionsProvider = MockUserClaimActionsProvider()
         let userProvider = MockUserProvider()
         userProvider.errorToThrow = ErrorResponse.error(401, nil, nil, MockError())
         let service = UserService(
-            appUserId: MockUser.Full.object.appUserId,
+            appUserId: MockUser.appUserId,
             apiKey: MockConstants.apiKey,
             offerCodeProvider: offerCodeProvider,
             userCache: userCache,
@@ -219,9 +219,9 @@ import Testing
         let userCache = MockUserCache()
         let userClaimActionsProvider = MockUserClaimActionsProvider()
         let userProvider = MockUserProvider()
-        userProvider.userToReturn = MockUser.Full.object
+        userProvider.userToReturn = MockUser.mock()
         let service = UserService(
-            appUserId: MockUser.Full.object.appUserId,
+            appUserId: MockUser.appUserId,
             apiKey: MockConstants.apiKey,
             offerCodeProvider: offerCodeProvider,
             userCache: userCache,
@@ -239,7 +239,7 @@ import Testing
                     #expect(userProvider.createOrUpdateMethodCallsCounter == 1)
                     #expect(userClaimActionsProvider.claimMethodCallsCounter == 0)
 
-                    #expect(service.cachedUser == MockUser.Full.object)
+                    #expect(service.cachedUser == MockUser.mock())
                 }
             }
             service.refresh()
@@ -251,14 +251,13 @@ import Testing
     @Test func updateReferralUser() async throws {
         let offerCodeProvider = MockOfferCodeProvider()
         let userCache = MockUserCache()
-        userCache.user = MockUser.Full.object
+        userCache.user = MockUser.mock()
         let userClaimActionsProvider = MockUserClaimActionsProvider()
         let userProvider = MockUserProvider()
-        let updateMetadata: AnyCodable = ["value": 123]
-        let updatedReferralUser = MockUser.Full.object.set(metadata: updateMetadata)
+        let updatedReferralUser = MockUser.mock(metadata: ["value": 123])
         userProvider.userToReturn = updatedReferralUser
         let service = UserService(
-            appUserId: MockUser.Full.object.appUserId,
+            appUserId: MockUser.appUserId,
             apiKey: MockConstants.apiKey,
             offerCodeProvider: offerCodeProvider,
             userCache: userCache,
@@ -279,7 +278,6 @@ import Testing
                     #expect(service.cachedUser == updatedReferralUser)
                 }
             }
-            service.set(metadata: updateMetadata)
             service.refresh()
 
             try await Task.sleep(for: .milliseconds(50))
@@ -293,13 +291,13 @@ import Testing
     @Test func referralUserDeletedOnRemoteCreatesNewReferralUser() async throws {
         let offerCodeProvider = MockOfferCodeProvider()
         let userCache = MockUserCache()
-        userCache.user = MockUser.Full.object
+        userCache.user = MockUser.mock()
         let userClaimActionsProvider = MockUserClaimActionsProvider()
         let userProvider = MockUserProvider()
-        let expectedReferralUser = MockUser.Full.object.set(metadata: nil)
+        let expectedReferralUser = MockUser.mock(code: "XYZ123")
         userProvider.userToReturn = expectedReferralUser
         let service = UserService(
-            appUserId: MockUser.Full.object.appUserId,
+            appUserId: MockUser.appUserId,
             apiKey: MockConstants.apiKey,
             offerCodeProvider: offerCodeProvider,
             userCache: userCache,
