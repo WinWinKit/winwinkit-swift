@@ -25,10 +25,6 @@ extension UserCacheType {
 struct UserCache: UserCacheType {
     let keyValueCache: KeyValueCacheType
 
-    init(keyValueCache: KeyValueCacheType) {
-        self.keyValueCache = keyValueCache
-    }
-
     // MARK: - UserCacheType
 
     var user: User? {
