@@ -60,17 +60,17 @@ Optionally set metadata to save user's additional properties.
 Referrals.shared.set(metadata: ["key": "value"])
 ```
 
-### Referral user
+### User
 
-Referral user object contains all necessary information needed to display in the user interface.
+User object contains all necessary information needed to display in the user interface.
 
-Access the latest referral user object.
+Access the latest user object.
 
 ```swift
-let referralUser = Referrals.shared.referralUser
+let user = Referrals.shared.user
 ```
 
-> Also available as a property of `ReferralUserObservableObject` (see below).
+> Also available as a property of `UserObservableObject` (see below).
 
 ### Claim code
 
@@ -81,8 +81,8 @@ Access the latest claim code object.
 ```swift
 Referrals.shared.claim(code: referralCode) { result in
     switch result {
-        case .success(let (referralUser, grantedRewards)):
-            // grant access to rewards
+        case .success(let (user, rewardsGranted)):
+            // grant access to rewards in your app
         case .failure(let error):
             // handle error
     }
@@ -106,7 +106,7 @@ Referrals.shared.delegate = delegate
 
 final class Delegate: ReferralsDelegate {
     
-    func referrals(_ referrals: Referrals, receivedUpdated referralUser: ReferralUser?) {
+    func referrals(_ referrals: Referrals, receivedUpdated user: User?) {
         // Called every time the referral user is updated.
     }
     
@@ -127,33 +127,33 @@ final class Delegate: ReferralsDelegate {
 
 The SDK provides convenient `Observable` objects to observe changes to the referral user and claim code. 
 
-**ReferralUserObservableObject**
+**UserObservableObject**
 
-Provides observable `ReferralUser` and `isRefreshing` properties.
+Provides observable `User` and `isRefreshing` properties.
 
 ```swift
-@State var referralUserObservableObject = Referrals.shared.referralUserObservableObject
+@State var userObservableObject = Referrals.shared.userObservableObject
 
 ...
 
 VStack {
     Text("Your referral code")
-    Text(self.referralUserObservableObject.referralUser?.code ?? "-")
+    Text(self.userObservableObject.user?.code ?? "-")
       .font(.title3)
 }
 ```
 
-**ReferralClaimCodeObservableObject**
+**ClaimReferralCodeObservableObject**
 
-Provides observable `isClaimingCode`, `didClaimCodeSuccessfully`, `grantedRewards` properties and `claim(code:)` method.
+Provides observable `isClaimingCode`, `didClaimCodeSuccessfully`, `rewardsGranted` properties and `claim(code:)` method.
 
 ```swift
-@State var referralClaimCodeObservableObject = Referrals.shared.referralClaimCodeObservableObject
+@State var claimReferralCodeObservableObject = Referrals.shared.claimReferralCodeObservableObject
 
 ...
 
 Button(action: {
-    self.referralClaimCodeObservableObject.claim(code: self.referralCode)
+    self.claimReferralCodeObservableObject.claim(code: self.referralCode)
 }) {
     Text("Claim referral code")
 }
