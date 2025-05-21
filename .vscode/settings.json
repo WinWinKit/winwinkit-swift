@@ -5,4 +5,7 @@
     "[swift]": {
         "editor.defaultFormatter": "vknabel.vscode-swiftformat"
     },
+    "[yaml]": {
+        "prettier.singleQuote": true
+    }
 }

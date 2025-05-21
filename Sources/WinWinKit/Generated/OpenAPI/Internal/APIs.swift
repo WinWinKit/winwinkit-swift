@@ -9,7 +9,7 @@ import Foundation
 import FoundationNetworking
 #endif
 internal class WinWinKitAPI {
-    internal static var basePath = "https://api.winwinkit.com"
+    internal static var basePath = "https://api-v1.winwinkit.com"
     internal static var customHeaders: [String: String] = [:]
     internal static var credential: URLCredential?
     internal static var requestBuilderFactory: RequestBuilderFactory = URLSessionRequestBuilderFactory()
