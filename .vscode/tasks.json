@@ -15,6 +15,13 @@
         "detail": "swift test",
         "args": ["test"],
         "group": "test"
+      },
+      {
+        "type": "shell",
+        "label": "Generate OpenAPI",
+        "detail": "openapi.generate",
+        "command": "./openapi.generate",
+        "group": "build"
       }
     ]
   }
