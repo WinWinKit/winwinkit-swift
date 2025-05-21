@@ -21,8 +21,8 @@ internal class RewardsActionsAPI {
      - returns: UserWithdrawCreditsDataResponse
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    internal class func rewardsWithdraw(appUserId: String, xApiKey: String, userWithdrawCreditsRequest: UserWithdrawCreditsRequest) async throws -> UserWithdrawCreditsDataResponse {
-        return try await rewardsWithdrawWithRequestBuilder(appUserId: appUserId, xApiKey: xApiKey, userWithdrawCreditsRequest: userWithdrawCreditsRequest).execute().body
+    internal class func withdrawCredits(appUserId: String, xApiKey: String, userWithdrawCreditsRequest: UserWithdrawCreditsRequest) async throws -> UserWithdrawCreditsDataResponse {
+        return try await withdrawCreditsWithRequestBuilder(appUserId: appUserId, xApiKey: xApiKey, userWithdrawCreditsRequest: userWithdrawCreditsRequest).execute().body
     }
 
     /**
@@ -34,7 +34,7 @@ internal class RewardsActionsAPI {
      - parameter userWithdrawCreditsRequest: (body)  
      - returns: RequestBuilder<UserWithdrawCreditsDataResponse> 
      */
-    internal class func rewardsWithdrawWithRequestBuilder(appUserId: String, xApiKey: String, userWithdrawCreditsRequest: UserWithdrawCreditsRequest) -> RequestBuilder<UserWithdrawCreditsDataResponse> {
+    internal class func withdrawCreditsWithRequestBuilder(appUserId: String, xApiKey: String, userWithdrawCreditsRequest: UserWithdrawCreditsRequest) -> RequestBuilder<UserWithdrawCreditsDataResponse> {
         var localVariablePath = "/users/{app_user_id}/rewards/withdraw"
         let appUserIdPreEscape = "\(APIHelper.mapValueToPathItem(appUserId))"
         let appUserIdPostEscape = appUserIdPreEscape.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? ""

@@ -204,9 +204,9 @@ public final class Referrals {
         }
     }
 
-    public func withdraw(credits: Int, key: String) async throws -> (User, UserWithdrawCreditsResult) {
+    public func withdrawCredits(amount: Int, key: String) async throws -> (User, UserWithdrawCreditsResult) {
         try await withCheckedThrowingContinuation { continuation in
-            self.withdraw(credits: credits, key: key, completion: { result in
+            self.withdrawCredits(amount: amount, key: key, completion: { result in
                 switch result {
                 case let .success(data):
                     continuation.resume(returning: data)
@@ -217,7 +217,7 @@ public final class Referrals {
         }
     }
 
-    public func withdraw(credits: Int, key: String, completion: @escaping (Result<(User, UserWithdrawCreditsResult), Error>) -> Void) {
+    public func withdrawCredits(amount: Int, key: String, completion: @escaping (Result<(User, UserWithdrawCreditsResult), Error>) -> Void) {
         guard
             let userService
         else {
@@ -226,7 +226,7 @@ public final class Referrals {
             return
         }
 
-        userService.withdraw(credits: credits, key: key) { result in
+        userService.withdrawCredits(amount: amount, key: key) { result in
             completion(result.map { ($0.user, $0.withdrawResult) })
         }
     }

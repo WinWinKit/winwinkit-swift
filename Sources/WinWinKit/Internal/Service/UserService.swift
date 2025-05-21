@@ -211,7 +211,7 @@ final class UserService {
         }
     }
 
-    func withdraw(credits amount: Int, key: String, completion: @escaping (Result<UserWithdrawCreditsResponse, Error>) -> Void) {
+    func withdrawCredits(amount: Int, key: String, completion: @escaping (Result<UserWithdrawCreditsResponse, Error>) -> Void) {
         if self.shouldSuspendIndefinitely {
             Logger.debug("UserService: Withdraw credits suspended indefinitely")
             completion(.failure(ReferralsError.suspendedIndefinitely))
@@ -224,7 +224,7 @@ final class UserService {
                     key: key,
                     amount: Double(amount)
                 )
-                let userWithdrawCreditsResponse = try await self.userRewardActionsProvider.withdraw(
+                let userWithdrawCreditsResponse = try await self.userRewardActionsProvider.withdrawCredits(
                     request: request,
                     appUserId: self.appUserId,
                     apiKey: self.apiKey

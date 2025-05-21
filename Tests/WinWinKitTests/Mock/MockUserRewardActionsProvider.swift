@@ -22,7 +22,7 @@ final class MockUserRewardActionsProvider: UserRewardActionsProviderType {
     var errorToThrow: Error? = nil
     var withdrawMethodCallsCounter: Int = 0
 
-    func withdraw(request: UserWithdrawCreditsRequest, appUserId _: String, apiKey _: String) async throws -> UserWithdrawCreditsResponse {
+    func withdrawCredits(request: UserWithdrawCreditsRequest, appUserId _: String, apiKey _: String) async throws -> UserWithdrawCreditsResponse {
         self.withdrawMethodCallsCounter += 1
         if let errorToThrow {
             throw errorToThrow

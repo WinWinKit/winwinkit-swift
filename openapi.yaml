@@ -134,7 +134,7 @@ paths:
   /users/{app_user_id}/rewards/withdraw:
     post:
       description: Withdraws credits from a user.
-      operationId: rewardsWithdraw
+      operationId: withdrawCredits
       parameters:
         - name: app_user_id
           required: true
