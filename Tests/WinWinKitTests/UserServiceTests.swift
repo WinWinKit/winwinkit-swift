@@ -5,7 +5,7 @@
 //  You may not use this file except in compliance with the License.
 //  You may obtain a copy of the License at https://opensource.org/licenses/MIT
 //
-//  ReferralUserServiceTests.swift
+//  UserServiceTests.swift
 //
 //  Created by Oleh Stasula on 05/12/2024.
 //
@@ -14,7 +14,7 @@ import AnyCodable
 import Testing
 @testable import WinWinKit
 
-@Suite struct ReferralUserServiceTests {
+@Suite struct UserServiceTests {
     @Test func initilization() {
         let offerCodeProvider = MockOfferCodeProvider()
         let userCache = MockUserCache()
@@ -214,7 +214,7 @@ import Testing
         }
     }
 
-    @Test func createReferralUser() async throws {
+    @Test func createUser() async throws {
         let offerCodeProvider = MockOfferCodeProvider()
         let userCache = MockUserCache()
         let userClaimActionsProvider = MockUserClaimActionsProvider()
@@ -231,7 +231,7 @@ import Testing
         let delegate = MockUserServiceDelegate()
         service.delegate = delegate
 
-        try await confirmation("creates referral user") { c in
+        try await confirmation("creates user") { c in
             delegate.isRefreshingChangedCallback = { isRefreshing in
                 if !isRefreshing {
                     c.confirm()
@@ -248,14 +248,14 @@ import Testing
         }
     }
 
-    @Test func updateReferralUser() async throws {
+    @Test func updateUser() async throws {
         let offerCodeProvider = MockOfferCodeProvider()
         let userCache = MockUserCache()
         userCache.user = MockUser.mock()
         let userClaimActionsProvider = MockUserClaimActionsProvider()
         let userProvider = MockUserProvider()
-        let updatedReferralUser = MockUser.mock(metadata: ["value": 123])
-        userProvider.userToReturn = updatedReferralUser
+        let updatedUser = MockUser.mock(metadata: ["value": 123])
+        userProvider.userToReturn = updatedUser
         let service = UserService(
             appUserId: MockUser.appUserId,
             apiKey: MockConstants.apiKey,
@@ -267,7 +267,7 @@ import Testing
         let delegate = MockUserServiceDelegate()
         service.delegate = delegate
 
-        try await confirmation("updates referral user") { c in
+        try await confirmation("updates user") { c in
             delegate.isRefreshingChangedCallback = { isRefreshing in
                 if !isRefreshing {
                     c.confirm()
@@ -275,7 +275,7 @@ import Testing
                     #expect(userProvider.createOrUpdateMethodCallsCounter == 1)
                     #expect(userClaimActionsProvider.claimMethodCallsCounter == 0)
 
-                    #expect(service.cachedUser == updatedReferralUser)
+                    #expect(service.cachedUser == updatedUser)
                 }
             }
             service.refresh()
@@ -284,18 +284,20 @@ import Testing
         }
     }
 
-    @Test func createAndUpdateReferralUser() {}
+    @Test func createAndUpdateUser() {}
 
     @Test func claimReferralCode() {}
 
-    @Test func referralUserDeletedOnRemoteCreatesNewReferralUser() async throws {
+    @Test func fetchOfferCode() {}
+
+    @Test func userDeletedOnRemoteCreatesNewUser() async throws {
         let offerCodeProvider = MockOfferCodeProvider()
         let userCache = MockUserCache()
         userCache.user = MockUser.mock()
         let userClaimActionsProvider = MockUserClaimActionsProvider()
         let userProvider = MockUserProvider()
-        let expectedReferralUser = MockUser.mock(code: "XYZ123")
-        userProvider.userToReturn = expectedReferralUser
+        let expectedUser = MockUser.mock(code: "XYZ123")
+        userProvider.userToReturn = expectedUser
         let service = UserService(
             appUserId: MockUser.appUserId,
             apiKey: MockConstants.apiKey,
@@ -307,7 +309,7 @@ import Testing
         let delegate = MockUserServiceDelegate()
         service.delegate = delegate
 
-        try await confirmation("creates new referral user") { c in
+        try await confirmation("creates new user") { c in
             delegate.isRefreshingChangedCallback = { isRefreshing in
                 if !isRefreshing {
                     c.confirm()
@@ -315,7 +317,7 @@ import Testing
                     #expect(userProvider.createOrUpdateMethodCallsCounter == 1)
                     #expect(userClaimActionsProvider.claimMethodCallsCounter == 0)
 
-                    #expect(service.cachedUser == expectedReferralUser)
+                    #expect(service.cachedUser == expectedUser)
                 }
             }
             service.refresh()

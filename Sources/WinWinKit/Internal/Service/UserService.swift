@@ -49,8 +49,8 @@ final class UserService {
 
     func set(isPremium: Bool) {
         Logger.debug("UserService: Set isPremium value")
-        self.cacheReferralUserUpdate(
-            self.pendingReferralUserUpdate?.set(isPremium: isPremium) ??
+        self.cacheUserUpdate(
+            self.pendingUserUpdate?.set(isPremium: isPremium) ??
                 UserUpdate(appUserId: self.appUserId,
                            isPremium: isPremium,
                            firstSeenAt: nil,
@@ -61,8 +61,8 @@ final class UserService {
 
     func set(firstSeenAt: Date) {
         Logger.debug("UserService: Set firstSeenAt value")
-        self.cacheReferralUserUpdate(
-            self.pendingReferralUserUpdate?.set(firstSeenAt: firstSeenAt) ??
+        self.cacheUserUpdate(
+            self.pendingUserUpdate?.set(firstSeenAt: firstSeenAt) ??
                 UserUpdate(appUserId: self.appUserId,
                            isPremium: nil,
                            firstSeenAt: firstSeenAt,
@@ -73,8 +73,8 @@ final class UserService {
 
     func set(lastSeenAt: Date) {
         Logger.debug("UserService: Set lastSeenAt value")
-        self.cacheReferralUserUpdate(
-            self.pendingReferralUserUpdate?.set(lastSeenAt: lastSeenAt) ??
+        self.cacheUserUpdate(
+            self.pendingUserUpdate?.set(lastSeenAt: lastSeenAt) ??
                 UserUpdate(appUserId: self.appUserId,
                            isPremium: nil,
                            firstSeenAt: nil,
@@ -85,8 +85,8 @@ final class UserService {
 
     func set(metadata: AnyCodable) {
         Logger.debug("UserService: Set metadata value")
-        self.cacheReferralUserUpdate(
-            self.pendingReferralUserUpdate?.set(metadata: metadata) ??
+        self.cacheUserUpdate(
+            self.pendingUserUpdate?.set(metadata: metadata) ??
                 UserUpdate(appUserId: self.appUserId,
                            isPremium: nil,
                            firstSeenAt: nil,
@@ -125,7 +125,7 @@ final class UserService {
             var completedSuccessfully = false
 
             do {
-                let pendingUserUpdate = self.pendingReferralUserUpdate
+                let pendingUserUpdate = self.pendingUserUpdate
                 let request = UserCreateRequest(
                     appUserId: self.appUserId,
                     isPremium: pendingUserUpdate?.isPremium,
@@ -137,8 +137,8 @@ final class UserService {
                     request: request,
                     apiKey: self.apiKey
                 )
-                self.resetReferralUserUpdate(with: pendingUserUpdate)
-                self.cacheReferralUser(updatedUser)
+                self.resetUserUpdate(with: pendingUserUpdate)
+                self.cacheUser(updatedUser)
 
                 completedSuccessfully = true
 
@@ -154,7 +154,7 @@ final class UserService {
             self.refreshTask = nil
             self.delegate?.userService(self, isRefreshingChanged: false)
 
-            if completedSuccessfully && self.pendingReferralUserUpdate != nil {
+            if completedSuccessfully && self.pendingUserUpdate != nil {
                 Logger.debug("UserService: Refresh will start again")
                 self.refresh()
             }
@@ -179,17 +179,19 @@ final class UserService {
         self.claimCodeTask = Task { @MainActor in
             do {
                 let request = UserClaimReferralCodeRequest(code: code)
-                let referralClaimCodeData = try await self.userClaimActionsProvider.claim(referralCode: request,
-                                                                                          appUserId: self.appUserId,
-                                                                                          apiKey: self.apiKey)
+                let userClaimReferralCodeResponse = try await self.userClaimActionsProvider.claim(
+                    referralCode: request,
+                    appUserId: self.appUserId,
+                    apiKey: self.apiKey
+                )
 
                 Logger.debug("UserService: Claim code did finish")
 
-                self.cacheReferralUser(referralClaimCodeData.user)
+                self.cacheUser(userClaimReferralCodeResponse.user)
 
                 self.claimCodeTask = nil
 
-                completion(.success(referralClaimCodeData))
+                completion(.success(userClaimReferralCodeResponse))
             }
             catch {
                 Logger.debug("UserService: Claim code did fail")
@@ -236,12 +238,12 @@ final class UserService {
     private var offerCodeTask: Task<Void, Never>?
     private var refreshTask: Task<Void, Never>?
 
-    private var pendingReferralUserUpdate: UserUpdate? {
+    private var pendingUserUpdate: UserUpdate? {
         get {
-            if let referralUser = self.userCache.userUpdate,
-               referralUser.appUserId == self.appUserId
+            if let userUpdate = self.userCache.userUpdate,
+               userUpdate.appUserId == self.appUserId
             {
-                return referralUser
+                return userUpdate
             }
             return nil
         }
@@ -250,16 +252,16 @@ final class UserService {
         }
     }
 
-    private func cacheReferralUser(_ user: User) {
+    private func cacheUser(_ user: User) {
         self.userCache.user = user
         self.delegate?.userService(self, receivedUpdated: user)
     }
 
-    private func cacheReferralUserUpdate(_ userUpdate: UserUpdate) {
+    private func cacheUserUpdate(_ userUpdate: UserUpdate) {
         self.userCache.userUpdate = userUpdate
     }
 
-    private func resetReferralUserUpdate(with user: UserUpdate?) {
+    private func resetUserUpdate(with user: UserUpdate?) {
         if self.userCache.userUpdate == user {
             self.userCache.userUpdate = nil
         }
