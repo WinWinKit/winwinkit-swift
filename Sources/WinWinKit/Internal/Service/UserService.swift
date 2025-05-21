@@ -171,11 +171,13 @@ final class UserService {
     func claim(referralCode code: String, completion: @escaping (Result<UserClaimReferralCodeResponse, Error>) -> Void) {
         if self.shouldSuspendIndefinitely {
             Logger.debug("UserService: Claim code suspended indefinitely")
+            completion(.failure(ReferralsError.suspendedIndefinitely))
             return
         }
 
         if self.claimCodeTask != nil {
             Logger.debug("UserService: Claim code skipped because of already claiming code")
+            completion(.failure(ReferralsError.actionAlreadyInProgress))
             return
         }
 
@@ -212,6 +214,7 @@ final class UserService {
     func withdraw(credits amount: Int, key: String, completion: @escaping (Result<UserWithdrawCreditsResponse, Error>) -> Void) {
         if self.shouldSuspendIndefinitely {
             Logger.debug("UserService: Withdraw credits suspended indefinitely")
+            completion(.failure(ReferralsError.suspendedIndefinitely))
             return
         }
 
@@ -245,13 +248,17 @@ final class UserService {
     }
 
     func fetchOfferCode(offerCodeId: String, completion: @escaping (Result<OfferCodeResponse, Error>) -> Void) {
-        self.offerCodeTask = Task { @MainActor in
+        if self.shouldSuspendIndefinitely {
+            Logger.debug("UserService: Fetch offer code suspended indefinitely")
+            completion(.failure(ReferralsError.suspendedIndefinitely))
+            return
+        }
+
+        Task { @MainActor in
             do {
                 let offerCode = try await self.offerCodeProvider.fetch(offerCodeId: offerCodeId, apiKey: self.apiKey)
 
                 Logger.debug("UserService: Fetch offer code did finish")
-
-                self.offerCodeTask = nil
 
                 completion(.success(offerCode))
             }
@@ -260,8 +267,6 @@ final class UserService {
                 Logger.error("Failed to fetch offer code: \(String(describing: error))")
 
                 self.handleTaskError(error)
-
-                self.offerCodeTask = nil
 
                 completion(.failure(error))
             }
@@ -273,7 +278,6 @@ final class UserService {
     private(set) var shouldSuspendIndefinitely: Bool = false
 
     private var claimCodeTask: Task<Void, Never>?
-    private var offerCodeTask: Task<Void, Never>?
     private var refreshTask: Task<Void, Never>?
 
     private var pendingUserUpdate: UserUpdate? {

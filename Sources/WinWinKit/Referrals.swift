@@ -19,6 +19,8 @@ import Logging
 ///
 public enum ReferralsError: Error {
     case appUserIdNotSet
+    case actionAlreadyInProgress
+    case suspendedIndefinitely
 }
 
 ///
