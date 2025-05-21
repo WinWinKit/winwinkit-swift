@@ -1,2 +1,3 @@
 --elseposition next-line
 --self insert
+--stripunusedargs closure-only
