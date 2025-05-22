@@ -14,12 +14,13 @@ dependencies: [
 
 ### Configure
 
-Configure the SDK with API key and set the referral user's the App User Id.
+Configure the SDK with API key and set the user's the App User Id.
 
 ```swift
 import WinWinKit
 
 Referrals.configure(apiKey: "your-api-key")
+// Singleton can be used after configure(apiKey:) method has been called.
 Referrals.shared.set(appUserId: "your-app-user-id")
 ```
 
@@ -34,7 +35,7 @@ If not set, the first seen at is the date the user was created in WinWinKit.
 Referrals.shared.set(firstSeenAt: Date())
 ```
 
-### Update referral user properties
+### Update user properties
 
 **Is Premium**
 
@@ -97,7 +98,7 @@ The SDK provides convenient `Observable` object to interact and observe changes 
 
 **ReferralsObservableObject**
 
-Provides observable `User` and `isRefreshing` properties.
+Provides observable `User` object, methods and states for interacting with WinWinKit service.
 
 ```swift
 @State var referralsObservableObject = Referrals.shared.observableObject
@@ -143,11 +144,11 @@ final class Delegate: ReferralsDelegate {
     init() {}
 
     func referrals(_ referrals: Referrals, receivedUpdated user: User?) {
-        // Called every time the referral user is updated.
+        // Called every time the user is updated.
     }
     
     func referrals(_ referrals: Referrals, receivedError error: any Error) {
-        // Received error when creating, updating or fetching the referral user.
+        // Received error when creating, updating or fetching the user.
     }
 }
 
