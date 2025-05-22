@@ -449,6 +449,19 @@ public final class Referrals {
         }
     }
 
+    // MARK: - Internal
+
+    init(apiKey: String,
+         networkReachability: NetworkReachabilityType,
+         providers: UserService.Providers,
+         userCache: UserCacheType)
+    {
+        self.apiKey = apiKey
+        self.networkReachability = networkReachability
+        self.providers = providers
+        self.userCache = userCache
+    }
+
     // MARK: - Private
 
     @Atomic
@@ -492,17 +505,6 @@ public final class Referrals {
             providers: providers,
             userCache: userCache
         )
-    }
-
-    private init(apiKey: String,
-                 networkReachability: NetworkReachabilityType,
-                 providers: UserService.Providers,
-                 userCache: UserCacheType)
-    {
-        self.apiKey = apiKey
-        self.networkReachability = networkReachability
-        self.providers = providers
-        self.userCache = userCache
     }
 
     private func startNetworkReachability() {
