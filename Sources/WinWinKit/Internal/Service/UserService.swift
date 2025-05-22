@@ -134,7 +134,7 @@ final class UserService {
                     lastSeenAt: pendingUserUpdate?.lastSeenAt,
                     metadata: pendingUserUpdate?.metadata
                 )
-                let updatedUser = try await self.providers.users.createOrUpdate(
+                let updatedUser = try await self.providers.users.createOrUpdateUser(
                     request: request,
                     apiKey: self.apiKey
                 )
@@ -162,7 +162,7 @@ final class UserService {
         }
     }
 
-    func claim(referralCode code: String, completion: @escaping (Result<UserClaimReferralCodeResponse, Error>) -> Void) {
+    func claimReferralCode(code: String, completion: @escaping (Result<UserClaimReferralCodeResponse, Error>) -> Void) {
         if self.shouldSuspendIndefinitely {
             Logger.debug("UserService: Claim code suspended indefinitely")
             completion(.failure(ReferralsError.suspendedIndefinitely))
@@ -172,8 +172,8 @@ final class UserService {
         Task { @MainActor in
             do {
                 let request = UserClaimReferralCodeRequest(code: code)
-                let userClaimReferralCodeResponse = try await self.providers.claimActions.claim(
-                    referralCode: request,
+                let userClaimReferralCodeResponse = try await self.providers.claimActions.claimReferralCode(
+                    request: request,
                     appUserId: self.appUserId,
                     apiKey: self.apiKey
                 )
@@ -195,7 +195,7 @@ final class UserService {
         }
     }
 
-    func withdrawCredits(amount: Int, key: String, completion: @escaping (Result<UserWithdrawCreditsResponse, Error>) -> Void) {
+    func withdrawCredits(key: String, amount: Int, completion: @escaping (Result<UserWithdrawCreditsResponse, Error>) -> Void) {
         if self.shouldSuspendIndefinitely {
             Logger.debug("UserService: Withdraw credits suspended indefinitely")
             completion(.failure(ReferralsError.suspendedIndefinitely))
@@ -240,7 +240,10 @@ final class UserService {
 
         Task { @MainActor in
             do {
-                let offerCode = try await self.providers.offerCodes.fetch(offerCodeId: offerCodeId, apiKey: self.apiKey)
+                let offerCode = try await self.providers.offerCodes.fetchOfferCode(
+                    offerCodeId: offerCodeId,
+                    apiKey: self.apiKey
+                )
 
                 Logger.debug("UserService: Fetch offer code did finish")
 

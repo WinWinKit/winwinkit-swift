@@ -11,11 +11,11 @@
 //
 
 protocol UsersProviderType {
-    func createOrUpdate(request: UserCreateRequest, apiKey: String) async throws -> User
+    func createOrUpdateUser(request: UserCreateRequest, apiKey: String) async throws -> User
 }
 
 struct UsersProvider: UsersProviderType {
-    func createOrUpdate(request: UserCreateRequest, apiKey: String) async throws -> User {
+    func createOrUpdateUser(request: UserCreateRequest, apiKey: String) async throws -> User {
         try await UsersAPI.createOrUpdateUser(xApiKey: apiKey, userCreateRequest: request).data.user
     }
 }

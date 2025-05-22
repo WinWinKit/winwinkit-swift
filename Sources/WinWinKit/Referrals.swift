@@ -154,10 +154,10 @@ public final class Referrals {
         let created = ReferralsObservableObject()
         created.user = self.userService?.cachedUser
         created.onClaimReferralCode = { [weak self] code in
-            self?.claim(referralCode: code, completion: { _ in })
+            self?.claimReferralCode(code: code) { _ in }
         }
         created.onFetchOfferCode = { [weak self] offerCodeId in
-            self?.fetchOfferCode(offerCodeId: offerCodeId, completion: { _ in })
+            self?.fetchOfferCode(offerCodeId: offerCodeId) { _ in }
         }
         self._observableObject = created
         return created
@@ -281,16 +281,16 @@ public final class Referrals {
     ///
     /// - Throws: An error if the referral code is not found or the user is not eligible to claim it.
     ///
-    public func claim(referralCode code: String) async throws -> (User, UserRewardsGranted) {
+    public func claimReferralCode(code: String) async throws -> (User, UserRewardsGranted) {
         try await withCheckedThrowingContinuation { continuation in
-            self.claim(referralCode: code, completion: { result in
+            self.claimReferralCode(code: code) { result in
                 switch result {
                 case let .success(data):
                     continuation.resume(returning: data)
                 case let .failure(error):
                     continuation.resume(throwing: error)
                 }
-            })
+            }
         }
     }
 
@@ -300,7 +300,7 @@ public final class Referrals {
     /// - Parameter code: The referral code to claim.
     /// - Parameter completion: A closure to be called when the claim is complete.
     ///
-    public func claim(referralCode code: String, completion: @escaping (Result<(User, UserRewardsGranted), Error>) -> Void) {
+    public func claimReferralCode(code: String, completion: @escaping (Result<(User, UserRewardsGranted), Error>) -> Void) {
         guard
             let userService
         else {
@@ -313,7 +313,7 @@ public final class Referrals {
             self.retainedObservableObject?.claimReferralCodeState = .loading
         }
 
-        userService.claim(referralCode: code) { [weak self] result in
+        userService.claimReferralCode(code: code) { [weak self] result in
             if #available(iOS 17.0, macOS 14.0, *) {
                 switch result {
                 case let .success(data):
@@ -330,34 +330,34 @@ public final class Referrals {
     ///
     /// Withdraw credits.
     ///
-    /// - Parameter amount: The amount of credits to withdraw.
     /// - Parameter key: The key of the credits to withdraw.
+    /// - Parameter amount: The amount of credits to withdraw.
     ///
     /// - Returns: A tuple containing the updated user and the result of the withdrawal.
     ///
     /// - Throws: An error if the user is not found or the withdrawal fails.
     ///
-    public func withdrawCredits(amount: Int, key: String) async throws -> (User, UserWithdrawCreditsResult) {
+    public func withdrawCredits(key: String, amount: Int) async throws -> (User, UserWithdrawCreditsResult) {
         try await withCheckedThrowingContinuation { continuation in
-            self.withdrawCredits(amount: amount, key: key, completion: { result in
+            self.withdrawCredits(key: key, amount: amount) { result in
                 switch result {
                 case let .success(data):
                     continuation.resume(returning: data)
                 case let .failure(error):
                     continuation.resume(throwing: error)
                 }
-            })
+            }
         }
     }
 
     ///
     /// Withdraw credits.
     ///
-    /// - Parameter amount: The amount of credits to withdraw.
     /// - Parameter key: The key of the credits to withdraw.
+    /// - Parameter amount: The amount of credits to withdraw.
     /// - Parameter completion: A closure to be called when the withdrawal is complete.
     ///
-    public func withdrawCredits(amount: Int, key: String, completion: @escaping (Result<(User, UserWithdrawCreditsResult), Error>) -> Void) {
+    public func withdrawCredits(key: String, amount: Int, completion: @escaping (Result<(User, UserWithdrawCreditsResult), Error>) -> Void) {
         guard
             let userService
         else {
@@ -366,7 +366,7 @@ public final class Referrals {
             return
         }
 
-        userService.withdrawCredits(amount: amount, key: key) { result in
+        userService.withdrawCredits(key: key, amount: amount) { result in
             completion(result.map { ($0.user, $0.withdrawResult) })
         }
     }
@@ -382,14 +382,14 @@ public final class Referrals {
     ///
     public func fetchOfferCode(offerCodeId: String) async throws -> (AppStoreOfferCode, AppStoreSubscription) {
         try await withCheckedThrowingContinuation { continuation in
-            self.fetchOfferCode(offerCodeId: offerCodeId, completion: { result in
+            self.fetchOfferCode(offerCodeId: offerCodeId) { result in
                 switch result {
                 case let .success(data):
                     continuation.resume(returning: data)
                 case let .failure(error):
                     continuation.resume(throwing: error)
                 }
-            })
+            }
         }
     }
 
