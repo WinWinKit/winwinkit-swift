@@ -18,7 +18,12 @@ import Logging
 /// The error type for ``Referrals``.
 ///
 public enum ReferralsError: Error {
+    /// The app user id must be set before using any other methods.
     case appUserIdNotSet
+    /// Service is suspended indefinitely.
+    ///
+    /// Normally this happens after receiving unauthorized error from WinWinKit API.
+    /// Obtain a new API key and configure ``Referrals`` with a valid one.
     case suspendedIndefinitely
 }
 
