@@ -19,7 +19,6 @@ import Logging
 ///
 public enum ReferralsError: Error {
     case appUserIdNotSet
-    case actionAlreadyInProgress
     case suspendedIndefinitely
 }
 
@@ -278,11 +277,8 @@ public final class Referrals {
         let userService = UserService(
             appUserId: appUserId,
             apiKey: self.apiKey,
-            offerCodeProvider: self.offerCodeProvider,
-            userCache: self.userCache,
-            userClaimActionsProvider: self.userClaimActionsProvider,
-            userProvider: self.userProvider,
-            userRewardActionsProvider: self.userRewardActionsProvider
+            providers: self.providers,
+            userCache: self.userCache
         )
         self.userService = userService
 
@@ -408,11 +404,8 @@ public final class Referrals {
 
     private let apiKey: String
     private let networkReachability: NetworkReachabilityType
-    private let offerCodeProvider: OfferCodeProviderType
+    private let providers: UserService.Providers
     private let userCache: UserCacheType
-    private let userClaimActionsProvider: UserClaimActionsProviderType
-    private let userProvider: UserProviderType
-    private let userRewardActionsProvider: UserRewardActionsProviderType
 
     private weak var _delegate: ReferralsDelegate?
 
@@ -433,38 +426,31 @@ public final class Referrals {
                              keyValueCache: KeyValueCacheType)
     {
         let networkReachability = NetworkReachability()
-        let offerCodeProvider = OfferCodeProvider()
         let userCache = UserCache(keyValueCache: keyValueCache)
-        let userClaimActionsProvider = UserClaimActionsProvider()
-        let userProvider = UserProvider()
-        let userRewardActionsProvider = UserRewardActionsProvider()
+        let providers = UserService.Providers(
+            claimActions: ClaimActionsProvider(),
+            offerCodes: OfferCodesProvider(),
+            rewardActions: RewardActionsProvider(),
+            users: UsersProvider()
+        )
 
         self.init(
             apiKey: apiKey,
             networkReachability: networkReachability,
-            offerCodeProvider: offerCodeProvider,
-            userCache: userCache,
-            userClaimActionsProvider: userClaimActionsProvider,
-            userProvider: userProvider,
-            userRewardActionsProvider: userRewardActionsProvider
+            providers: providers,
+            userCache: userCache
         )
     }
 
     private init(apiKey: String,
                  networkReachability: NetworkReachabilityType,
-                 offerCodeProvider: OfferCodeProviderType,
-                 userCache: UserCacheType,
-                 userClaimActionsProvider: UserClaimActionsProviderType,
-                 userProvider: UserProviderType,
-                 userRewardActionsProvider: UserRewardActionsProviderType)
+                 providers: UserService.Providers,
+                 userCache: UserCacheType)
     {
         self.apiKey = apiKey
         self.networkReachability = networkReachability
-        self.offerCodeProvider = offerCodeProvider
+        self.providers = providers
         self.userCache = userCache
-        self.userClaimActionsProvider = userClaimActionsProvider
-        self.userProvider = userProvider
-        self.userRewardActionsProvider = userRewardActionsProvider
     }
 
     private func startNetworkReachability() {

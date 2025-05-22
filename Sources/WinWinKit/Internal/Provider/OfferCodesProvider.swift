@@ -5,16 +5,16 @@
 //  You may not use this file except in compliance with the License.
 //  You may obtain a copy of the License at https://opensource.org/licenses/MIT
 //
-//  OfferCodeProvider.swift
+//  OfferCodesProvider.swift
 //
 //  Created by Oleh Stasula on 20/05/2025.
 //
 
-protocol OfferCodeProviderType {
+protocol OfferCodesProviderType {
     func fetch(offerCodeId: String, apiKey: String) async throws -> OfferCodeResponse
 }
 
-struct OfferCodeProvider: OfferCodeProviderType {
+struct OfferCodesProvider: OfferCodesProviderType {
     func fetch(offerCodeId: String, apiKey: String) async throws -> OfferCodeResponse {
         try await AppStoreAPI.getOfferCode(offerCodeId: offerCodeId, xApiKey: apiKey).data
     }

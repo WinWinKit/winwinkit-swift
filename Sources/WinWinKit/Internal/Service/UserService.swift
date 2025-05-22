@@ -16,27 +16,25 @@ import Foundation
 final class UserService {
     let appUserId: String
     let apiKey: String
-    let offerCodeProvider: OfferCodeProviderType
+    let providers: Providers
     let userCache: UserCacheType
-    let userClaimActionsProvider: UserClaimActionsProviderType
-    let userProvider: UserProviderType
-    let userRewardActionsProvider: UserRewardActionsProviderType
+
+    struct Providers {
+        let claimActions: ClaimActionsProviderType
+        let offerCodes: OfferCodesProviderType
+        let rewardActions: RewardActionsProviderType
+        let users: UsersProviderType
+    }
 
     init(appUserId: String,
          apiKey: String,
-         offerCodeProvider: OfferCodeProviderType,
-         userCache: UserCacheType,
-         userClaimActionsProvider: UserClaimActionsProviderType,
-         userProvider: UserProviderType,
-         userRewardActionsProvider: UserRewardActionsProviderType)
+         providers: Providers,
+         userCache: UserCacheType)
     {
         self.appUserId = appUserId
         self.apiKey = apiKey
-        self.offerCodeProvider = offerCodeProvider
+        self.providers = providers
         self.userCache = userCache
-        self.userClaimActionsProvider = userClaimActionsProvider
-        self.userProvider = userProvider
-        self.userRewardActionsProvider = userRewardActionsProvider
     }
 
     weak var delegate: UserServiceDelegate?
@@ -136,7 +134,7 @@ final class UserService {
                     lastSeenAt: pendingUserUpdate?.lastSeenAt,
                     metadata: pendingUserUpdate?.metadata
                 )
-                let updatedUser = try await self.userProvider.createOrUpdate(
+                let updatedUser = try await self.providers.users.createOrUpdate(
                     request: request,
                     apiKey: self.apiKey
                 )
@@ -164,10 +162,6 @@ final class UserService {
         }
     }
 
-    var isClaimingCode: Bool {
-        self.claimCodeTask != nil
-    }
-
     func claim(referralCode code: String, completion: @escaping (Result<UserClaimReferralCodeResponse, Error>) -> Void) {
         if self.shouldSuspendIndefinitely {
             Logger.debug("UserService: Claim code suspended indefinitely")
@@ -175,16 +169,10 @@ final class UserService {
             return
         }
 
-        if self.claimCodeTask != nil {
-            Logger.debug("UserService: Claim code skipped because of already claiming code")
-            completion(.failure(ReferralsError.actionAlreadyInProgress))
-            return
-        }
-
-        self.claimCodeTask = Task { @MainActor in
+        Task { @MainActor in
             do {
                 let request = UserClaimReferralCodeRequest(code: code)
-                let userClaimReferralCodeResponse = try await self.userClaimActionsProvider.claim(
+                let userClaimReferralCodeResponse = try await self.providers.claimActions.claim(
                     referralCode: request,
                     appUserId: self.appUserId,
                     apiKey: self.apiKey
@@ -194,8 +182,6 @@ final class UserService {
 
                 self.cacheUser(userClaimReferralCodeResponse.user)
 
-                self.claimCodeTask = nil
-
                 completion(.success(userClaimReferralCodeResponse))
             }
             catch {
@@ -203,8 +189,6 @@ final class UserService {
                 Logger.error("Failed to claim code: \(String(describing: error))")
 
                 self.handleTaskError(error)
-
-                self.claimCodeTask = nil
 
                 completion(.failure(error))
             }
@@ -224,7 +208,7 @@ final class UserService {
                     key: key,
                     amount: Double(amount)
                 )
-                let userWithdrawCreditsResponse = try await self.userRewardActionsProvider.withdrawCredits(
+                let userWithdrawCreditsResponse = try await self.providers.rewardActions.withdrawCredits(
                     request: request,
                     appUserId: self.appUserId,
                     apiKey: self.apiKey
@@ -256,7 +240,7 @@ final class UserService {
 
         Task { @MainActor in
             do {
-                let offerCode = try await self.offerCodeProvider.fetch(offerCodeId: offerCodeId, apiKey: self.apiKey)
+                let offerCode = try await self.providers.offerCodes.fetch(offerCodeId: offerCodeId, apiKey: self.apiKey)
 
                 Logger.debug("UserService: Fetch offer code did finish")
 
@@ -277,7 +261,6 @@ final class UserService {
 
     private(set) var shouldSuspendIndefinitely: Bool = false
 
-    private var claimCodeTask: Task<Void, Never>?
     private var refreshTask: Task<Void, Never>?
 
     private var pendingUserUpdate: UserUpdate? {
