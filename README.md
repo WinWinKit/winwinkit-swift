@@ -6,7 +6,7 @@ The official [WinWinKit](https://winwinkit.com) SDK for iOS and macOS.
 
 ```swift
 dependencies: [
-    .package(url: "https://github.com/winwinkit/winwinkit-swift.git", exact: "0.1.2")
+    .package(url: "https://github.com/winwinkit/winwinkit-swift.git", exact: "0.2.0")
 ]
 ```
 
@@ -54,7 +54,7 @@ Referrals.shared.set(lastSeenAt: Date())
 
 **Metadata**
 
-Optionally set metadata to save user's additional properties.
+Optionally set metadata to set user's additional properties.
 
 ```swift
 Referrals.shared.set(metadata: ["key": "value"])
@@ -70,30 +70,64 @@ Access the latest user object.
 let user = Referrals.shared.user
 ```
 
-> Also available as a property of `UserObservableObject` (see below).
+> Also available as a property of `ReferralsObservableObject` (see below).
 
-### Claim code
-
-Claim code object contains all necessary information needed to claim a code.
-
-Access the latest claim code object.
+### Claim Referral Code
 
 ```swift
-Referrals.shared.claim(code: referralCode) { result in
-    switch result {
-        case .success(let (user, rewardsGranted)):
-            // grant access to rewards in your app
-        case .failure(let error):
-            // handle error
-    }
+let (user, rewardsGranted) = try await Referrals.shared.claimReferralCode(code: "XYZ123")
+ // Grant access to rewards in your app
+```
+
+### Fetch Offer Code with related Subscription
+
+```swift
+let (offerCode, subscription) = try await Referrals.shared.fetchOfferCode(offerCodeId: "1234-5678")
+// Display to the user what benefits offer code gives
+```
+
+### Withdraw Credits
+```swift
+let (user, withdrawResult) = try await Referrals.shared.withdrawCredits(key: "extra-levels", amount: 5)
+```
+
+### SwiftUI
+
+The SDK provides convenient `Observable` object to interact and observe changes in SwiftUI views.
+
+**ReferralsObservableObject**
+
+Provides observable `User` and `isRefreshing` properties.
+
+```swift
+@State var referralsObservableObject = Referrals.shared.observableObject
+
+...
+
+VStack {
+    Text("Your referral code")
+    Text(self.referralsObservableObject.user?.code ?? "-")
+      .font(.title3)
+}
+
+...
+
+Button(action: {
+    self.referralsObservableObject.claimReferralCode(code: self.code)
+}) {
+    Text("Claim")
 }
 ```
 
-> Another way to claim code is to call the `claim` method of `ReferralClaimCodeObservableObject`.
+> In SwiftUI only apps it is possible to build complete integration with only this observable object.
+
+### User Interface
+
+Currently, we **do not provide** pre-built UI components for presenting the referral program or claiming referral codes. We are actively working on adding these features in the near future.
 
 ### Delegate
 
-Set a delegate to receive events from the SDK.
+Optionally set a delegate to receive events from the SDK.
 
 ```swift
 let delegate = Delegate()
@@ -106,6 +140,8 @@ Referrals.shared.delegate = delegate
 
 final class Delegate: ReferralsDelegate {
     
+    init() {}
+
     func referrals(_ referrals: Referrals, receivedUpdated user: User?) {
         // Called every time the referral user is updated.
     }
@@ -113,52 +149,11 @@ final class Delegate: ReferralsDelegate {
     func referrals(_ referrals: Referrals, receivedError error: any Error) {
         // Received error when creating, updating or fetching the referral user.
     }
-    
-    func referrals(_ referrals: Referrals, isRefreshingChanged isRefreshing: Bool) {
-        // Called when internal refreshing state changes.
-    }
 }
 
 ```
 
-> Setting the delegate is optional when using observable objects described below.
-
-### SwiftUI
-
-The SDK provides convenient `Observable` objects to observe changes to the referral user and claim code. 
-
-**UserObservableObject**
-
-Provides observable `User` and `isRefreshing` properties.
-
-```swift
-@State var userObservableObject = Referrals.shared.userObservableObject
-
-...
-
-VStack {
-    Text("Your referral code")
-    Text(self.userObservableObject.user?.code ?? "-")
-      .font(.title3)
-}
-```
-
-**ClaimReferralCodeObservableObject**
-
-Provides observable `isClaimingCode`, `didClaimCodeSuccessfully`, `rewardsGranted` properties and `claim(code:)` method.
-
-```swift
-@State var claimReferralCodeObservableObject = Referrals.shared.claimReferralCodeObservableObject
-
-...
-
-Button(action: {
-    self.claimReferralCodeObservableObject.claim(code: self.referralCode)
-}) {
-    Text("Claim referral code")
-}
-```
-> In SwiftUI only apps it is possible to build complete integration with only these observable objects.
+> Setting the delegate is optional when using observable object described below.
 
 ## Requirements
 
