@@ -135,6 +135,30 @@ public final class Referrals {
         self.userService?.cachedUser
     }
 
+    ///
+    /// Creates a new `ReferralsObservableObject` object, or returns a retained instance if it already exists.
+    ///
+    /// The returned instance is weakly referenced from the SDK.
+    /// It is your responsibility to retain it throughout the lifecycle of you View or App.
+    /// If the instance is released from memory, calling this property will create a new one.
+    ///
+    @available(iOS 17.0, macOS 14.0, *)
+    public var observableObject: ReferralsObservableObject {
+        if let retained = self.retainedObservableObject {
+            return retained
+        }
+        let created = ReferralsObservableObject()
+        created.user = self.userService?.cachedUser
+        created.onClaimReferralCode = { [weak self] code in
+            self?.claim(referralCode: code, completion: { _ in })
+        }
+        created.onFetchOfferCode = { [weak self] offerCodeId in
+            self?.fetchOfferCode(offerCodeId: offerCodeId, completion: { _ in })
+        }
+        self._observableObject = created
+        return created
+    }
+
     @available(iOS 17.0, macOS 14.0, *)
     public var userObservableObject: UserObservableObject {
         if let retained = self.retainedUserObservableObject {
@@ -184,6 +208,7 @@ public final class Referrals {
         }
 
         if #available(iOS 17.0, macOS 14.0, *) {
+            self.retainedObservableObject?.claimReferralCodeState = .loading
             self.retainedClaimReferralCodeObservableObject?.set(isClaimingCode: true)
         }
 
@@ -193,9 +218,11 @@ public final class Referrals {
 
                 switch result {
                 case let .success(data):
+                    self?.retainedObservableObject?.claimReferralCodeState = .success(data.rewardsGranted)
                     self?.retainedClaimReferralCodeObservableObject?.set(didClaimCodeSuccesfully: true)
                     self?.retainedClaimReferralCodeObservableObject?.set(rewardsGranted: data.rewardsGranted)
-                case .failure:
+                case let .failure(error):
+                    self?.retainedObservableObject?.claimReferralCodeState = .failure(error)
                     self?.retainedClaimReferralCodeObservableObject?.set(didClaimCodeSuccesfully: false)
                 }
             }
@@ -249,10 +276,23 @@ public final class Referrals {
             let userService
         else {
             Logger.warning("User identifier `appUserId` must be set before fetching offer code.")
+            completion(.failure(ReferralsError.appUserIdNotSet))
             return
         }
 
+        if #available(iOS 17.0, macOS 14.0, *) {
+            self.retainedObservableObject?.offerCodesState[offerCodeId] = .loading
+        }
+
         userService.fetchOfferCode(offerCodeId: offerCodeId) { result in
+            if #available(iOS 17.0, macOS 14.0, *) {
+                switch result {
+                case let .success(data):
+                    self.retainedObservableObject?.offerCodesState[offerCodeId] = .success(data.offerCode, data.subscription)
+                case let .failure(error):
+                    self.retainedObservableObject?.offerCodesState[offerCodeId] = .failure(error)
+                }
+            }
             completion(result.map { ($0.offerCode, $0.subscription) })
         }
     }
@@ -410,6 +450,13 @@ public final class Referrals {
 
     @Atomic
     private var _shouldAutoUpdateLastSeenAt: Bool = true
+
+    private weak var _observableObject: AnyObject?
+
+    @available(iOS 17.0, macOS 14.0, *)
+    private var retainedObservableObject: ReferralsObservableObject? {
+        self._observableObject as? ReferralsObservableObject
+    }
 
     private weak var _userObservableObject: AnyObject?
 
