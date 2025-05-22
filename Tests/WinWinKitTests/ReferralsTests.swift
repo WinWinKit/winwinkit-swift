@@ -1,3 +1,4 @@
+import Foundation
 import Testing
 @testable import WinWinKit
 
@@ -92,7 +93,6 @@ import Testing
         self.dependencies.networkReachability.isReachable = true
         let delegate = MockReferralsDelegate()
         self.referrals.delegate = delegate
-        #expect(self.referrals.user == nil)
         self.referrals.set(appUserId: user1.appUserId)
         #expect(self.referrals.user == nil)
         #expect(self.dependencies.userCache.user == nil)
@@ -117,5 +117,50 @@ import Testing
         #expect(self.dependencies.usersProvider.request?.metadata == nil)
         #expect(delegate.receivedUpdatedUserCallsCounter == 1)
         #expect(delegate.receivedErrorCallsCounter == 0)
+    }
+
+    @Test func suspendsIndefinitelyWhenUnauthorized() async throws {
+        let user1 = MockUser.mock()
+        let error = ErrorResponse.error(401, nil, nil, MockError(message: "Unauthorized"))
+        self.dependencies.usersProvider.createOrUpdateUserResultToReturn = .failure(error)
+        self.dependencies.networkReachability.isReachable = true
+        let delegate = MockReferralsDelegate()
+        self.referrals.delegate = delegate
+        self.referrals.set(appUserId: user1.appUserId)
+        try await Task.sleep(for: .milliseconds(50))
+        #expect(self.referrals.user == nil)
+        #expect(self.dependencies.userCache.user == nil)
+        #expect(delegate.receivedUpdatedUserCallsCounter == 0)
+        #expect(delegate.receivedErrorCallsCounter == 1)
+        #expect(delegate.receivedError as? ErrorResponse != nil)
+        self.referrals.set(isPremium: true)
+        #expect(delegate.receivedError as? ReferralsError == .suspendedIndefinitely)
+        #expect(delegate.receivedUpdatedUserCallsCounter == 0)
+        #expect(delegate.receivedErrorCallsCounter == 2)
+        delegate.receivedError = nil
+        self.referrals.set(firstSeenAt: Date.now)
+        #expect(delegate.receivedError as? ReferralsError == .suspendedIndefinitely)
+        #expect(delegate.receivedUpdatedUserCallsCounter == 0)
+        #expect(delegate.receivedErrorCallsCounter == 3)
+        delegate.receivedError = nil
+        self.referrals.set(lastSeenAt: Date.now)
+        #expect(delegate.receivedError as? ReferralsError == .suspendedIndefinitely)
+        #expect(delegate.receivedUpdatedUserCallsCounter == 0)
+        #expect(delegate.receivedErrorCallsCounter == 4)
+        self.referrals.set(metadata: ["key": "value"])
+        #expect(delegate.receivedError as? ReferralsError == .suspendedIndefinitely)
+        #expect(delegate.receivedUpdatedUserCallsCounter == 0)
+        #expect(delegate.receivedErrorCallsCounter == 5)
+        await #expect(throws: ReferralsError.suspendedIndefinitely) {
+            try await self.referrals.claimReferralCode(code: "XYZ123")
+        }
+        await #expect(throws: ReferralsError.suspendedIndefinitely) {
+            try await self.referrals.withdrawCredits(key: "key", amount: 100)
+        }
+        await #expect(throws: ReferralsError.suspendedIndefinitely) {
+            try await self.referrals.fetchOfferCode(offerCodeId: "offer-code-id")
+        }
+        #expect(delegate.receivedUpdatedUserCallsCounter == 0)
+        #expect(delegate.receivedErrorCallsCounter == 5)
     }
 }

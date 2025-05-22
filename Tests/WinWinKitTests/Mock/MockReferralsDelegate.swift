@@ -16,16 +16,21 @@ final class MockReferralsDelegate: ReferralsDelegate {
     var receivedUpdatedUserCallsCounter: Int = 0
     var receivedErrorCallsCounter: Int = 0
 
+    var receivedUpdatedUser: User?
+    var receivedError: (any Error)?
+
     var onReceivedUpdatedUser: ((User?) -> Void)?
     var onReceivedError: ((any Error) -> Void)?
 
     func referrals(_ referrals: Referrals, receivedUpdated user: User?) {
         self.receivedUpdatedUserCallsCounter += 1
+        self.receivedUpdatedUser = user
         self.onReceivedUpdatedUser?(user)
     }
 
     func referrals(_ referrals: Referrals, receivedError error: any Error) {
         self.receivedErrorCallsCounter += 1
+        self.receivedError = error
         self.onReceivedError?(error)
     }
 }

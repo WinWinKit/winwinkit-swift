@@ -99,6 +99,7 @@ final class UserService {
     func refresh() {
         if self.shouldSuspendIndefinitely {
             Logger.debug("UserService: Refresh suspended indefinitely")
+            self.delegate?.userService(self, receivedError: ReferralsError.suspendedIndefinitely)
             return
         }
 
