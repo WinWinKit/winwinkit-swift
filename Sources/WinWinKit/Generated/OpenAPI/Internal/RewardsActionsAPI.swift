@@ -27,7 +27,7 @@ internal class RewardsActionsAPI {
 
     /**
      Withdraw Credits
-     - POST /users/{app_user_id}/rewards/withdraw
+     - POST /users/{app_user_id}/rewards/withdraw-credits
      - Withdraws credits from a user.
      - parameter appUserId: (path) The app user id of the user to withdraw credits from. 
      - parameter xApiKey: (header) The API key to authenticate with. 
@@ -35,7 +35,7 @@ internal class RewardsActionsAPI {
      - returns: RequestBuilder<UserWithdrawCreditsDataResponse> 
      */
     internal class func withdrawCreditsWithRequestBuilder(appUserId: String, xApiKey: String, userWithdrawCreditsRequest: UserWithdrawCreditsRequest) -> RequestBuilder<UserWithdrawCreditsDataResponse> {
-        var localVariablePath = "/users/{app_user_id}/rewards/withdraw"
+        var localVariablePath = "/users/{app_user_id}/rewards/withdraw-credits"
         let appUserIdPreEscape = "\(APIHelper.mapValueToPathItem(appUserId))"
         let appUserIdPostEscape = appUserIdPreEscape.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? ""
         localVariablePath = localVariablePath.replacingOccurrences(of: "{app_user_id}", with: appUserIdPostEscape, options: .literal, range: nil)

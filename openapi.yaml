@@ -131,7 +131,7 @@ paths:
       summary: Get User
       tags:
         - Users
-  /users/{app_user_id}/rewards/withdraw:
+  /users/{app_user_id}/rewards/withdraw-credits:
     post:
       description: Withdraws credits from a user.
       operationId: withdrawCredits
