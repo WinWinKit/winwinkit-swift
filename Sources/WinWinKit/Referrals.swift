@@ -159,32 +159,6 @@ public final class Referrals {
         return created
     }
 
-    @available(iOS 17.0, macOS 14.0, *)
-    public var userObservableObject: UserObservableObject {
-        if let retained = self.retainedUserObservableObject {
-            return retained
-        }
-        let created = UserObservableObject()
-        created.set(user: self.userService?.cachedUser)
-        created.set(isRefreshing: self.userService?.isRefreshing ?? false)
-        self._userObservableObject = created
-        return created
-    }
-
-    @available(iOS 17.0, macOS 14.0, *)
-    public var claimReferralCodeObservableObject: ClaimReferralCodeObservableObject {
-        if let retained = self.retainedClaimReferralCodeObservableObject {
-            return retained
-        }
-        let created = ClaimReferralCodeObservableObject()
-        created.set(isClaimingCode: self.userService?.isClaimingCode ?? false)
-        created.onClaimCode = { [weak self] code in
-            self?.claim(referralCode: code, completion: { _ in })
-        }
-        self._claimReferralCodeObservableObject = created
-        return created
-    }
-
     public func claim(referralCode code: String) async throws -> (User, UserRewardsGranted) {
         try await withCheckedThrowingContinuation { continuation in
             self.claim(referralCode: code, completion: { result in
@@ -209,21 +183,15 @@ public final class Referrals {
 
         if #available(iOS 17.0, macOS 14.0, *) {
             self.retainedObservableObject?.claimReferralCodeState = .loading
-            self.retainedClaimReferralCodeObservableObject?.set(isClaimingCode: true)
         }
 
         userService.claim(referralCode: code) { [weak self] result in
             if #available(iOS 17.0, macOS 14.0, *) {
-                self?.retainedClaimReferralCodeObservableObject?.set(isClaimingCode: false)
-
                 switch result {
                 case let .success(data):
                     self?.retainedObservableObject?.claimReferralCodeState = .success(data.rewardsGranted)
-                    self?.retainedClaimReferralCodeObservableObject?.set(didClaimCodeSuccesfully: true)
-                    self?.retainedClaimReferralCodeObservableObject?.set(rewardsGranted: data.rewardsGranted)
                 case let .failure(error):
                     self?.retainedObservableObject?.claimReferralCodeState = .failure(error)
-                    self?.retainedClaimReferralCodeObservableObject?.set(didClaimCodeSuccesfully: false)
                 }
             }
 
@@ -458,20 +426,6 @@ public final class Referrals {
         self._observableObject as? ReferralsObservableObject
     }
 
-    private weak var _userObservableObject: AnyObject?
-
-    @available(iOS 17.0, macOS 14.0, *)
-    private var retainedUserObservableObject: UserObservableObject? {
-        self._userObservableObject as? UserObservableObject
-    }
-
-    private weak var _claimReferralCodeObservableObject: AnyObject?
-
-    @available(iOS 17.0, macOS 14.0, *)
-    private var retainedClaimReferralCodeObservableObject: ClaimReferralCodeObservableObject? {
-        self._claimReferralCodeObservableObject as? ClaimReferralCodeObservableObject
-    }
-
     @Atomic
     private var userService: UserService?
 
@@ -535,7 +489,7 @@ extension Referrals: UserServiceDelegate {
 
     func userService(_: UserService, receivedUpdated user: User) {
         if #available(iOS 17, macOS 14, *) {
-            self.retainedUserObservableObject?.set(user: user)
+            self.retainedObservableObject?.user = user
         }
         self.delegate?.referrals(self, receivedUpdated: user)
     }
@@ -545,9 +499,6 @@ extension Referrals: UserServiceDelegate {
     }
 
     func userService(_: UserService, isRefreshingChanged isRefreshing: Bool) {
-        if #available(iOS 17, macOS 14, *) {
-            self.retainedUserObservableObject?.set(isRefreshing: isRefreshing)
-        }
         self.delegate?.referrals(self, isRefreshingChanged: isRefreshing)
     }
 }
