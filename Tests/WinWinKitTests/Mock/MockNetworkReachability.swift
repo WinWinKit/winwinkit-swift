@@ -14,7 +14,17 @@ import Foundation
 @testable import WinWinKit
 
 final class MockNetworkReachability: NetworkReachabilityType {
-    var isReachable: Bool = false
+    var isReachable: Bool {
+        get {
+            self.isReachableGetterCallsCounter += 1
+            return self._isReachable
+        }
+        set {
+            self._isReachable = newValue
+        }
+    }
+
+    private var _isReachable: Bool = false
 
     var delegate: NetworkReachabilityDelegate?
 
@@ -23,4 +33,5 @@ final class MockNetworkReachability: NetworkReachabilityType {
     }
 
     var startMethodCallsCounter: Int = 0
+    var isReachableGetterCallsCounter: Int = 0
 }

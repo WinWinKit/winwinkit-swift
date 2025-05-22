@@ -3,11 +3,13 @@ import Testing
 
 @Suite struct ReferralsTests {
     struct Dependencies {
-        let userCache: MockUserCache
-        let offerCodeProvider: MockOfferCodesProvider
+        let apiKey: String
         let claimActionsProvider: MockClaimActionsProvider
-        let usersProvider: MockUsersProvider
+        let networkReachability: MockNetworkReachability
+        let offerCodeProvider: MockOfferCodesProvider
         let rewardActionsProvider: MockRewardActionsProvider
+        let usersProvider: MockUsersProvider
+        let userCache: MockUserCache
     }
 
     let dependencies: Dependencies
@@ -15,15 +17,17 @@ import Testing
 
     init() {
         self.dependencies = Dependencies(
-            userCache: MockUserCache(),
-            offerCodeProvider: MockOfferCodesProvider(),
+            apiKey: MockConstants.apiKey,
             claimActionsProvider: MockClaimActionsProvider(),
+            networkReachability: MockNetworkReachability(),
+            offerCodeProvider: MockOfferCodesProvider(),
+            rewardActionsProvider: MockRewardActionsProvider(),
             usersProvider: MockUsersProvider(),
-            rewardActionsProvider: MockRewardActionsProvider()
+            userCache: MockUserCache()
         )
         self.referrals = Referrals(
-            apiKey: MockConstants.apiKey,
-            networkReachability: MockNetworkReachability(),
+            apiKey: self.dependencies.apiKey,
+            networkReachability: self.dependencies.networkReachability,
             providers: .init(
                 claimActions: self.dependencies.claimActionsProvider,
                 offerCodes: self.dependencies.offerCodeProvider,
@@ -70,5 +74,48 @@ import Testing
         #expect(self.referrals.user == user2)
         self.referrals.set(appUserId: "app-user-id-3")
         #expect(self.referrals.user == nil)
+    }
+
+    @Test func setAppUserIdWhenNotReachable() async throws {
+        #expect(self.referrals.user == nil)
+        let user1 = MockUser.mock()
+        self.referrals.set(appUserId: user1.appUserId)
+        #expect(self.referrals.user == nil)
+        #expect(self.dependencies.networkReachability.startMethodCallsCounter == 1)
+        #expect(self.dependencies.networkReachability.isReachableGetterCallsCounter == 1)
+        #expect(self.dependencies.networkReachability.delegate != nil)
+    }
+
+    @Test func setAppUserIdWhenReachable() async throws {
+        let user1 = MockUser.mock()
+        self.dependencies.usersProvider.createOrUpdateUserResultToReturn = .success(user1)
+        self.dependencies.networkReachability.isReachable = true
+        let delegate = MockReferralsDelegate()
+        self.referrals.delegate = delegate
+        #expect(self.referrals.user == nil)
+        self.referrals.set(appUserId: user1.appUserId)
+        #expect(self.referrals.user == nil)
+        #expect(self.dependencies.userCache.user == nil)
+        #expect(self.dependencies.networkReachability.startMethodCallsCounter == 1)
+        #expect(self.dependencies.networkReachability.isReachableGetterCallsCounter == 1)
+        #expect(self.dependencies.networkReachability.delegate != nil)
+        #expect(self.dependencies.usersProvider.createOrUpdateUserCallsCounter == 0)
+        #expect(delegate.receivedUpdatedUserCallsCounter == 0)
+        #expect(delegate.receivedErrorCallsCounter == 0)
+        try await Task.sleep(for: .milliseconds(50))
+        #expect(self.referrals.user == user1)
+        #expect(self.dependencies.userCache.user == user1)
+        #expect(self.dependencies.networkReachability.startMethodCallsCounter == 1)
+        #expect(self.dependencies.networkReachability.isReachableGetterCallsCounter == 1)
+        #expect(self.dependencies.networkReachability.delegate != nil)
+        #expect(self.dependencies.usersProvider.createOrUpdateUserCallsCounter == 1)
+        #expect(self.dependencies.usersProvider.apiKey == self.dependencies.apiKey)
+        #expect(self.dependencies.usersProvider.request?.appUserId == user1.appUserId)
+        #expect(self.dependencies.usersProvider.request?.isPremium == nil)
+        #expect(self.dependencies.usersProvider.request?.firstSeenAt == nil)
+        #expect(self.dependencies.usersProvider.request?.lastSeenAt != nil)
+        #expect(self.dependencies.usersProvider.request?.metadata == nil)
+        #expect(delegate.receivedUpdatedUserCallsCounter == 1)
+        #expect(delegate.receivedErrorCallsCounter == 0)
     }
 }
