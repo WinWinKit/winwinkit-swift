@@ -158,112 +158,6 @@ public final class Referrals {
         return created
     }
 
-    public func claim(referralCode code: String) async throws -> (User, UserRewardsGranted) {
-        try await withCheckedThrowingContinuation { continuation in
-            self.claim(referralCode: code, completion: { result in
-                switch result {
-                case let .success(data):
-                    continuation.resume(returning: data)
-                case let .failure(error):
-                    continuation.resume(throwing: error)
-                }
-            })
-        }
-    }
-
-    public func claim(referralCode code: String, completion: @escaping (Result<(User, UserRewardsGranted), Error>) -> Void) {
-        guard
-            let userService
-        else {
-            Logger.warning("User identifier `appUserId` must be set before claiming code.")
-            completion(.failure(ReferralsError.appUserIdNotSet))
-            return
-        }
-
-        if #available(iOS 17.0, macOS 14.0, *) {
-            self.retainedObservableObject?.claimReferralCodeState = .loading
-        }
-
-        userService.claim(referralCode: code) { [weak self] result in
-            if #available(iOS 17.0, macOS 14.0, *) {
-                switch result {
-                case let .success(data):
-                    self?.retainedObservableObject?.claimReferralCodeState = .success(data.rewardsGranted)
-                case let .failure(error):
-                    self?.retainedObservableObject?.claimReferralCodeState = .failure(error)
-                }
-            }
-
-            completion(result.map { ($0.user, $0.rewardsGranted) })
-        }
-    }
-
-    public func withdrawCredits(amount: Int, key: String) async throws -> (User, UserWithdrawCreditsResult) {
-        try await withCheckedThrowingContinuation { continuation in
-            self.withdrawCredits(amount: amount, key: key, completion: { result in
-                switch result {
-                case let .success(data):
-                    continuation.resume(returning: data)
-                case let .failure(error):
-                    continuation.resume(throwing: error)
-                }
-            })
-        }
-    }
-
-    public func withdrawCredits(amount: Int, key: String, completion: @escaping (Result<(User, UserWithdrawCreditsResult), Error>) -> Void) {
-        guard
-            let userService
-        else {
-            Logger.warning("User identifier `appUserId` must be set before withdrawing credits.")
-            completion(.failure(ReferralsError.appUserIdNotSet))
-            return
-        }
-
-        userService.withdrawCredits(amount: amount, key: key) { result in
-            completion(result.map { ($0.user, $0.withdrawResult) })
-        }
-    }
-
-    public func fetchOfferCode(offerCodeId: String) async throws -> (AppStoreOfferCode, AppStoreSubscription) {
-        try await withCheckedThrowingContinuation { continuation in
-            self.fetchOfferCode(offerCodeId: offerCodeId, completion: { result in
-                switch result {
-                case let .success(data):
-                    continuation.resume(returning: data)
-                case let .failure(error):
-                    continuation.resume(throwing: error)
-                }
-            })
-        }
-    }
-
-    public func fetchOfferCode(offerCodeId: String, completion: @escaping (Result<(AppStoreOfferCode, AppStoreSubscription), Error>) -> Void) {
-        guard
-            let userService
-        else {
-            Logger.warning("User identifier `appUserId` must be set before fetching offer code.")
-            completion(.failure(ReferralsError.appUserIdNotSet))
-            return
-        }
-
-        if #available(iOS 17.0, macOS 14.0, *) {
-            self.retainedObservableObject?.offerCodesState[offerCodeId] = .loading
-        }
-
-        userService.fetchOfferCode(offerCodeId: offerCodeId) { result in
-            if #available(iOS 17.0, macOS 14.0, *) {
-                switch result {
-                case let .success(data):
-                    self.retainedObservableObject?.offerCodesState[offerCodeId] = .success(data.offerCode, data.subscription)
-                case let .failure(error):
-                    self.retainedObservableObject?.offerCodesState[offerCodeId] = .failure(error)
-                }
-            }
-            completion(result.map { ($0.offerCode, $0.subscription) })
-        }
-    }
-
     ///
     /// Sets your app's user unique identifier.
     /// - Parameter appUserId: Unique identifier of your app's user.
@@ -371,6 +265,159 @@ public final class Referrals {
         }
         userService.set(metadata: metadata)
         userService.refresh()
+    }
+
+    ///
+    /// Claim a referral code.
+    ///
+    /// - Parameter code: The referral code to claim.
+    ///
+    /// - Returns: A tuple containing the updated user and the rewards granted.
+    ///
+    /// - Throws: An error if the referral code is not found or the user is not eligible to claim it.
+    ///
+    public func claim(referralCode code: String) async throws -> (User, UserRewardsGranted) {
+        try await withCheckedThrowingContinuation { continuation in
+            self.claim(referralCode: code, completion: { result in
+                switch result {
+                case let .success(data):
+                    continuation.resume(returning: data)
+                case let .failure(error):
+                    continuation.resume(throwing: error)
+                }
+            })
+        }
+    }
+
+    ///
+    /// Claim a referral code.
+    ///
+    /// - Parameter code: The referral code to claim.
+    /// - Parameter completion: A closure to be called when the claim is complete.
+    ///
+    public func claim(referralCode code: String, completion: @escaping (Result<(User, UserRewardsGranted), Error>) -> Void) {
+        guard
+            let userService
+        else {
+            Logger.warning("User identifier `appUserId` must be set before claiming code.")
+            completion(.failure(ReferralsError.appUserIdNotSet))
+            return
+        }
+
+        if #available(iOS 17.0, macOS 14.0, *) {
+            self.retainedObservableObject?.claimReferralCodeState = .loading
+        }
+
+        userService.claim(referralCode: code) { [weak self] result in
+            if #available(iOS 17.0, macOS 14.0, *) {
+                switch result {
+                case let .success(data):
+                    self?.retainedObservableObject?.claimReferralCodeState = .success(data.rewardsGranted)
+                case let .failure(error):
+                    self?.retainedObservableObject?.claimReferralCodeState = .failure(error)
+                }
+            }
+
+            completion(result.map { ($0.user, $0.rewardsGranted) })
+        }
+    }
+
+    ///
+    /// Withdraw credits.
+    ///
+    /// - Parameter amount: The amount of credits to withdraw.
+    /// - Parameter key: The key of the credits to withdraw.
+    ///
+    /// - Returns: A tuple containing the updated user and the result of the withdrawal.
+    ///
+    /// - Throws: An error if the user is not found or the withdrawal fails.
+    ///
+    public func withdrawCredits(amount: Int, key: String) async throws -> (User, UserWithdrawCreditsResult) {
+        try await withCheckedThrowingContinuation { continuation in
+            self.withdrawCredits(amount: amount, key: key, completion: { result in
+                switch result {
+                case let .success(data):
+                    continuation.resume(returning: data)
+                case let .failure(error):
+                    continuation.resume(throwing: error)
+                }
+            })
+        }
+    }
+
+    ///
+    /// Withdraw credits.
+    ///
+    /// - Parameter amount: The amount of credits to withdraw.
+    /// - Parameter key: The key of the credits to withdraw.
+    /// - Parameter completion: A closure to be called when the withdrawal is complete.
+    ///
+    public func withdrawCredits(amount: Int, key: String, completion: @escaping (Result<(User, UserWithdrawCreditsResult), Error>) -> Void) {
+        guard
+            let userService
+        else {
+            Logger.warning("User identifier `appUserId` must be set before withdrawing credits.")
+            completion(.failure(ReferralsError.appUserIdNotSet))
+            return
+        }
+
+        userService.withdrawCredits(amount: amount, key: key) { result in
+            completion(result.map { ($0.user, $0.withdrawResult) })
+        }
+    }
+
+    ///
+    /// Fetch an offer code.
+    ///
+    /// - Parameter offerCodeId: The id of the offer code to fetch.
+    ///
+    /// - Returns: A tuple containing the offer code and the subscription.
+    ///
+    /// - Throws: An error if the offer code is not found or the user is not eligible to fetch it.
+    ///
+    public func fetchOfferCode(offerCodeId: String) async throws -> (AppStoreOfferCode, AppStoreSubscription) {
+        try await withCheckedThrowingContinuation { continuation in
+            self.fetchOfferCode(offerCodeId: offerCodeId, completion: { result in
+                switch result {
+                case let .success(data):
+                    continuation.resume(returning: data)
+                case let .failure(error):
+                    continuation.resume(throwing: error)
+                }
+            })
+        }
+    }
+
+    ///
+    /// Fetch an offer code.
+    ///
+    /// - Parameter offerCodeId: The id of the offer code to fetch.
+    /// - Parameter completion: A closure to be called when the offer code is fetched.
+    ///
+    public func fetchOfferCode(offerCodeId: String, completion: @escaping (Result<(AppStoreOfferCode, AppStoreSubscription), Error>) -> Void) {
+        guard
+            let userService
+        else {
+            Logger.warning("User identifier `appUserId` must be set before fetching offer code.")
+            completion(.failure(ReferralsError.appUserIdNotSet))
+            return
+        }
+
+        if #available(iOS 17.0, macOS 14.0, *) {
+            self.retainedObservableObject?.offerCodesState[offerCodeId] = .loading
+        }
+
+        userService.fetchOfferCode(offerCodeId: offerCodeId) { result in
+            if #available(iOS 17.0, macOS 14.0, *) {
+                switch result {
+                case let .success(data):
+                    self.retainedObservableObject?.offerCodesState[offerCodeId] = .success(data.offerCode, data.subscription)
+                case let .failure(error):
+                    self.retainedObservableObject?.offerCodesState[offerCodeId] = .failure(error)
+                }
+            }
+            completion(result.map { ($0.offerCode, $0.subscription) })
+        }
     }
 
     ///
