@@ -535,8 +535,4 @@ extension Referrals: UserServiceDelegate {
     func userService(_: UserService, receivedError error: any Error) {
         self.delegate?.referrals(self, receivedError: error)
     }
-
-    func userService(_: UserService, isRefreshingChanged isRefreshing: Bool) {
-        self.delegate?.referrals(self, isRefreshingChanged: isRefreshing)
-    }
 }
