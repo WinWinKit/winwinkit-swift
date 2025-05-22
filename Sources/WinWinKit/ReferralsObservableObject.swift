@@ -29,8 +29,8 @@ public final class ReferralsObservableObject {
 
     public internal(set) var claimReferralCodeState: ClaimReferralCodeState = .none
 
-    public func claim(referralCode: String) {
-        self.onClaimReferralCode?(referralCode)
+    public func claimReferralCode(code: String) {
+        self.onClaimReferralCode?(code)
     }
 
     // Offer Codes
