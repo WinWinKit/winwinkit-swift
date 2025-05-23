@@ -33,7 +33,7 @@ struct UserCache: UserCacheType {
                 return try self.keyValueCache[Keys.user].map { try User(jsonData: $0) }
             }
             catch {
-                Logger.error("Unable to deserialize User.")
+                Logger.error("Unable to deserialize User. \(error)")
                 return nil
             }
         }
@@ -42,7 +42,7 @@ struct UserCache: UserCacheType {
                 self.keyValueCache[Keys.user] = try newValue?.jsonData()
             }
             catch {
-                Logger.error("Unable to serialize User.")
+                Logger.error("Unable to serialize User. \(error)")
             }
         }
     }
@@ -53,7 +53,7 @@ struct UserCache: UserCacheType {
                 return try self.keyValueCache[Keys.userUpdate].map { try UserUpdate(jsonData: $0) }
             }
             catch {
-                Logger.error("Unable to deserialize update UserUpdate.")
+                Logger.error("Unable to deserialize update UserUpdate. \(error)")
                 return nil
             }
         }
@@ -62,7 +62,7 @@ struct UserCache: UserCacheType {
                 self.keyValueCache[Keys.userUpdate] = try newValue?.jsonData()
             }
             catch {
-                Logger.error("Unable to serialize update UserUpdate.")
+                Logger.error("Unable to serialize update UserUpdate. \(error)")
             }
         }
     }
