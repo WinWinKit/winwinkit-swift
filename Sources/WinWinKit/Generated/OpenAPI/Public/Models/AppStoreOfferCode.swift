@@ -45,11 +45,11 @@ public struct AppStoreOfferCode: Codable, Hashable {
     /** The offer code offer mode. */
     public private(set) var offerMode: OfferMode
     /** The offer code number of periods. */
-    public private(set) var numberOfPeriods: Double
+    public private(set) var numberOfPeriods: Int
     /** The offer code prices. */
     public private(set) var prices: [AppStorePrice]?
 
-    public init(id: String, name: String, customerEligibilities: [String], offerEligibility: OfferEligibility, duration: Duration, offerMode: OfferMode, numberOfPeriods: Double, prices: [AppStorePrice]?) {
+    public init(id: String, name: String, customerEligibilities: [String], offerEligibility: OfferEligibility, duration: Duration, offerMode: OfferMode, numberOfPeriods: Int, prices: [AppStorePrice]?) {
         self.id = id
         self.name = name
         self.customerEligibilities = customerEligibilities

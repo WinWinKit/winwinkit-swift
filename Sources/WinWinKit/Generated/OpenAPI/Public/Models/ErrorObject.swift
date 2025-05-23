@@ -14,11 +14,11 @@ import AnyCodable
 public struct ErrorObject: Codable, Hashable {
 
     public private(set) var code: String
-    public private(set) var status: Double
+    public private(set) var status: Int
     public private(set) var message: String
     public private(set) var source: String?
 
-    public init(code: String, status: Double, message: String, source: String?) {
+    public init(code: String, status: Int, message: String, source: String?) {
         self.code = code
         self.status = status
         self.message = message

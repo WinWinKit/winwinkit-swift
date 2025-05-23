@@ -278,7 +278,7 @@ components:
         code:
           type: string
         status:
-          type: number
+          type: integer
         message:
           type: string
         source:
@@ -369,7 +369,7 @@ components:
           example: PAY_AS_YOU_GO
           description: The offer code offer mode.
         number_of_periods:
-          type: number
+          type: integer
           example: 1
           description: The offer code number of periods.
         prices:
@@ -500,15 +500,15 @@ components:
       type: object
       properties:
         claims:
-          type: number
+          type: integer
           example: 0
           description: The number of users who have claimed the referral code.
         conversions:
-          type: number
+          type: integer
           example: 0
           description: The number of users who have converted to premium.
         churns:
-          type: number
+          type: integer
           example: 0
           description: The number of users who have churned.
       description: The stats of the user.
@@ -592,7 +592,7 @@ components:
           example: credit-reward
           description: The key of the reward
         credits:
-          type: number
+          type: integer
           example: 100
           description: The credits of the reward
         name:
@@ -636,7 +636,7 @@ components:
           allOf:
             - $ref: '#/components/schemas/CreditReward'
         credits:
-          type: number
+          type: integer
           example: 100
           description: The amount of the reward
         expires_at:
@@ -925,7 +925,7 @@ components:
           example: interval
           description: The variant of the deactivation configuration
         duration:
-          type: number
+          type: integer
           example: 1
           description: The duration of the deactivation configuration
         period:
@@ -951,7 +951,7 @@ components:
           example: claim
           description: The variant of the activation configuration
         amount:
-          type: number
+          type: integer
           example: 1
           description: The amount of the activation configuration
       required:
@@ -1001,7 +1001,7 @@ components:
           example: interval
           description: The variant of the deactivation configuration
         duration:
-          type: number
+          type: integer
           example: 1
           description: The duration of the deactivation configuration
         period:
@@ -1027,11 +1027,11 @@ components:
           example: claim
           description: The variant of the activation configuration
         amount:
-          type: number
+          type: integer
           example: 1
           description: The amount of the activation configuration
         limit:
-          type: number
+          type: integer
           example: 1
           description: The limit of the activation configuration
       required:
@@ -1082,7 +1082,7 @@ components:
           example: interval
           description: The variant of the deactivation configuration
         duration:
-          type: number
+          type: integer
           description: The duration of the deactivation configuration
           example: 1
         period:
@@ -1108,11 +1108,11 @@ components:
           example: claim
           description: The variant of the activation configuration
         amount:
-          type: number
+          type: integer
           example: 1
           description: The amount of the activation configuration
         limit:
-          type: number
+          type: integer
           example: 1
           description: The limit of the activation configuration
       required:
@@ -1186,7 +1186,7 @@ components:
           description: The variant of the deactivation configuration
           example: interval
         duration:
-          type: number
+          type: integer
           example: 1
           description: The duration of the deactivation configuration
         period:
@@ -1257,7 +1257,7 @@ components:
           example: interval
           description: The variant of the deactivation configuration
         duration:
-          type: number
+          type: integer
           example: 1
           description: The duration of the deactivation configuration
         period:
@@ -1329,7 +1329,7 @@ components:
           example: interval
           description: The variant of the deactivation configuration
         duration:
-          type: number
+          type: integer
           example: 1
           description: The duration of the deactivation configuration
         period:
@@ -1437,11 +1437,11 @@ components:
           example: {}
           description: The program metadata
         distribution_percentage:
-          type: number
+          type: integer
           example: 100
           description: The program distribution percentage
         limit:
-          type: number
+          type: integer
           example: 0
           description: The program limit
         rewards:
@@ -1561,7 +1561,7 @@ components:
           example: credit-reward
           description: The key of the credit reward to withdraw
         amount:
-          type: number
+          type: integer
           example: 100
           description: The amount of credits to withdraw
           minimum: 1
@@ -1572,19 +1572,19 @@ components:
       type: object
       properties:
         credits_available_at_start:
-          type: number
+          type: integer
           example: 100
           description: The amount of credits available at the start
         credits_available_at_end:
-          type: number
+          type: integer
           example: 90
           description: The amount of credits available at the end
         credits_requested_to_withdraw:
-          type: number
+          type: integer
           example: 10
           description: The amount of credits requested to withdraw
         credits_withdrawn:
-          type: number
+          type: integer
           example: 10
           description: The amount of credits withdrawn
       required:

@@ -12,13 +12,13 @@ import AnyCodable
 
 internal struct UserWithdrawCreditsRequest: Codable, Hashable {
 
-    internal static let amountRule = NumericRule<Double>(minimum: 1, exclusiveMinimum: false, maximum: nil, exclusiveMaximum: false, multipleOf: nil)
+    internal static let amountRule = NumericRule<Int>(minimum: 1, exclusiveMinimum: false, maximum: nil, exclusiveMaximum: false, multipleOf: nil)
     /** The key of the credit reward to withdraw */
     public private(set) var key: String
     /** The amount of credits to withdraw */
-    public private(set) var amount: Double
+    public private(set) var amount: Int
 
-    public init(key: String, amount: Double) {
+    public init(key: String, amount: Int) {
         self.key = key
         self.amount = amount
     }

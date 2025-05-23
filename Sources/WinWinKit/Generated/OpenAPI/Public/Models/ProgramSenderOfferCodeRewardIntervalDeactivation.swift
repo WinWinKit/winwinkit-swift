@@ -23,11 +23,11 @@ public struct ProgramSenderOfferCodeRewardIntervalDeactivation: Codable, Hashabl
     /** The variant of the deactivation configuration */
     public private(set) var variant: Variant
     /** The duration of the deactivation configuration */
-    public private(set) var duration: Double
+    public private(set) var duration: Int
     /** The period of the deactivation configuration */
     public private(set) var period: Period
 
-    public init(variant: Variant, duration: Double, period: Period) {
+    public init(variant: Variant, duration: Int, period: Period) {
         self.variant = variant
         self.duration = duration
         self.period = period

@@ -19,11 +19,11 @@ public struct ProgramSenderOfferCodeRewardActivation: Codable, Hashable {
     /** The variant of the activation configuration */
     public private(set) var variant: Variant
     /** The amount of the activation configuration */
-    public private(set) var amount: Double
+    public private(set) var amount: Int
     /** The limit of the activation configuration */
-    public private(set) var limit: Double
+    public private(set) var limit: Int
 
-    public init(variant: Variant, amount: Double, limit: Double) {
+    public init(variant: Variant, amount: Int, limit: Int) {
         self.variant = variant
         self.amount = amount
         self.limit = limit

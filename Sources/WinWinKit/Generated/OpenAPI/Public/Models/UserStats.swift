@@ -14,13 +14,13 @@ import AnyCodable
 public struct UserStats: Codable, Hashable {
 
     /** The number of users who have claimed the referral code. */
-    public private(set) var claims: Double
+    public private(set) var claims: Int
     /** The number of users who have converted to premium. */
-    public private(set) var conversions: Double
+    public private(set) var conversions: Int
     /** The number of users who have churned. */
-    public private(set) var churns: Double
+    public private(set) var churns: Int
 
-    public init(claims: Double, conversions: Double, churns: Double) {
+    public init(claims: Int, conversions: Int, churns: Int) {
         self.claims = claims
         self.conversions = conversions
         self.churns = churns

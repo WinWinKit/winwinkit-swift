@@ -19,9 +19,9 @@ public struct ProgramSenderBasicRewardActivation: Codable, Hashable {
     /** The variant of the activation configuration */
     public private(set) var variant: Variant
     /** The amount of the activation configuration */
-    public private(set) var amount: Double
+    public private(set) var amount: Int
 
-    public init(variant: Variant, amount: Double) {
+    public init(variant: Variant, amount: Int) {
         self.variant = variant
         self.amount = amount
     }

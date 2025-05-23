@@ -21,9 +21,9 @@ public struct Program: Codable, Hashable {
     /** The program metadata */
     public private(set) var metadata: AnyCodable?
     /** The program distribution percentage */
-    public private(set) var distributionPercentage: Double
+    public private(set) var distributionPercentage: Int
     /** The program limit */
-    public private(set) var limit: Double
+    public private(set) var limit: Int
     /** The program rewards */
     public private(set) var rewards: ProgramRewards
     /** The program created at */
@@ -31,7 +31,7 @@ public struct Program: Codable, Hashable {
     /** The program updated at */
     public private(set) var updatedAt: Date?
 
-    public init(id: String, name: String, description: String?, metadata: AnyCodable?, distributionPercentage: Double, limit: Double, rewards: ProgramRewards, createdAt: Date, updatedAt: Date?) {
+    public init(id: String, name: String, description: String?, metadata: AnyCodable?, distributionPercentage: Int, limit: Int, rewards: ProgramRewards, createdAt: Date, updatedAt: Date?) {
         self.id = id
         self.name = name
         self.description = description

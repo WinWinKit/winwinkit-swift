@@ -15,7 +15,7 @@ public struct UserCreditRewardActive: Codable, Hashable {
     /** The reward */
     public private(set) var reward: CreditReward
     /** The amount of the reward */
-    public private(set) var credits: Double
+    public private(set) var credits: Int
     /** The expiration date of the reward */
     public private(set) var expiresAt: Date?
     /** The created at of the reward */
@@ -23,7 +23,7 @@ public struct UserCreditRewardActive: Codable, Hashable {
     /** The updated at of the reward */
     public private(set) var updatedAt: Date?
 
-    public init(reward: CreditReward, credits: Double, expiresAt: Date?, createdAt: Date, updatedAt: Date?) {
+    public init(reward: CreditReward, credits: Int, expiresAt: Date?, createdAt: Date, updatedAt: Date?) {
         self.reward = reward
         self.credits = credits
         self.expiresAt = expiresAt

@@ -15,7 +15,7 @@ public struct CreditReward: Codable, Hashable {
     /** The key of the reward */
     public private(set) var key: String
     /** The credits of the reward */
-    public private(set) var credits: Double
+    public private(set) var credits: Int
     /** The name of the reward */
     public private(set) var name: String
     /** The description of the reward */
@@ -27,7 +27,7 @@ public struct CreditReward: Codable, Hashable {
     /** The updated at of the reward */
     public private(set) var updatedAt: Date?
 
-    public init(key: String, credits: Double, name: String, description: String?, metadata: AnyCodable?, createdAt: Date, updatedAt: Date?) {
+    public init(key: String, credits: Int, name: String, description: String?, metadata: AnyCodable?, createdAt: Date, updatedAt: Date?) {
         self.key = key
         self.credits = credits
         self.name = name
