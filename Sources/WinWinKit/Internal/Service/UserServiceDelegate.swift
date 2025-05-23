@@ -14,4 +14,5 @@ protocol UserServiceDelegate: AnyObject {
     func userServiceCanPerformNextRefresh(_ service: UserService) -> Bool
     func userService(_ service: UserService, receivedUpdated user: User)
     func userService(_ service: UserService, receivedError error: Error)
+    func userService(_ service: UserService, changedIsRefreshing isRefreshing: Bool)
 }

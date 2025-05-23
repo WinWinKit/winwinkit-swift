@@ -152,7 +152,9 @@ public final class Referrals {
             return retained
         }
         let created = ReferralsObservableObject()
-        created.user = self.userService?.cachedUser
+        let user = self.userService?.cachedUser
+        created.user = user
+        created.userState = (self.userService?.isRefreshing == true ? .loading : (user != nil ? .available : .none))
         created.onClaimReferralCode = { [weak self] code in
             self?.claimReferralCode(code: code) { _ in }
         }
@@ -530,11 +532,23 @@ extension Referrals: UserServiceDelegate {
     func userService(_: UserService, receivedUpdated user: User) {
         if #available(iOS 17, macOS 14, *) {
             self.retainedObservableObject?.user = user
+            self.retainedObservableObject?.userState = .available
         }
         self.delegate?.referrals(self, receivedUpdated: user)
     }
 
     func userService(_: UserService, receivedError error: any Error) {
+        if #available(iOS 17.0, macOS 14.0, *) {
+            self.retainedObservableObject?.userState = .failure(error)
+        }
         self.delegate?.referrals(self, receivedError: error)
+    }
+
+    func userService(_: UserService, changedIsRefreshing isRefreshing: Bool) {
+        if #available(iOS 17.0, macOS 14.0, *) {
+            if isRefreshing { // If false, then userState is set in other delegate methods
+                self.retainedObservableObject?.userState = .loading
+            }
+        }
     }
 }

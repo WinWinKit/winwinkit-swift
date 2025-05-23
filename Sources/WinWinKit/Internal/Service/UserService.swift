@@ -96,6 +96,12 @@ final class UserService {
         )
     }
 
+    private(set) var isRefreshing: Bool = false {
+        didSet {
+            self.delegate?.userService(self, changedIsRefreshing: self.isRefreshing)
+        }
+    }
+
     func refresh() {
         if self.shouldSuspendIndefinitely {
             Logger.debug("UserService: Refresh suspended indefinitely")
@@ -117,6 +123,8 @@ final class UserService {
 
         self.refreshTask = Task { @MainActor in
             Logger.debug("UserService: Refresh will start")
+
+            self.isRefreshing = true
 
             var completedSuccessfully = false
 
@@ -148,6 +156,8 @@ final class UserService {
             }
 
             self.refreshTask = nil
+
+            self.isRefreshing = false
 
             if completedSuccessfully && self.pendingUserUpdate != nil {
                 Logger.debug("UserService: Refresh will start again")

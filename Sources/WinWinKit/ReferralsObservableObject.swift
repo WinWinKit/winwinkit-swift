@@ -19,6 +19,43 @@ public final class ReferralsObservableObject {
     // User
     public internal(set) var user: User?
 
+    // User State
+    public enum UserState {
+        case none
+        case loading
+        case available
+        case failure(Error)
+
+        public var isLoading: Bool {
+            switch self {
+            case .loading:
+                return true
+            default:
+                return false
+            }
+        }
+
+        public var isAvailable: Bool {
+            switch self {
+            case .available:
+                return true
+            default:
+                return false
+            }
+        }
+
+        public var isFailure: Bool {
+            switch self {
+            case .failure:
+                return true
+            default:
+                return false
+            }
+        }
+    }
+
+    public internal(set) var userState: UserState = .none
+
     // Claim Referral Code
     public enum ClaimReferralCodeState {
         case none
