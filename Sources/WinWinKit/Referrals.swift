@@ -88,7 +88,8 @@ public final class Referrals {
     @discardableResult
     public static func configure(apiKey: String,
                                  keyValueCache: KeyValueCacheType = UserDefaults.standard,
-                                 logLevel: Logger.Level = .info) -> Referrals
+                                 logLevel: Logger.Level = .info,
+                                 baseEndpointURL: URL? = nil) -> Referrals
     {
         if let instance {
             Logger.error("Referrals has already been configured. Calling `configure` again has no effect.")
@@ -96,6 +97,10 @@ public final class Referrals {
         }
 
         Logger.logLevel = logLevel
+
+        if let baseEndpointURL {
+            WinWinKitAPI.basePath = baseEndpointURL.absoluteString
+        }
 
         let instance = Referrals(
             apiKey: apiKey,
