@@ -10,7 +10,7 @@ import Testing
         let offerCodeProvider: MockOfferCodesProvider
         let rewardActionsProvider: MockRewardActionsProvider
         let usersProvider: MockUsersProvider
-        let userCache: MockUserCache
+        let userCache: UserCacheType
     }
 
     let dependencies: Dependencies
@@ -24,7 +24,7 @@ import Testing
             offerCodeProvider: MockOfferCodesProvider(),
             rewardActionsProvider: MockRewardActionsProvider(),
             usersProvider: MockUsersProvider(),
-            userCache: MockUserCache()
+            userCache: UserCache(keyValueCache: MockKeyValueCache())
         )
         self.referrals = Referrals(
             apiKey: self.dependencies.apiKey,
@@ -66,6 +66,7 @@ import Testing
         #expect(self.referrals.user == nil)
         self.referrals.set(appUserId: user1.appUserId)
         #expect(self.referrals.user == user1)
+        #expect(self.dependencies.userCache.userUpdate?.appUserId == user1.appUserId)
         self.dependencies.userCache.user = nil
         #expect(self.referrals.user == nil)
         let user2 = MockUser.mock(appUserId: "app-user-id-2")
@@ -82,6 +83,7 @@ import Testing
         let user1 = MockUser.mock()
         self.referrals.set(appUserId: user1.appUserId)
         #expect(self.referrals.user == nil)
+        #expect(self.dependencies.userCache.userUpdate?.appUserId == user1.appUserId)
         #expect(self.dependencies.networkReachability.startMethodCallsCounter == 1)
         #expect(self.dependencies.networkReachability.isReachableGetterCallsCounter == 1)
         #expect(self.dependencies.networkReachability.delegate != nil)
@@ -117,6 +119,17 @@ import Testing
         #expect(self.dependencies.usersProvider.request?.metadata == nil)
         #expect(delegate.receivedUpdatedUserCallsCounter == 1)
         #expect(delegate.receivedErrorCallsCounter == 0)
+    }
+
+    @Test func setFirstSeenAtWhenNotReachable() async throws {
+        #expect(self.referrals.user == nil)
+        let user1 = MockUser.mock()
+        let date = Date.now.addingTimeInterval(-100)
+        self.referrals.set(appUserId: user1.appUserId)
+        self.referrals.set(firstSeenAt: date)
+        #expect(self.referrals.user == nil)
+        #expect(self.dependencies.userCache.userUpdate?.appUserId == user1.appUserId)
+        #expect(self.dependencies.userCache.userUpdate?.firstSeenAt?.timeIntervalSince1970.rounded() == date.timeIntervalSince1970.rounded())
     }
 
     @Test func suspendsIndefinitelyWhenUnauthorized() async throws {

@@ -30,19 +30,20 @@ struct UserCache: UserCacheType {
     var user: User? {
         get {
             do {
-                return try self.keyValueCache[Keys.user].map { try User(jsonData: $0) }
+                return try self.keyValueCache[Keys.user].map { try CodableHelper.jsonDecoder.decode(User.self, from: $0) }
             }
             catch {
                 Logger.error("Unable to deserialize User. \(error)")
+                self.keyValueCache[Keys.user] = nil
                 return nil
             }
         }
         nonmutating set {
             do {
-                self.keyValueCache[Keys.user] = try newValue?.jsonData()
+                self.keyValueCache[Keys.user] = newValue != nil ? try CodableHelper.jsonEncoder.encode(newValue) : nil
             }
             catch {
-                Logger.error("Unable to serialize User. \(error)")
+                Logger.error("Unable to serialize User.")
             }
         }
     }
@@ -50,19 +51,20 @@ struct UserCache: UserCacheType {
     var userUpdate: UserUpdate? {
         get {
             do {
-                return try self.keyValueCache[Keys.userUpdate].map { try UserUpdate(jsonData: $0) }
+                return try self.keyValueCache[Keys.userUpdate].map { try CodableHelper.jsonDecoder.decode(UserUpdate.self, from: $0) }
             }
             catch {
-                Logger.error("Unable to deserialize update UserUpdate. \(error)")
+                Logger.error("Unable to deserialize update UserUpdate.")
+                self.keyValueCache[Keys.userUpdate] = nil
                 return nil
             }
         }
         nonmutating set {
             do {
-                self.keyValueCache[Keys.userUpdate] = try newValue?.jsonData()
+                self.keyValueCache[Keys.userUpdate] = newValue != nil ? try CodableHelper.jsonEncoder.encode(newValue) : nil
             }
             catch {
-                Logger.error("Unable to serialize update UserUpdate. \(error)")
+                Logger.error("Unable to serialize update UserUpdate.")
             }
         }
     }
