@@ -210,7 +210,7 @@ final class UserService {
             do {
                 let request = UserWithdrawCreditsRequest(
                     key: key,
-                    amount: Double(amount)
+                    amount: amount
                 )
                 let userWithdrawCreditsResponse = try await self.providers.rewardActions.withdrawCredits(
                     request: request,
