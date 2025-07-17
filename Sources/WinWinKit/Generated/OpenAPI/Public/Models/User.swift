@@ -15,9 +15,9 @@ public struct User: Codable, Hashable {
     /** The unique identifier of the user in your app. */
     public private(set) var appUserId: String
     /** The referral code of the user. */
-    public private(set) var code: String?
-    /** The preview link of the user. */
-    public private(set) var previewLink: String?
+    public private(set) var referralCode: String?
+    /** The referral code link of the user. */
+    public private(set) var referralCodeLink: String?
     /** Whether the user is a premium user. */
     public private(set) var isPremium: Bool?
     /** The date when the user was first seen at. */
@@ -33,12 +33,12 @@ public struct User: Codable, Hashable {
     /** The rewards of the user. */
     public private(set) var rewards: UserRewards
     /** The program of the user. */
-    public private(set) var program: Program?
+    public private(set) var referralProgram: ReferralProgram?
 
-    public init(appUserId: String, code: String?, previewLink: String?, isPremium: Bool?, firstSeenAt: Date?, lastSeenAt: Date?, metadata: AnyCodable?, claimCodeEligibility: UserClaimCodeEligibility, stats: UserStats, rewards: UserRewards, program: Program?) {
+    public init(appUserId: String, referralCode: String?, referralCodeLink: String?, isPremium: Bool?, firstSeenAt: Date?, lastSeenAt: Date?, metadata: AnyCodable?, claimCodeEligibility: UserClaimCodeEligibility, stats: UserStats, rewards: UserRewards, referralProgram: ReferralProgram?) {
         self.appUserId = appUserId
-        self.code = code
-        self.previewLink = previewLink
+        self.referralCode = referralCode
+        self.referralCodeLink = referralCodeLink
         self.isPremium = isPremium
         self.firstSeenAt = firstSeenAt
         self.lastSeenAt = lastSeenAt
@@ -46,13 +46,13 @@ public struct User: Codable, Hashable {
         self.claimCodeEligibility = claimCodeEligibility
         self.stats = stats
         self.rewards = rewards
-        self.program = program
+        self.referralProgram = referralProgram
     }
 
     public enum CodingKeys: String, CodingKey, CaseIterable {
         case appUserId = "app_user_id"
-        case code
-        case previewLink = "preview_link"
+        case referralCode = "referral_code"
+        case referralCodeLink = "referral_code_link"
         case isPremium = "is_premium"
         case firstSeenAt = "first_seen_at"
         case lastSeenAt = "last_seen_at"
@@ -60,7 +60,7 @@ public struct User: Codable, Hashable {
         case claimCodeEligibility = "claim_code_eligibility"
         case stats
         case rewards
-        case program
+        case referralProgram = "referral_program"
     }
 
     // Encodable protocol methods
@@ -68,8 +68,8 @@ public struct User: Codable, Hashable {
     public func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
         try container.encode(appUserId, forKey: .appUserId)
-        try container.encode(code, forKey: .code)
-        try container.encode(previewLink, forKey: .previewLink)
+        try container.encode(referralCode, forKey: .referralCode)
+        try container.encode(referralCodeLink, forKey: .referralCodeLink)
         try container.encode(isPremium, forKey: .isPremium)
         try container.encode(firstSeenAt, forKey: .firstSeenAt)
         try container.encode(lastSeenAt, forKey: .lastSeenAt)
@@ -77,7 +77,7 @@ public struct User: Codable, Hashable {
         try container.encode(claimCodeEligibility, forKey: .claimCodeEligibility)
         try container.encode(stats, forKey: .stats)
         try container.encode(rewards, forKey: .rewards)
-        try container.encode(program, forKey: .program)
+        try container.encode(referralProgram, forKey: .referralProgram)
     }
 }
 

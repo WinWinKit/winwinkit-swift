@@ -165,7 +165,7 @@ import Testing
         #expect(delegate.receivedUpdatedUserCallsCounter == 0)
         #expect(delegate.receivedErrorCallsCounter == 5)
         await #expect(throws: ReferralsError.suspendedIndefinitely) {
-            try await self.referrals.claimReferralCode(code: "XYZ123")
+            try await self.referrals.claimCode(code: "XYZ123")
         }
         await #expect(throws: ReferralsError.suspendedIndefinitely) {
             try await self.referrals.withdrawCredits(key: "key", amount: 100)

@@ -166,7 +166,7 @@ final class UserService {
         }
     }
 
-    func claimReferralCode(code: String, completion: @escaping (Result<UserClaimReferralCodeResponse, Error>) -> Void) {
+    func claimCode(code: String, completion: @escaping (Result<UserClaimCodeResponse, Error>) -> Void) {
         if self.shouldSuspendIndefinitely {
             Logger.debug("UserService: Claim code suspended indefinitely")
             completion(.failure(ReferralsError.suspendedIndefinitely))
@@ -175,8 +175,8 @@ final class UserService {
 
         Task { @MainActor in
             do {
-                let request = UserClaimReferralCodeRequest(code: code)
-                let userClaimReferralCodeResponse = try await self.providers.claimActions.claimReferralCode(
+                let request = UserClaimCodeRequest(code: code)
+                let userClaimCodeResponse = try await self.providers.claimActions.claimCode(
                     request: request,
                     appUserId: self.appUserId,
                     apiKey: self.apiKey
@@ -184,9 +184,9 @@ final class UserService {
 
                 Logger.debug("UserService: Claim code did finish")
 
-                self.cacheUser(userClaimReferralCodeResponse.user)
+                self.cacheUser(userClaimCodeResponse.user)
 
-                completion(.success(userClaimReferralCodeResponse))
+                completion(.success(userClaimCodeResponse))
             }
             catch {
                 Logger.debug("UserService: Claim code did fail")

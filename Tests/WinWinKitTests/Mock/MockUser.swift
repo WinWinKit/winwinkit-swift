@@ -7,8 +7,8 @@ enum MockUser {
 
     static func mock(
         appUserId: String = Self.appUserId,
-        code: String? = nil,
-        previewLink: String? = nil,
+        referralCode: String? = nil,
+        referralCodeLink: String? = nil,
         isPremium: Bool? = nil,
         firstSeenAt: Date? = nil,
         lastSeenAt: Date? = nil,
@@ -26,20 +26,24 @@ enum MockUser {
             active: .init(
                 basic: [],
                 credit: [],
-                offerCode: []
+                offerCode: [],
+                revenuecatEntitlement: [],
+                revenuecatOffering: []
             ),
             expired: .init(
                 basic: [],
                 credit: [],
-                offerCode: []
+                offerCode: [],
+                revenuecatEntitlement: [],
+                revenuecatOffering: []
             )
         ),
-        program: Program? = nil
+        referralProgram: ReferralProgram? = nil
     ) -> User {
         return User(
             appUserId: appUserId,
-            code: code,
-            previewLink: previewLink,
+            referralCode: referralCode,
+            referralCodeLink: referralCodeLink,
             isPremium: isPremium,
             firstSeenAt: firstSeenAt,
             lastSeenAt: lastSeenAt,
@@ -47,7 +51,7 @@ enum MockUser {
             claimCodeEligibility: claimCodeEligibility,
             stats: stats,
             rewards: rewards,
-            program: program
+            referralProgram: referralProgram
         )
     }
 }

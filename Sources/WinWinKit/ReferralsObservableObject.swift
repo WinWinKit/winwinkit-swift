@@ -56,8 +56,8 @@ public final class ReferralsObservableObject {
 
     public internal(set) var userState: UserState = .none
 
-    // Claim Referral Code
-    public enum ClaimReferralCodeState {
+    // Claim Code
+    public enum ClaimCodeState {
         case none
         case loading
         case success(UserRewardsGranted)
@@ -91,10 +91,10 @@ public final class ReferralsObservableObject {
         }
     }
 
-    public internal(set) var claimReferralCodeState: ClaimReferralCodeState = .none
+    public internal(set) var claimCodeState: ClaimCodeState = .none
 
-    public func claimReferralCode(code: String) {
-        self.onClaimReferralCode?(code)
+    public func claimCode(code: String) {
+        self.onClaimCode?(code)
     }
 
     // Offer Codes
@@ -141,6 +141,6 @@ public final class ReferralsObservableObject {
 
     init() {}
 
-    var onClaimReferralCode: ((String) -> Void)?
+    var onClaimCode: ((String) -> Void)?
     var onFetchOfferCode: ((String) -> Void)?
 }

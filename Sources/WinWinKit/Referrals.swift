@@ -160,8 +160,8 @@ public final class Referrals {
         let user = self.userService?.cachedUser
         created.user = user
         created.userState = (self.userService?.isRefreshing == true ? .loading : (user != nil ? .available : .none))
-        created.onClaimReferralCode = { [weak self] code in
-            self?.claimReferralCode(code: code) { _ in }
+        created.onClaimCode = { [weak self] code in
+            self?.claimCode(code: code) { _ in }
         }
         created.onFetchOfferCode = { [weak self] offerCodeId in
             self?.fetchOfferCode(offerCodeId: offerCodeId) { _ in }
@@ -280,17 +280,17 @@ public final class Referrals {
     }
 
     ///
-    /// Claim a referral code.
+    /// Claim a code. Code can be affiliate, promo or referral code.
     ///
-    /// - Parameter code: The referral code to claim.
+    /// - Parameter code: The code to claim. Can be affiliate, promo or referral code.
     ///
     /// - Returns: A tuple containing the updated user and the rewards granted.
     ///
-    /// - Throws: An error if the referral code is not found or the user is not eligible to claim it.
+    /// - Throws: An error if the code is not found or the user is not eligible to claim it.
     ///
-    public func claimReferralCode(code: String) async throws -> (User, UserRewardsGranted) {
+    public func claimCode(code: String) async throws -> (User, UserRewardsGranted) {
         try await withCheckedThrowingContinuation { continuation in
-            self.claimReferralCode(code: code) { result in
+            self.claimCode(code: code) { result in
                 switch result {
                 case let .success(data):
                     continuation.resume(returning: data)
@@ -302,12 +302,12 @@ public final class Referrals {
     }
 
     ///
-    /// Claim a referral code.
+    /// Claim a code. Code can be affiliate, promo or referral code.
     ///
-    /// - Parameter code: The referral code to claim.
+    /// - Parameter code: The code to claim. Can be affiliate, promo or referral code.
     /// - Parameter completion: A closure to be called when the claim is complete.
     ///
-    public func claimReferralCode(code: String, completion: @escaping (Result<(User, UserRewardsGranted), Error>) -> Void) {
+    public func claimCode(code: String, completion: @escaping (Result<(User, UserRewardsGranted), Error>) -> Void) {
         guard
             let userService
         else {
@@ -317,16 +317,16 @@ public final class Referrals {
         }
 
         if #available(iOS 17.0, macOS 14.0, *) {
-            self.retainedObservableObject?.claimReferralCodeState = .loading
+            self.retainedObservableObject?.claimCodeState = .loading
         }
 
-        userService.claimReferralCode(code: code) { [weak self] result in
+        userService.claimCode(code: code) { [weak self] result in
             if #available(iOS 17.0, macOS 14.0, *) {
                 switch result {
                 case let .success(data):
-                    self?.retainedObservableObject?.claimReferralCodeState = .success(data.rewardsGranted)
+                    self?.retainedObservableObject?.claimCodeState = .success(data.rewardsGranted)
                 case let .failure(error):
-                    self?.retainedObservableObject?.claimReferralCodeState = .failure(error)
+                    self?.retainedObservableObject?.claimCodeState = .failure(error)
                 }
             }
 
