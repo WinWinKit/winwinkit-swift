@@ -1,4 +1,4 @@
-# Referral Programs for mobile apps
+# Referrals & Affiliates for iOS & macOS apps
 
 The official [WinWinKit](https://winwinkit.com) SDK for iOS and macOS.
 
