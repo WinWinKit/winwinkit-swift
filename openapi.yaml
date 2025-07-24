@@ -429,7 +429,7 @@ components:
     OfferCodeResponse:
       type: object
       properties:
-        offerCode:
+        offer_code:
           description: The offer code
           allOf:
             - $ref: '#/components/schemas/AppStoreOfferCode'
@@ -438,7 +438,7 @@ components:
           allOf:
             - $ref: '#/components/schemas/AppStoreSubscription'
       required:
-        - offerCode
+        - offer_code
         - subscription
     OfferCodeDataResponse:
       type: object

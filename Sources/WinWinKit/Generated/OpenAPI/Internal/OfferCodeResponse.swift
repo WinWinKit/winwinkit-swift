@@ -23,7 +23,7 @@ internal struct OfferCodeResponse: Codable, Hashable {
     }
 
     public enum CodingKeys: String, CodingKey, CaseIterable {
-        case offerCode
+        case offerCode = "offer_code"
         case subscription
     }
 
