@@ -11,11 +11,11 @@
 //
 
 protocol ClaimActionsProviderType {
-    func claimCode(request: UserClaimCodeRequest, appUserId: String, apiKey: String) async throws -> UserClaimCodeResponse
+    func claimCode(request: UserClaimCodeRequest, appUserId: String, apiKey: String) async throws -> UserClaimCodeResponseData
 }
 
 struct ClaimActionsProvider: ClaimActionsProviderType {
-    func claimCode(request: UserClaimCodeRequest, appUserId: String, apiKey: String) async throws -> UserClaimCodeResponse {
+    func claimCode(request: UserClaimCodeRequest, appUserId: String, apiKey: String) async throws -> UserClaimCodeResponseData {
         try await ClaimActionsAPI.claimCode(appUserId: appUserId, xApiKey: apiKey, userClaimCodeRequest: request).data
     }
 }

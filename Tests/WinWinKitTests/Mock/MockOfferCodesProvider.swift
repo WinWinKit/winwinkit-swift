@@ -14,13 +14,13 @@ import Foundation
 @testable import WinWinKit
 
 final class MockOfferCodesProvider: OfferCodesProviderType {
-    var fetchOfferCodeResultToReturn: Result<OfferCodeResponse, Error>? = nil
+    var fetchOfferCodeResultToReturn: Result<OfferCodeResponseData, Error>? = nil
     var fetchOfferCodeCallsCounter: Int = 0
 
     var offerCodeId: String? = nil
     var apiKey: String? = nil
 
-    func fetchOfferCode(offerCodeId: String, apiKey: String) async throws -> OfferCodeResponse {
+    func fetchOfferCode(offerCodeId: String, apiKey: String) async throws -> OfferCodeResponseData {
         self.offerCodeId = offerCodeId
         self.apiKey = apiKey
         self.fetchOfferCodeCallsCounter += 1

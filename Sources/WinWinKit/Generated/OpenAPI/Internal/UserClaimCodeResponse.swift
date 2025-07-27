@@ -12,27 +12,21 @@ import AnyCodable
 
 internal struct UserClaimCodeResponse: Codable, Hashable {
 
-    /** The rewards granted to the user. */
-    public private(set) var rewardsGranted: UserRewardsGranted
-    /** The updated user. */
-    public private(set) var user: User
+    public private(set) var data: UserClaimCodeResponseData
 
-    public init(rewardsGranted: UserRewardsGranted, user: User) {
-        self.rewardsGranted = rewardsGranted
-        self.user = user
+    public init(data: UserClaimCodeResponseData) {
+        self.data = data
     }
 
     public enum CodingKeys: String, CodingKey, CaseIterable {
-        case rewardsGranted = "rewards_granted"
-        case user
+        case data
     }
 
     // Encodable protocol methods
 
     internal func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
-        try container.encode(rewardsGranted, forKey: .rewardsGranted)
-        try container.encode(user, forKey: .user)
+        try container.encode(data, forKey: .data)
     }
 }
 

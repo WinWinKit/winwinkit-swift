@@ -91,7 +91,7 @@ import Testing
 
     @Test func setAppUserIdWhenReachable() async throws {
         let user1 = MockUser.mock()
-        self.dependencies.usersProvider.createOrUpdateUserResultToReturn = .success(user1)
+        self.dependencies.usersProvider.createOrUpdateUserResultToReturn = .success(UserResponseData(user: user1))
         self.dependencies.networkReachability.isReachable = true
         let delegate = MockReferralsDelegate()
         self.referrals.delegate = delegate

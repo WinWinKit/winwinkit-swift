@@ -14,13 +14,13 @@ import Foundation
 @testable import WinWinKit
 
 final class MockUsersProvider: UsersProviderType {
-    var createOrUpdateUserResultToReturn: Result<User, Error>? = nil
+    var createOrUpdateUserResultToReturn: Result<UserResponseData, Error>? = nil
     var createOrUpdateUserCallsCounter: Int = 0
 
     var request: UserCreateRequest? = nil
     var apiKey: String? = nil
 
-    func createOrUpdateUser(request: UserCreateRequest, apiKey: String) async throws -> User {
+    func createOrUpdateUser(request: UserCreateRequest, apiKey: String) async throws -> UserResponseData {
         self.request = request
         self.apiKey = apiKey
         self.createOrUpdateUserCallsCounter += 1

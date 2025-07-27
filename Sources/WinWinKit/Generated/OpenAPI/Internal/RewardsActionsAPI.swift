@@ -18,10 +18,10 @@ internal class RewardsActionsAPI {
      - parameter appUserId: (path) The app user id of the user to withdraw credits from. 
      - parameter xApiKey: (header) The API key to authenticate with. 
      - parameter userWithdrawCreditsRequest: (body)  
-     - returns: UserWithdrawCreditsDataResponse
+     - returns: UserWithdrawCreditsResponse
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    internal class func withdrawCredits(appUserId: String, xApiKey: String, userWithdrawCreditsRequest: UserWithdrawCreditsRequest) async throws -> UserWithdrawCreditsDataResponse {
+    internal class func withdrawCredits(appUserId: String, xApiKey: String, userWithdrawCreditsRequest: UserWithdrawCreditsRequest) async throws -> UserWithdrawCreditsResponse {
         return try await withdrawCreditsWithRequestBuilder(appUserId: appUserId, xApiKey: xApiKey, userWithdrawCreditsRequest: userWithdrawCreditsRequest).execute().body
     }
 
@@ -32,9 +32,9 @@ internal class RewardsActionsAPI {
      - parameter appUserId: (path) The app user id of the user to withdraw credits from. 
      - parameter xApiKey: (header) The API key to authenticate with. 
      - parameter userWithdrawCreditsRequest: (body)  
-     - returns: RequestBuilder<UserWithdrawCreditsDataResponse> 
+     - returns: RequestBuilder<UserWithdrawCreditsResponse> 
      */
-    internal class func withdrawCreditsWithRequestBuilder(appUserId: String, xApiKey: String, userWithdrawCreditsRequest: UserWithdrawCreditsRequest) -> RequestBuilder<UserWithdrawCreditsDataResponse> {
+    internal class func withdrawCreditsWithRequestBuilder(appUserId: String, xApiKey: String, userWithdrawCreditsRequest: UserWithdrawCreditsRequest) -> RequestBuilder<UserWithdrawCreditsResponse> {
         var localVariablePath = "/users/{app_user_id}/rewards/withdraw-credits"
         let appUserIdPreEscape = "\(APIHelper.mapValueToPathItem(appUserId))"
         let appUserIdPostEscape = appUserIdPreEscape.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? ""
@@ -51,7 +51,7 @@ internal class RewardsActionsAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<UserWithdrawCreditsDataResponse>.Type = WinWinKitAPI.requestBuilderFactory.getBuilder()
+        let localVariableRequestBuilder: RequestBuilder<UserWithdrawCreditsResponse>.Type = WinWinKitAPI.requestBuilderFactory.getBuilder()
 
         return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
     }

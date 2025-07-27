@@ -12,22 +12,21 @@ import AnyCodable
 
 internal struct UserResponse: Codable, Hashable {
 
-    /** The user */
-    public private(set) var user: User
+    public private(set) var data: UserResponseData
 
-    public init(user: User) {
-        self.user = user
+    public init(data: UserResponseData) {
+        self.data = data
     }
 
     public enum CodingKeys: String, CodingKey, CaseIterable {
-        case user
+        case data
     }
 
     // Encodable protocol methods
 
     internal func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
-        try container.encode(user, forKey: .user)
+        try container.encode(data, forKey: .data)
     }
 }
 

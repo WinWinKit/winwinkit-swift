@@ -17,10 +17,10 @@ internal class AppStoreAPI {
      
      - parameter offerCodeId: (path) The offer code id to retrieve. 
      - parameter xApiKey: (header) The API key to authenticate with. 
-     - returns: OfferCodeDataResponse
+     - returns: OfferCodeResponse
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    internal class func getOfferCode(offerCodeId: String, xApiKey: String) async throws -> OfferCodeDataResponse {
+    internal class func getOfferCode(offerCodeId: String, xApiKey: String) async throws -> OfferCodeResponse {
         return try await getOfferCodeWithRequestBuilder(offerCodeId: offerCodeId, xApiKey: xApiKey).execute().body
     }
 
@@ -30,9 +30,9 @@ internal class AppStoreAPI {
      - Get an offer code with subscription and prices by the offer code id.
      - parameter offerCodeId: (path) The offer code id to retrieve. 
      - parameter xApiKey: (header) The API key to authenticate with. 
-     - returns: RequestBuilder<OfferCodeDataResponse> 
+     - returns: RequestBuilder<OfferCodeResponse> 
      */
-    internal class func getOfferCodeWithRequestBuilder(offerCodeId: String, xApiKey: String) -> RequestBuilder<OfferCodeDataResponse> {
+    internal class func getOfferCodeWithRequestBuilder(offerCodeId: String, xApiKey: String) -> RequestBuilder<OfferCodeResponse> {
         var localVariablePath = "/app-store/offer-codes/{offer_code_id}"
         let offerCodeIdPreEscape = "\(APIHelper.mapValueToPathItem(offerCodeId))"
         let offerCodeIdPostEscape = offerCodeIdPreEscape.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? ""
@@ -48,7 +48,7 @@ internal class AppStoreAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<OfferCodeDataResponse>.Type = WinWinKitAPI.requestBuilderFactory.getBuilder()
+        let localVariableRequestBuilder: RequestBuilder<OfferCodeResponse>.Type = WinWinKitAPI.requestBuilderFactory.getBuilder()
 
         return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
     }

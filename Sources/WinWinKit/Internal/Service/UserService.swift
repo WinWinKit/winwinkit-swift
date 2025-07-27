@@ -142,7 +142,7 @@ final class UserService {
                     apiKey: self.apiKey
                 )
                 self.resetUserUpdate(with: pendingUserUpdate)
-                self.cacheUser(updatedUser)
+                self.cacheUser(updatedUser.user)
 
                 completedSuccessfully = true
 
@@ -166,7 +166,7 @@ final class UserService {
         }
     }
 
-    func claimCode(code: String, completion: @escaping (Result<UserClaimCodeResponse, Error>) -> Void) {
+    func claimCode(code: String, completion: @escaping (Result<UserClaimCodeResponseData, Error>) -> Void) {
         if self.shouldSuspendIndefinitely {
             Logger.debug("UserService: Claim code suspended indefinitely")
             completion(.failure(ReferralsError.suspendedIndefinitely))
@@ -199,7 +199,7 @@ final class UserService {
         }
     }
 
-    func withdrawCredits(key: String, amount: Int, completion: @escaping (Result<UserWithdrawCreditsResponse, Error>) -> Void) {
+    func withdrawCredits(key: String, amount: Int, completion: @escaping (Result<UserWithdrawCreditsResponseData, Error>) -> Void) {
         if self.shouldSuspendIndefinitely {
             Logger.debug("UserService: Withdraw credits suspended indefinitely")
             completion(.failure(ReferralsError.suspendedIndefinitely))
@@ -235,7 +235,7 @@ final class UserService {
         }
     }
 
-    func fetchOfferCode(offerCodeId: String, completion: @escaping (Result<OfferCodeResponse, Error>) -> Void) {
+    func fetchOfferCode(offerCodeId: String, completion: @escaping (Result<OfferCodeResponseData, Error>) -> Void) {
         if self.shouldSuspendIndefinitely {
             Logger.debug("UserService: Fetch offer code suspended indefinitely")
             completion(.failure(ReferralsError.suspendedIndefinitely))

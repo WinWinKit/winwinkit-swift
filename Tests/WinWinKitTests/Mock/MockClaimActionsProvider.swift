@@ -14,14 +14,14 @@ import Foundation
 @testable import WinWinKit
 
 final class MockClaimActionsProvider: ClaimActionsProviderType {
-    var claimCodeResultToReturn: Result<UserClaimCodeResponse, Error>? = nil
+    var claimCodeResultToReturn: Result<UserClaimCodeResponseData, Error>? = nil
     var claimCodeCallsCounter: Int = 0
 
     var request: UserClaimCodeRequest? = nil
     var appUserId: String? = nil
     var apiKey: String? = nil
 
-    func claimCode(request: UserClaimCodeRequest, appUserId: String, apiKey: String) async throws -> UserClaimCodeResponse {
+    func claimCode(request: UserClaimCodeRequest, appUserId: String, apiKey: String) async throws -> UserClaimCodeResponseData {
         self.request = request
         self.appUserId = appUserId
         self.apiKey = apiKey

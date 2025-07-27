@@ -14,14 +14,14 @@ import Foundation
 @testable import WinWinKit
 
 final class MockRewardActionsProvider: RewardActionsProviderType {
-    var withdrawCreditsResultToReturn: Result<UserWithdrawCreditsResponse, Error>? = nil
+    var withdrawCreditsResultToReturn: Result<UserWithdrawCreditsResponseData, Error>? = nil
     var withdrawCreditsCallsCounter: Int = 0
 
     var request: UserWithdrawCreditsRequest? = nil
     var appUserId: String? = nil
     var apiKey: String? = nil
 
-    func withdrawCredits(request: UserWithdrawCreditsRequest, appUserId: String, apiKey: String) async throws -> UserWithdrawCreditsResponse {
+    func withdrawCredits(request: UserWithdrawCreditsRequest, appUserId: String, apiKey: String) async throws -> UserWithdrawCreditsResponseData {
         self.request = request
         self.appUserId = appUserId
         self.apiKey = apiKey

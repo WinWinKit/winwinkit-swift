@@ -12,27 +12,21 @@ import AnyCodable
 
 internal struct OfferCodeResponse: Codable, Hashable {
 
-    /** The offer code */
-    public private(set) var offerCode: AppStoreOfferCode
-    /** The subscription */
-    public private(set) var subscription: AppStoreSubscription
+    public private(set) var data: OfferCodeResponseData
 
-    public init(offerCode: AppStoreOfferCode, subscription: AppStoreSubscription) {
-        self.offerCode = offerCode
-        self.subscription = subscription
+    public init(data: OfferCodeResponseData) {
+        self.data = data
     }
 
     public enum CodingKeys: String, CodingKey, CaseIterable {
-        case offerCode = "offer_code"
-        case subscription
+        case data
     }
 
     // Encodable protocol methods
 
     internal func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
-        try container.encode(offerCode, forKey: .offerCode)
-        try container.encode(subscription, forKey: .subscription)
+        try container.encode(data, forKey: .data)
     }
 }
 

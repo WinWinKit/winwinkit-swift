@@ -18,10 +18,10 @@ internal class ClaimActionsAPI {
      - parameter appUserId: (path) The app user id of the user to claim the code for. 
      - parameter xApiKey: (header) The API key to authenticate with. 
      - parameter userClaimCodeRequest: (body)  
-     - returns: UserClaimCodeDataResponse
+     - returns: UserClaimCodeResponse
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    internal class func claimCode(appUserId: String, xApiKey: String, userClaimCodeRequest: UserClaimCodeRequest) async throws -> UserClaimCodeDataResponse {
+    internal class func claimCode(appUserId: String, xApiKey: String, userClaimCodeRequest: UserClaimCodeRequest) async throws -> UserClaimCodeResponse {
         return try await claimCodeWithRequestBuilder(appUserId: appUserId, xApiKey: xApiKey, userClaimCodeRequest: userClaimCodeRequest).execute().body
     }
 
@@ -32,9 +32,9 @@ internal class ClaimActionsAPI {
      - parameter appUserId: (path) The app user id of the user to claim the code for. 
      - parameter xApiKey: (header) The API key to authenticate with. 
      - parameter userClaimCodeRequest: (body)  
-     - returns: RequestBuilder<UserClaimCodeDataResponse> 
+     - returns: RequestBuilder<UserClaimCodeResponse> 
      */
-    internal class func claimCodeWithRequestBuilder(appUserId: String, xApiKey: String, userClaimCodeRequest: UserClaimCodeRequest) -> RequestBuilder<UserClaimCodeDataResponse> {
+    internal class func claimCodeWithRequestBuilder(appUserId: String, xApiKey: String, userClaimCodeRequest: UserClaimCodeRequest) -> RequestBuilder<UserClaimCodeResponse> {
         var localVariablePath = "/users/{app_user_id}/claim-code"
         let appUserIdPreEscape = "\(APIHelper.mapValueToPathItem(appUserId))"
         let appUserIdPostEscape = appUserIdPreEscape.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? ""
@@ -51,7 +51,7 @@ internal class ClaimActionsAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<UserClaimCodeDataResponse>.Type = WinWinKitAPI.requestBuilderFactory.getBuilder()
+        let localVariableRequestBuilder: RequestBuilder<UserClaimCodeResponse>.Type = WinWinKitAPI.requestBuilderFactory.getBuilder()
 
         return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
     }

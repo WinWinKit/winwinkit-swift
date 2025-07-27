@@ -17,10 +17,10 @@ internal class UsersAPI {
      
      - parameter xApiKey: (header) The API key to authenticate with. 
      - parameter userCreateRequest: (body)  
-     - returns: UserDataResponse
+     - returns: UserResponse
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    internal class func createOrUpdateUser(xApiKey: String, userCreateRequest: UserCreateRequest) async throws -> UserDataResponse {
+    internal class func createOrUpdateUser(xApiKey: String, userCreateRequest: UserCreateRequest) async throws -> UserResponse {
         return try await createOrUpdateUserWithRequestBuilder(xApiKey: xApiKey, userCreateRequest: userCreateRequest).execute().body
     }
 
@@ -30,9 +30,9 @@ internal class UsersAPI {
      - Create or update a user if already exists.
      - parameter xApiKey: (header) The API key to authenticate with. 
      - parameter userCreateRequest: (body)  
-     - returns: RequestBuilder<UserDataResponse> 
+     - returns: RequestBuilder<UserResponse> 
      */
-    internal class func createOrUpdateUserWithRequestBuilder(xApiKey: String, userCreateRequest: UserCreateRequest) -> RequestBuilder<UserDataResponse> {
+    internal class func createOrUpdateUserWithRequestBuilder(xApiKey: String, userCreateRequest: UserCreateRequest) -> RequestBuilder<UserResponse> {
         let localVariablePath = "/users"
         let localVariableURLString = WinWinKitAPI.basePath + localVariablePath
         let localVariableParameters = JSONEncodingHelper.encodingParameters(forEncodableObject: userCreateRequest)
@@ -46,7 +46,7 @@ internal class UsersAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<UserDataResponse>.Type = WinWinKitAPI.requestBuilderFactory.getBuilder()
+        let localVariableRequestBuilder: RequestBuilder<UserResponse>.Type = WinWinKitAPI.requestBuilderFactory.getBuilder()
 
         return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
     }
@@ -56,10 +56,10 @@ internal class UsersAPI {
      
      - parameter appUserId: (path) The app user id of the user to retrieve. 
      - parameter xApiKey: (header) The API key to authenticate with. 
-     - returns: UserDataResponse
+     - returns: UserResponse
      */
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    internal class func getUser(appUserId: String, xApiKey: String) async throws -> UserDataResponse {
+    internal class func getUser(appUserId: String, xApiKey: String) async throws -> UserResponse {
         return try await getUserWithRequestBuilder(appUserId: appUserId, xApiKey: xApiKey).execute().body
     }
 
@@ -69,9 +69,9 @@ internal class UsersAPI {
      - Retrieves a user by their app user id.
      - parameter appUserId: (path) The app user id of the user to retrieve. 
      - parameter xApiKey: (header) The API key to authenticate with. 
-     - returns: RequestBuilder<UserDataResponse> 
+     - returns: RequestBuilder<UserResponse> 
      */
-    internal class func getUserWithRequestBuilder(appUserId: String, xApiKey: String) -> RequestBuilder<UserDataResponse> {
+    internal class func getUserWithRequestBuilder(appUserId: String, xApiKey: String) -> RequestBuilder<UserResponse> {
         var localVariablePath = "/users/{app_user_id}"
         let appUserIdPreEscape = "\(APIHelper.mapValueToPathItem(appUserId))"
         let appUserIdPostEscape = appUserIdPreEscape.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? ""
@@ -87,7 +87,7 @@ internal class UsersAPI {
 
         let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
 
-        let localVariableRequestBuilder: RequestBuilder<UserDataResponse>.Type = WinWinKitAPI.requestBuilderFactory.getBuilder()
+        let localVariableRequestBuilder: RequestBuilder<UserResponse>.Type = WinWinKitAPI.requestBuilderFactory.getBuilder()
 
         return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
     }

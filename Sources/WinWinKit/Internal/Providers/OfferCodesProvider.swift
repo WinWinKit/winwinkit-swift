@@ -11,11 +11,11 @@
 //
 
 protocol OfferCodesProviderType {
-    func fetchOfferCode(offerCodeId: String, apiKey: String) async throws -> OfferCodeResponse
+    func fetchOfferCode(offerCodeId: String, apiKey: String) async throws -> OfferCodeResponseData
 }
 
 struct OfferCodesProvider: OfferCodesProviderType {
-    func fetchOfferCode(offerCodeId: String, apiKey: String) async throws -> OfferCodeResponse {
+    func fetchOfferCode(offerCodeId: String, apiKey: String) async throws -> OfferCodeResponseData {
         try await AppStoreAPI.getOfferCode(offerCodeId: offerCodeId, xApiKey: apiKey).data
     }
 }

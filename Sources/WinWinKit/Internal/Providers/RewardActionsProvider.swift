@@ -11,11 +11,11 @@
 //
 
 protocol RewardActionsProviderType {
-    func withdrawCredits(request: UserWithdrawCreditsRequest, appUserId: String, apiKey: String) async throws -> UserWithdrawCreditsResponse
+    func withdrawCredits(request: UserWithdrawCreditsRequest, appUserId: String, apiKey: String) async throws -> UserWithdrawCreditsResponseData
 }
 
 struct RewardActionsProvider: RewardActionsProviderType {
-    func withdrawCredits(request: UserWithdrawCreditsRequest, appUserId: String, apiKey: String) async throws -> UserWithdrawCreditsResponse {
+    func withdrawCredits(request: UserWithdrawCreditsRequest, appUserId: String, apiKey: String) async throws -> UserWithdrawCreditsResponseData {
         try await RewardsActionsAPI.withdrawCredits(appUserId: appUserId, xApiKey: apiKey, userWithdrawCreditsRequest: request).data
     }
 }

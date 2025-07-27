@@ -19,11 +19,11 @@ paths:
           description: The API key to authenticate with.
       responses:
         '200':
-          description: Offer Code object.
+          description: Offer Code response.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/OfferCodeDataResponse'
+                $ref: '#/components/schemas/OfferCodeResponse'
         '401':
           description: Unauthorized
           content:
@@ -64,13 +64,13 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/UserDataResponse'
+                $ref: '#/components/schemas/UserResponse'
         '201':
           description: The user has been successfully created.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/UserDataResponse'
+                $ref: '#/components/schemas/UserResponse'
         '400':
           description: The request is invalid.
           content:
@@ -115,7 +115,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/UserDataResponse'
+                $ref: '#/components/schemas/UserResponse'
         '401':
           description: Unauthorized
           content:
@@ -160,7 +160,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/UserWithdrawCreditsDataResponse'
+                $ref: '#/components/schemas/UserWithdrawCreditsResponse'
         '400':
           description: The request is invalid.
           content:
@@ -217,7 +217,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/UserClaimCodeDataResponse'
+                $ref: '#/components/schemas/UserClaimCodeResponse'
         '400':
           description: The request is invalid.
           content:
@@ -426,7 +426,7 @@ components:
         - name
         - subscription_period
         - prices
-    OfferCodeResponse:
+    OfferCodeResponseData:
       type: object
       properties:
         offer_code:
@@ -440,11 +440,11 @@ components:
       required:
         - offer_code
         - subscription
-    OfferCodeDataResponse:
+    OfferCodeResponse:
       type: object
       properties:
         data:
-          $ref: '#/components/schemas/OfferCodeResponse'
+          $ref: '#/components/schemas/OfferCodeResponseData'
       required:
         - data
     UserCreateRequest:
@@ -2110,7 +2110,7 @@ components:
         - stats
         - rewards
         - referral_program
-    UserResponse:
+    UserResponseData:
       type: object
       properties:
         user:
@@ -2119,11 +2119,11 @@ components:
             - $ref: '#/components/schemas/User'
       required:
         - user
-    UserDataResponse:
+    UserResponse:
       type: object
       properties:
         data:
-          $ref: '#/components/schemas/UserResponse'
+          $ref: '#/components/schemas/UserResponseData'
       required:
         - data
     UserWithdrawCreditsRequest:
@@ -2165,7 +2165,7 @@ components:
         - credits_available_at_end
         - credits_requested_to_withdraw
         - credits_withdrawn
-    UserWithdrawCreditsResponse:
+    UserWithdrawCreditsResponseData:
       type: object
       properties:
         withdraw_result:
@@ -2179,11 +2179,11 @@ components:
       required:
         - withdraw_result
         - user
-    UserWithdrawCreditsDataResponse:
+    UserWithdrawCreditsResponse:
       type: object
       properties:
         data:
-          $ref: '#/components/schemas/UserWithdrawCreditsResponse'
+          $ref: '#/components/schemas/UserWithdrawCreditsResponseData'
       required:
         - data
     UserClaimCodeRequest:
@@ -2229,7 +2229,7 @@ components:
         - offer_code
         - revenuecat_entitlement
         - revenuecat_offering
-    UserClaimCodeResponse:
+    UserClaimCodeResponseData:
       type: object
       properties:
         rewards_granted:
@@ -2243,10 +2243,10 @@ components:
       required:
         - rewards_granted
         - user
-    UserClaimCodeDataResponse:
+    UserClaimCodeResponse:
       type: object
       properties:
         data:
-          $ref: '#/components/schemas/UserClaimCodeResponse'
+          $ref: '#/components/schemas/UserClaimCodeResponseData'
       required:
         - data
