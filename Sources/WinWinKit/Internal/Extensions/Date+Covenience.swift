@@ -13,8 +13,7 @@
 import Foundation
 
 extension Date {
-    
-    func isPracticallyTheSame(as date: Date?) -> Bool {
+    func isEqualToSeconds(with date: Date?) -> Bool {
         guard let date else { return false }
         return Calendar.current.compare(self, to: date, toGranularity: .second) == .orderedSame
     }

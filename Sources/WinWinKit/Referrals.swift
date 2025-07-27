@@ -230,7 +230,7 @@ public final class Referrals {
             Logger.warning("First seen at date must not be in the future.")
             return
         }
-        if firstSeenAt.isPracticallyTheSame(as: userService.cachedUser?.firstSeenAt) {
+        if firstSeenAt.isEqualToSeconds(with: userService.cachedUser?.firstSeenAt) {
             return
         }
         userService.set(firstSeenAt: firstSeenAt)
@@ -254,7 +254,7 @@ public final class Referrals {
             Logger.warning("Last seen at date must not be in the future.")
             return
         }
-        if lastSeenAt.isPracticallyTheSame(as: userService.cachedUser?.lastSeenAt) {
+        if lastSeenAt.isEqualToSeconds(with: userService.cachedUser?.lastSeenAt) {
             return
         }
         userService.set(lastSeenAt: lastSeenAt)
