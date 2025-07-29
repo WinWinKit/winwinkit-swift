@@ -263,7 +263,7 @@ tags:
   - name: App Store
     description: App Store related endpoints
 servers:
-  - url: https://api-v1.winwinkit.com
+  - url: https://api.winwinkit.com
     description: Production
 components:
   securitySchemes:
