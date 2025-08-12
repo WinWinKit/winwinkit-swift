@@ -17,7 +17,6 @@ struct UserUpdate: Codable, Hashable {
     let appUserId: String
     let isPremium: Bool?
     let firstSeenAt: Date?
-    let lastSeenAt: Date?
     let metadata: AnyCodable?
 }
 
@@ -27,7 +26,6 @@ extension UserUpdate {
             appUserId: self.appUserId,
             isPremium: isPremium,
             firstSeenAt: self.firstSeenAt,
-            lastSeenAt: self.lastSeenAt,
             metadata: self.metadata
         )
     }
@@ -37,17 +35,6 @@ extension UserUpdate {
             appUserId: self.appUserId,
             isPremium: self.isPremium,
             firstSeenAt: firstSeenAt,
-            lastSeenAt: self.lastSeenAt,
-            metadata: self.metadata
-        )
-    }
-
-    func set(lastSeenAt: Date) -> Self {
-        UserUpdate(
-            appUserId: self.appUserId,
-            isPremium: self.isPremium,
-            firstSeenAt: self.firstSeenAt,
-            lastSeenAt: lastSeenAt,
             metadata: self.metadata
         )
     }
@@ -57,7 +44,6 @@ extension UserUpdate {
             appUserId: self.appUserId,
             isPremium: self.isPremium,
             firstSeenAt: self.firstSeenAt,
-            lastSeenAt: self.lastSeenAt,
             metadata: metadata
         )
     }

@@ -66,7 +66,7 @@ import Testing
         #expect(self.referrals.user == nil)
         self.referrals.set(appUserId: user1.appUserId)
         #expect(self.referrals.user == user1)
-        #expect(self.dependencies.userCache.userUpdate?.appUserId == user1.appUserId)
+        #expect(self.dependencies.userCache.userUpdate == nil)
         self.dependencies.userCache.user = nil
         #expect(self.referrals.user == nil)
         let user2 = MockUser.mock(appUserId: "app-user-id-2")
@@ -115,7 +115,6 @@ import Testing
         #expect(self.dependencies.usersProvider.request?.appUserId == user1.appUserId)
         #expect(self.dependencies.usersProvider.request?.isPremium == nil)
         #expect(self.dependencies.usersProvider.request?.firstSeenAt == nil)
-        #expect(self.dependencies.usersProvider.request?.lastSeenAt != nil)
         #expect(self.dependencies.usersProvider.request?.metadata == nil)
         #expect(delegate.receivedUpdatedUserCallsCounter == 1)
         #expect(delegate.receivedErrorCallsCounter == 0)
@@ -156,14 +155,10 @@ import Testing
         #expect(delegate.receivedUpdatedUserCallsCounter == 0)
         #expect(delegate.receivedErrorCallsCounter == 3)
         delegate.receivedError = nil
-        self.referrals.set(lastSeenAt: Date.now)
-        #expect(delegate.receivedError as? ReferralsError == .suspendedIndefinitely)
-        #expect(delegate.receivedUpdatedUserCallsCounter == 0)
-        #expect(delegate.receivedErrorCallsCounter == 4)
         self.referrals.set(metadata: ["key": "value"])
         #expect(delegate.receivedError as? ReferralsError == .suspendedIndefinitely)
         #expect(delegate.receivedUpdatedUserCallsCounter == 0)
-        #expect(delegate.receivedErrorCallsCounter == 5)
+        #expect(delegate.receivedErrorCallsCounter == 4)
         await #expect(throws: ReferralsError.suspendedIndefinitely) {
             try await self.referrals.claimCode(code: "XYZ123")
         }
@@ -174,6 +169,6 @@ import Testing
             try await self.referrals.fetchOfferCode(offerCodeId: "offer-code-id")
         }
         #expect(delegate.receivedUpdatedUserCallsCounter == 0)
-        #expect(delegate.receivedErrorCallsCounter == 5)
+        #expect(delegate.receivedErrorCallsCounter == 4)
     }
 }

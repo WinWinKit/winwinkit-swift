@@ -7,11 +7,10 @@
 
 import Foundation
 #if canImport(AnyCodable)
-import AnyCodable
+    import AnyCodable
 #endif
 
 public struct User: Codable, Hashable {
-
     /** The unique identifier of the user in your app. */
     public private(set) var appUserId: String
     /** The referral code of the user. */
@@ -22,7 +21,8 @@ public struct User: Codable, Hashable {
     public private(set) var isPremium: Bool?
     /** The date when the user was first seen at. */
     public private(set) var firstSeenAt: Date?
-    /** The date when the user was last seen at. */
+    /** The date when the user was last seen at. Deprecated, always returns null and will be removed in the future. */
+    @available(*, deprecated, message: "This property is deprecated.")
     public private(set) var lastSeenAt: Date?
     /** The metadata of the user. */
     public private(set) var metadata: AnyCodable?
@@ -67,17 +67,16 @@ public struct User: Codable, Hashable {
 
     public func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
-        try container.encode(appUserId, forKey: .appUserId)
-        try container.encode(referralCode, forKey: .referralCode)
-        try container.encode(referralCodeLink, forKey: .referralCodeLink)
-        try container.encode(isPremium, forKey: .isPremium)
-        try container.encode(firstSeenAt, forKey: .firstSeenAt)
-        try container.encode(lastSeenAt, forKey: .lastSeenAt)
-        try container.encode(metadata, forKey: .metadata)
-        try container.encode(claimCodeEligibility, forKey: .claimCodeEligibility)
-        try container.encode(stats, forKey: .stats)
-        try container.encode(rewards, forKey: .rewards)
-        try container.encode(referralProgram, forKey: .referralProgram)
+        try container.encode(self.appUserId, forKey: .appUserId)
+        try container.encode(self.referralCode, forKey: .referralCode)
+        try container.encode(self.referralCodeLink, forKey: .referralCodeLink)
+        try container.encode(self.isPremium, forKey: .isPremium)
+        try container.encode(self.firstSeenAt, forKey: .firstSeenAt)
+        try container.encode(self.lastSeenAt, forKey: .lastSeenAt)
+        try container.encode(self.metadata, forKey: .metadata)
+        try container.encode(self.claimCodeEligibility, forKey: .claimCodeEligibility)
+        try container.encode(self.stats, forKey: .stats)
+        try container.encode(self.rewards, forKey: .rewards)
+        try container.encode(self.referralProgram, forKey: .referralProgram)
     }
 }
-

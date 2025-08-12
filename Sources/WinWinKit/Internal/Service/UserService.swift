@@ -35,6 +35,17 @@ final class UserService {
         self.apiKey = apiKey
         self.providers = providers
         self.userCache = userCache
+
+        if self.cachedUser == nil {
+            self.cacheUserUpdate(
+                UserUpdate(
+                    appUserId: appUserId,
+                    isPremium: nil,
+                    firstSeenAt: nil,
+                    metadata: nil
+                )
+            )
+        }
     }
 
     weak var delegate: UserServiceDelegate?
@@ -55,7 +66,6 @@ final class UserService {
                 UserUpdate(appUserId: self.appUserId,
                            isPremium: isPremium,
                            firstSeenAt: nil,
-                           lastSeenAt: nil,
                            metadata: nil)
         )
     }
@@ -67,19 +77,6 @@ final class UserService {
                 UserUpdate(appUserId: self.appUserId,
                            isPremium: nil,
                            firstSeenAt: firstSeenAt,
-                           lastSeenAt: nil,
-                           metadata: nil)
-        )
-    }
-
-    func set(lastSeenAt: Date) {
-        Logger.debug("UserService: Set lastSeenAt value")
-        self.cacheUserUpdate(
-            self.pendingUserUpdate?.set(lastSeenAt: lastSeenAt) ??
-                UserUpdate(appUserId: self.appUserId,
-                           isPremium: nil,
-                           firstSeenAt: nil,
-                           lastSeenAt: lastSeenAt,
                            metadata: nil)
         )
     }
@@ -91,7 +88,6 @@ final class UserService {
                 UserUpdate(appUserId: self.appUserId,
                            isPremium: nil,
                            firstSeenAt: nil,
-                           lastSeenAt: nil,
                            metadata: metadata)
         )
     }
@@ -134,7 +130,6 @@ final class UserService {
                     appUserId: self.appUserId,
                     isPremium: pendingUserUpdate?.isPremium,
                     firstSeenAt: pendingUserUpdate?.firstSeenAt,
-                    lastSeenAt: pendingUserUpdate?.lastSeenAt,
                     metadata: pendingUserUpdate?.metadata
                 )
                 let updatedUser = try await self.providers.users.createOrUpdateUser(

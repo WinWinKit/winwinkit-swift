@@ -18,7 +18,8 @@ internal struct UserCreateRequest: Codable, Hashable {
     public private(set) var isPremium: Bool?
     /** The date when the user was first seen at. */
     public private(set) var firstSeenAt: Date?
-    /** The date when the user was last seen at. */
+    /** The date when the user was last seen at. Deprecated and will be removed in the future. */
+    @available(*, deprecated, message: "This property is deprecated.")
     public private(set) var lastSeenAt: Date?
     /** The metadata of the user. */
     public private(set) var metadata: AnyCodable?

@@ -189,9 +189,7 @@ public final class Referrals {
         self.userService = userService
 
         userService.delegate = self
-        if self.shouldAutoUpdateLastSeenAt {
-            userService.set(lastSeenAt: .now)
-        }
+
         userService.refresh()
     }
 
@@ -234,30 +232,6 @@ public final class Referrals {
             return
         }
         userService.set(firstSeenAt: firstSeenAt)
-        userService.refresh()
-    }
-
-    ///
-    /// Sets user's last seen at date.
-    /// - Parameter lastSeenAt: Date when user has been seen at first. Must not be date in the future.
-    ///
-    public func set(lastSeenAt: Date) {
-        guard
-            let userService
-        else {
-            Logger.warning("User identifier `appUserId` must be set before updating any other user properties.")
-            return
-        }
-        guard
-            lastSeenAt <= .now
-        else {
-            Logger.warning("Last seen at date must not be in the future.")
-            return
-        }
-        if lastSeenAt.isEqualToSeconds(with: userService.cachedUser?.lastSeenAt) {
-            return
-        }
-        userService.set(lastSeenAt: lastSeenAt)
         userService.refresh()
     }
 
@@ -441,21 +415,6 @@ public final class Referrals {
         self.delegate?.referrals(self, receivedUpdated: nil)
     }
 
-    ///
-    /// A flag controlling whether `lastSeenAt` should be auto-updated or not.
-    /// Set to `false` **before** calling `set(appUserId:)` if you do not want user's `lastSeenAt` property be auto-updated at initialization.
-    /// Additionally, you can always update it by calling `Referrals.shared.set(lastSeenAt: <NEW_DATE>)`.
-    /// The default value is `true`.
-    ///
-    public var shouldAutoUpdateLastSeenAt: Bool {
-        get {
-            self._shouldAutoUpdateLastSeenAt
-        }
-        set {
-            self._shouldAutoUpdateLastSeenAt = newValue
-        }
-    }
-
     // MARK: - Internal
 
     init(apiKey: String,
@@ -480,9 +439,6 @@ public final class Referrals {
     private let userCache: UserCacheType
 
     private weak var _delegate: ReferralsDelegate?
-
-    @Atomic
-    private var _shouldAutoUpdateLastSeenAt: Bool = true
 
     private weak var _observableObject: AnyObject?
 

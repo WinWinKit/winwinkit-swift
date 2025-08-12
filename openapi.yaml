@@ -470,8 +470,11 @@ components:
           format: date-time
           type: string
           nullable: true
-          example: '2024-11-10T10:28:18.104Z'
-          description: The date when the user was last seen at.
+          deprecated: true
+          example: null
+          description: >-
+            The date when the user was last seen at. Deprecated and will be
+            removed in the future.
         metadata:
           type: object
           nullable: true
@@ -2074,8 +2077,11 @@ components:
           format: date-time
           type: string
           nullable: true
-          example: '2024-11-10T10:28:18.104Z'
-          description: The date when the user was last seen at.
+          deprecated: true
+          example: null
+          description: >-
+            The date when the user was last seen at. Deprecated, always returns
+            null and will be removed in the future.
         metadata:
           type: object
           nullable: true
