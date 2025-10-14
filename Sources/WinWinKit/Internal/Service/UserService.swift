@@ -145,9 +145,12 @@ final class UserService {
             }
             catch {
                 Logger.debug("UserService: Refresh did fail")
-                Logger.error("Failed to refresh user: \(String(describing: error))")
+                
+                let referralsError = ReferralsError.fromErrorResponse(error) ?? error
+                
+                Logger.error("Failed to refresh user: \(String(describing: referralsError))")
 
-                self.handleTaskError(error)
+                self.handleTaskError(referralsError)
             }
 
             self.refreshTask = nil
@@ -185,11 +188,14 @@ final class UserService {
             }
             catch {
                 Logger.debug("UserService: Claim code did fail")
-                Logger.error("Failed to claim code: \(String(describing: error))")
+                
+                let referralsError = ReferralsError.fromErrorResponse(error) ?? error
+                
+                Logger.error("Failed to claim code: \(String(describing: referralsError))")
 
-                self.handleTaskError(error)
+                self.handleTaskError(referralsError)
 
-                completion(.failure(error))
+                completion(.failure(referralsError))
             }
         }
     }
@@ -221,11 +227,14 @@ final class UserService {
             }
             catch {
                 Logger.debug("UserService: Withdraw credits did fail")
-                Logger.error("Failed to withdraw credits: \(String(describing: error))")
+                
+                let referralsError = ReferralsError.fromErrorResponse(error) ?? error
+                
+                Logger.error("Failed to withdraw credits: \(String(describing: referralsError))")
 
-                self.handleTaskError(error)
+                self.handleTaskError(referralsError)
 
-                completion(.failure(error))
+                completion(.failure(referralsError))
             }
         }
     }
@@ -250,11 +259,14 @@ final class UserService {
             }
             catch {
                 Logger.debug("UserService: Fetch offer code did fail")
-                Logger.error("Failed to fetch offer code: \(String(describing: error))")
+                
+                let referralsError = ReferralsError.fromErrorResponse(error) ?? error
+                
+                Logger.error("Failed to fetch offer code: \(String(describing: referralsError))")
 
-                self.handleTaskError(error)
+                self.handleTaskError(referralsError)
 
-                completion(.failure(error))
+                completion(.failure(referralsError))
             }
         }
     }
@@ -311,3 +323,4 @@ final class UserService {
         Logger.error("Authorization with the provided API key has failed! Please obtain a new API key and use it when initializing the Referrals object.")
     }
 }
+
