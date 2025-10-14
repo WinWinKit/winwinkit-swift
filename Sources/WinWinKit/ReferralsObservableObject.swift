@@ -52,6 +52,15 @@ public final class ReferralsObservableObject {
                 return false
             }
         }
+        
+        public var errorObjects: [ErrorObject]? {
+            switch self {
+            case .failure(let error):
+                return (error as? ReferralsError)?.errorObjects
+            default:
+                return nil
+            }
+        }
     }
 
     public internal(set) var userState: UserState = .none
@@ -87,6 +96,15 @@ public final class ReferralsObservableObject {
                 return true
             default:
                 return false
+            }
+        }
+        
+        public var errorObjects: [ErrorObject]? {
+            switch self {
+            case .failure(let error):
+                return (error as? ReferralsError)?.errorObjects
+            default:
+                return nil
             }
         }
     }
@@ -127,6 +145,15 @@ public final class ReferralsObservableObject {
                 return true
             default:
                 return false
+            }
+        }
+        
+        public var errorObjects: [ErrorObject]? {
+            switch self {
+            case .failure(let error):
+                return (error as? ReferralsError)?.errorObjects
+            default:
+                return nil
             }
         }
     }

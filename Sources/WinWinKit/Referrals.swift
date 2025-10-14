@@ -26,7 +26,16 @@ public enum ReferralsError: Error, Equatable {
     /// Obtain a new API key and configure ``Referrals`` with a valid one.
     case suspendedIndefinitely
     /// Request to WinWinKit API has failed with provided errors.
-    case requestFailure(errors: [ErrorObject])
+    case requestFailure(_ errorObjects: [ErrorObject])
+    
+    public var errorObjects: [ErrorObject]? {
+        switch self {
+        case .requestFailure(let errorObjects):
+            return errorObjects
+        default:
+            return nil
+        }
+    }
 }
 
 ///

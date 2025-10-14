@@ -22,6 +22,6 @@ extension ReferralsError {
         
         let errorsResponse = try? JSONDecoder().decode(ErrorsResponse.self, from: data)
         
-        return .requestFailure(errors: errorsResponse?.errors ?? [])
+        return .requestFailure(errorsResponse?.errors ?? [])
     }
 }
