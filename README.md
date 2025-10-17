@@ -4,9 +4,9 @@ The official [WinWinKit](https://winwinkit.com) SDK for iOS and macOS.
 
 ## Getting Started
 
-Please follow the [Swift SDK](https://docs.winwinkit.com/integrations/swift-sdk) guide for information on how to install the SDK.
+Please follow the [Swift SDK](https://winwinkit.com/docs/sdk/swift-sdk) guide for information on how to install the SDK.
 
-Our complete documentation with [Quickstart](https://docs.winwinkit.com/quickstart) guide, [API Reference](https://docs.winwinkit.com/api-reference) and feature guides is available at [docs.winwinkit.com](https://docs.winwinkit.com).
+Additionally, check out our [docs](https://winwinkit.com/docs) and [guides](https://winwinkit.com/guides) for more information about the platform.
 
 ## Requirements
 
