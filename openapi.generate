@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Generate the OpenAPI client
-openapi-generator generate -i openapi.yaml -g swift5 -o tmp/OpenAPI  --additional-properties=responseAs=AsyncAwait,projectName=WinWinKit,readonlyProperties=true,useJsonEncodable=false
+openapi-generator generate -i https://api.winwinkit.com/openapi-yaml -g swift5 -o tmp/OpenAPI  --additional-properties=responseAs=AsyncAwait,projectName=WinWinKit,readonlyProperties=true,useJsonEncodable=false
 
 # Remove the previous OpenAPI folder
 rm -rf Sources/WinWinKit/Generated/OpenAPI/*
