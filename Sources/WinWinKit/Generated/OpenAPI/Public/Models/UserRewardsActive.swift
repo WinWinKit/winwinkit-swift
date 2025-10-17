@@ -18,15 +18,18 @@ public struct UserRewardsActive: Codable, Hashable {
     public private(set) var credit: [UserCreditRewardActive]
     /** The referral user offer code rewards */
     public private(set) var offerCode: [UserOfferCodeRewardActive]
+    /** The referral user Google Play promo code rewards */
+    public private(set) var googleplayPromoCode: [UserGooglePlayPromoCodeRewardActive]
     /** The referral user RevenueCat entitlement rewards */
     public private(set) var revenuecatEntitlement: [UserRevenueCatEntitlementRewardActive]
     /** The referral user RevenueCat offering rewards */
     public private(set) var revenuecatOffering: [UserRevenueCatOfferingRewardActive]
 
-    public init(basic: [UserBasicRewardActive], credit: [UserCreditRewardActive], offerCode: [UserOfferCodeRewardActive], revenuecatEntitlement: [UserRevenueCatEntitlementRewardActive], revenuecatOffering: [UserRevenueCatOfferingRewardActive]) {
+    public init(basic: [UserBasicRewardActive], credit: [UserCreditRewardActive], offerCode: [UserOfferCodeRewardActive], googleplayPromoCode: [UserGooglePlayPromoCodeRewardActive], revenuecatEntitlement: [UserRevenueCatEntitlementRewardActive], revenuecatOffering: [UserRevenueCatOfferingRewardActive]) {
         self.basic = basic
         self.credit = credit
         self.offerCode = offerCode
+        self.googleplayPromoCode = googleplayPromoCode
         self.revenuecatEntitlement = revenuecatEntitlement
         self.revenuecatOffering = revenuecatOffering
     }
@@ -35,6 +38,7 @@ public struct UserRewardsActive: Codable, Hashable {
         case basic
         case credit
         case offerCode = "offer_code"
+        case googleplayPromoCode = "googleplay_promo_code"
         case revenuecatEntitlement = "revenuecat_entitlement"
         case revenuecatOffering = "revenuecat_offering"
     }
@@ -46,6 +50,7 @@ public struct UserRewardsActive: Codable, Hashable {
         try container.encode(basic, forKey: .basic)
         try container.encode(credit, forKey: .credit)
         try container.encode(offerCode, forKey: .offerCode)
+        try container.encode(googleplayPromoCode, forKey: .googleplayPromoCode)
         try container.encode(revenuecatEntitlement, forKey: .revenuecatEntitlement)
         try container.encode(revenuecatOffering, forKey: .revenuecatOffering)
     }

@@ -17,6 +17,8 @@ public struct User: Codable, Hashable {
     public private(set) var referralCode: String?
     /** The referral code link of the user. */
     public private(set) var referralCodeLink: String?
+    /** Whether the user is a trial user. */
+    public private(set) var isTrial: Bool?
     /** Whether the user is a premium user. */
     public private(set) var isPremium: Bool?
     /** The date when the user was first seen at. */
@@ -35,10 +37,11 @@ public struct User: Codable, Hashable {
     /** The program of the user. */
     public private(set) var referralProgram: ReferralProgram?
 
-    public init(appUserId: String, referralCode: String?, referralCodeLink: String?, isPremium: Bool?, firstSeenAt: Date?, lastSeenAt: Date?, metadata: AnyCodable?, claimCodeEligibility: UserClaimCodeEligibility, stats: UserStats, rewards: UserRewards, referralProgram: ReferralProgram?) {
+    public init(appUserId: String, referralCode: String?, referralCodeLink: String?, isTrial: Bool?, isPremium: Bool?, firstSeenAt: Date?, lastSeenAt: Date?, metadata: AnyCodable?, claimCodeEligibility: UserClaimCodeEligibility, stats: UserStats, rewards: UserRewards, referralProgram: ReferralProgram?) {
         self.appUserId = appUserId
         self.referralCode = referralCode
         self.referralCodeLink = referralCodeLink
+        self.isTrial = isTrial
         self.isPremium = isPremium
         self.firstSeenAt = firstSeenAt
         self.lastSeenAt = lastSeenAt
@@ -53,6 +56,7 @@ public struct User: Codable, Hashable {
         case appUserId = "app_user_id"
         case referralCode = "referral_code"
         case referralCodeLink = "referral_code_link"
+        case isTrial = "is_trial"
         case isPremium = "is_premium"
         case firstSeenAt = "first_seen_at"
         case lastSeenAt = "last_seen_at"
@@ -70,6 +74,7 @@ public struct User: Codable, Hashable {
         try container.encode(self.appUserId, forKey: .appUserId)
         try container.encode(self.referralCode, forKey: .referralCode)
         try container.encode(self.referralCodeLink, forKey: .referralCodeLink)
+        try container.encode(self.isTrial, forKey: .isTrial)
         try container.encode(self.isPremium, forKey: .isPremium)
         try container.encode(self.firstSeenAt, forKey: .firstSeenAt)
         try container.encode(self.lastSeenAt, forKey: .lastSeenAt)

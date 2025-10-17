@@ -9,6 +9,7 @@ enum MockUser {
         appUserId: String = Self.appUserId,
         referralCode: String? = nil,
         referralCodeLink: String? = nil,
+        isTrial: Bool? = nil,
         isPremium: Bool? = nil,
         firstSeenAt: Date? = nil,
         lastSeenAt: Date? = nil,
@@ -27,6 +28,7 @@ enum MockUser {
                 basic: [],
                 credit: [],
                 offerCode: [],
+                googleplayPromoCode: [],
                 revenuecatEntitlement: [],
                 revenuecatOffering: []
             ),
@@ -34,6 +36,7 @@ enum MockUser {
                 basic: [],
                 credit: [],
                 offerCode: [],
+                googleplayPromoCode: [],
                 revenuecatEntitlement: [],
                 revenuecatOffering: []
             )
@@ -44,6 +47,7 @@ enum MockUser {
             appUserId: appUserId,
             referralCode: referralCode,
             referralCodeLink: referralCodeLink,
+            isTrial: isTrial,
             isPremium: isPremium,
             firstSeenAt: firstSeenAt,
             lastSeenAt: lastSeenAt,

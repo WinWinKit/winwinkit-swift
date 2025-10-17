@@ -113,6 +113,7 @@ import Testing
         #expect(self.dependencies.usersProvider.createOrUpdateUserCallsCounter == 1)
         #expect(self.dependencies.usersProvider.apiKey == self.dependencies.apiKey)
         #expect(self.dependencies.usersProvider.request?.appUserId == user1.appUserId)
+        #expect(self.dependencies.usersProvider.request?.isTrial == nil)
         #expect(self.dependencies.usersProvider.request?.isPremium == nil)
         #expect(self.dependencies.usersProvider.request?.firstSeenAt == nil)
         #expect(self.dependencies.usersProvider.request?.metadata == nil)

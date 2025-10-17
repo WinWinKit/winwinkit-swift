@@ -18,15 +18,18 @@ public struct ReferralProgramSenderRewards: Codable, Hashable {
     public private(set) var credit: [ReferralProgramSenderCreditReward]
     /** The program offer code rewards */
     public private(set) var offerCode: [ReferralProgramSenderOfferCodeReward]
+    /** The program Google Play promo code rewards */
+    public private(set) var googleplayPromoCode: [ReferralProgramSenderGooglePlayPromoCodeReward]
     /** The program RevenueCat entitlement rewards */
     public private(set) var revenuecatEntitlement: [ReferralProgramSenderRevenueCatEntitlementReward]
     /** The program RevenueCat offering rewards */
     public private(set) var revenuecatOffering: [ReferralProgramSenderRevenueCatOfferingReward]
 
-    public init(basic: [ReferralProgramSenderBasicReward], credit: [ReferralProgramSenderCreditReward], offerCode: [ReferralProgramSenderOfferCodeReward], revenuecatEntitlement: [ReferralProgramSenderRevenueCatEntitlementReward], revenuecatOffering: [ReferralProgramSenderRevenueCatOfferingReward]) {
+    public init(basic: [ReferralProgramSenderBasicReward], credit: [ReferralProgramSenderCreditReward], offerCode: [ReferralProgramSenderOfferCodeReward], googleplayPromoCode: [ReferralProgramSenderGooglePlayPromoCodeReward], revenuecatEntitlement: [ReferralProgramSenderRevenueCatEntitlementReward], revenuecatOffering: [ReferralProgramSenderRevenueCatOfferingReward]) {
         self.basic = basic
         self.credit = credit
         self.offerCode = offerCode
+        self.googleplayPromoCode = googleplayPromoCode
         self.revenuecatEntitlement = revenuecatEntitlement
         self.revenuecatOffering = revenuecatOffering
     }
@@ -35,6 +38,7 @@ public struct ReferralProgramSenderRewards: Codable, Hashable {
         case basic
         case credit
         case offerCode = "offer_code"
+        case googleplayPromoCode = "googleplay_promo_code"
         case revenuecatEntitlement = "revenuecat_entitlement"
         case revenuecatOffering = "revenuecat_offering"
     }
@@ -46,6 +50,7 @@ public struct ReferralProgramSenderRewards: Codable, Hashable {
         try container.encode(basic, forKey: .basic)
         try container.encode(credit, forKey: .credit)
         try container.encode(offerCode, forKey: .offerCode)
+        try container.encode(googleplayPromoCode, forKey: .googleplayPromoCode)
         try container.encode(revenuecatEntitlement, forKey: .revenuecatEntitlement)
         try container.encode(revenuecatOffering, forKey: .revenuecatOffering)
     }

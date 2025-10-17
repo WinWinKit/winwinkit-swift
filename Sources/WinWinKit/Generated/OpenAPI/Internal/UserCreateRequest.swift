@@ -14,6 +14,8 @@ internal struct UserCreateRequest: Codable, Hashable {
 
     /** The unique identifier of the referral user in your app. */
     public private(set) var appUserId: String
+    /** Whether the user is a trial user. */
+    public private(set) var isTrial: Bool?
     /** Whether the user is a premium user. */
     public private(set) var isPremium: Bool?
     /** The date when the user was first seen at. */
@@ -24,8 +26,9 @@ internal struct UserCreateRequest: Codable, Hashable {
     /** The metadata of the user. */
     public private(set) var metadata: AnyCodable?
 
-    public init(appUserId: String, isPremium: Bool? = nil, firstSeenAt: Date? = nil, lastSeenAt: Date? = nil, metadata: AnyCodable? = nil) {
+    public init(appUserId: String, isTrial: Bool? = nil, isPremium: Bool? = nil, firstSeenAt: Date? = nil, lastSeenAt: Date? = nil, metadata: AnyCodable? = nil) {
         self.appUserId = appUserId
+        self.isTrial = isTrial
         self.isPremium = isPremium
         self.firstSeenAt = firstSeenAt
         self.lastSeenAt = lastSeenAt
@@ -34,6 +37,7 @@ internal struct UserCreateRequest: Codable, Hashable {
 
     public enum CodingKeys: String, CodingKey, CaseIterable {
         case appUserId = "app_user_id"
+        case isTrial = "is_trial"
         case isPremium = "is_premium"
         case firstSeenAt = "first_seen_at"
         case lastSeenAt = "last_seen_at"
@@ -45,6 +49,7 @@ internal struct UserCreateRequest: Codable, Hashable {
     internal func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
         try container.encode(appUserId, forKey: .appUserId)
+        try container.encodeIfPresent(isTrial, forKey: .isTrial)
         try container.encodeIfPresent(isPremium, forKey: .isPremium)
         try container.encodeIfPresent(firstSeenAt, forKey: .firstSeenAt)
         try container.encodeIfPresent(lastSeenAt, forKey: .lastSeenAt)
