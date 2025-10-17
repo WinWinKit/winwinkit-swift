@@ -41,6 +41,7 @@ final class UserService {
                 UserUpdate(
                     appUserId: appUserId,
                     isPremium: nil,
+                    isTrial: nil,
                     firstSeenAt: nil,
                     metadata: nil
                 )
@@ -65,6 +66,19 @@ final class UserService {
             self.pendingUserUpdate?.set(isPremium: isPremium) ??
                 UserUpdate(appUserId: self.appUserId,
                            isPremium: isPremium,
+                           isTrial: nil,
+                           firstSeenAt: nil,
+                           metadata: nil)
+        )
+    }
+
+    func set(isTrial: Bool) {
+        Logger.debug("UserService: Set isTrial value")
+        self.cacheUserUpdate(
+            self.pendingUserUpdate?.set(isTrial: isTrial) ??
+                UserUpdate(appUserId: self.appUserId,
+                           isPremium: nil,
+                           isTrial: isTrial,
                            firstSeenAt: nil,
                            metadata: nil)
         )
@@ -76,6 +90,7 @@ final class UserService {
             self.pendingUserUpdate?.set(firstSeenAt: firstSeenAt) ??
                 UserUpdate(appUserId: self.appUserId,
                            isPremium: nil,
+                           isTrial: nil,
                            firstSeenAt: firstSeenAt,
                            metadata: nil)
         )
@@ -87,6 +102,7 @@ final class UserService {
             self.pendingUserUpdate?.set(metadata: metadata) ??
                 UserUpdate(appUserId: self.appUserId,
                            isPremium: nil,
+                           isTrial: nil,
                            firstSeenAt: nil,
                            metadata: metadata)
         )
@@ -128,6 +144,7 @@ final class UserService {
                 let pendingUserUpdate = self.pendingUserUpdate
                 let request = UserCreateRequest(
                     appUserId: self.appUserId,
+                    isTrial: pendingUserUpdate?.isTrial,
                     isPremium: pendingUserUpdate?.isPremium,
                     firstSeenAt: pendingUserUpdate?.firstSeenAt,
                     metadata: pendingUserUpdate?.metadata
@@ -145,9 +162,9 @@ final class UserService {
             }
             catch {
                 Logger.debug("UserService: Refresh did fail")
-                
+
                 let referralsError = ReferralsError.fromErrorResponse(error) ?? error
-                
+
                 Logger.error("Failed to refresh user: \(String(describing: referralsError))")
 
                 self.handleTaskError(referralsError)
@@ -188,9 +205,9 @@ final class UserService {
             }
             catch {
                 Logger.debug("UserService: Claim code did fail")
-                
+
                 let referralsError = ReferralsError.fromErrorResponse(error) ?? error
-                
+
                 Logger.error("Failed to claim code: \(String(describing: referralsError))")
 
                 self.handleTaskError(referralsError)
@@ -227,9 +244,9 @@ final class UserService {
             }
             catch {
                 Logger.debug("UserService: Withdraw credits did fail")
-                
+
                 let referralsError = ReferralsError.fromErrorResponse(error) ?? error
-                
+
                 Logger.error("Failed to withdraw credits: \(String(describing: referralsError))")
 
                 self.handleTaskError(referralsError)
@@ -259,9 +276,9 @@ final class UserService {
             }
             catch {
                 Logger.debug("UserService: Fetch offer code did fail")
-                
+
                 let referralsError = ReferralsError.fromErrorResponse(error) ?? error
-                
+
                 Logger.error("Failed to fetch offer code: \(String(describing: referralsError))")
 
                 self.handleTaskError(referralsError)
@@ -323,4 +340,3 @@ final class UserService {
         Logger.error("Authorization with the provided API key has failed! Please obtain a new API key and use it when initializing the Referrals object.")
     }
 }
-

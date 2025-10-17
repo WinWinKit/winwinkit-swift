@@ -16,6 +16,7 @@ import Foundation
 struct UserUpdate: Codable, Hashable {
     let appUserId: String
     let isPremium: Bool?
+    let isTrial: Bool?
     let firstSeenAt: Date?
     let metadata: AnyCodable?
 }
@@ -25,6 +26,17 @@ extension UserUpdate {
         UserUpdate(
             appUserId: self.appUserId,
             isPremium: isPremium,
+            isTrial: self.isTrial,
+            firstSeenAt: self.firstSeenAt,
+            metadata: self.metadata
+        )
+    }
+
+    func set(isTrial: Bool) -> Self {
+        UserUpdate(
+            appUserId: self.appUserId,
+            isPremium: self.isPremium,
+            isTrial: isTrial,
             firstSeenAt: self.firstSeenAt,
             metadata: self.metadata
         )
@@ -34,6 +46,7 @@ extension UserUpdate {
         UserUpdate(
             appUserId: self.appUserId,
             isPremium: self.isPremium,
+            isTrial: self.isTrial,
             firstSeenAt: firstSeenAt,
             metadata: self.metadata
         )
@@ -43,6 +56,7 @@ extension UserUpdate {
         UserUpdate(
             appUserId: self.appUserId,
             isPremium: self.isPremium,
+            isTrial: self.isTrial,
             firstSeenAt: self.firstSeenAt,
             metadata: metadata
         )

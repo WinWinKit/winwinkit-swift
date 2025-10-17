@@ -27,10 +27,10 @@ public enum ReferralsError: Error, Equatable {
     case suspendedIndefinitely
     /// Request to WinWinKit API has failed with provided errors.
     case requestFailure(_ errorObjects: [ErrorObject])
-    
+
     public var errorObjects: [ErrorObject]? {
         switch self {
-        case .requestFailure(let errorObjects):
+        case let .requestFailure(errorObjects):
             return errorObjects
         default:
             return nil
@@ -219,6 +219,24 @@ public final class Referrals {
             return
         }
         userService.set(isPremium: isPremium)
+        userService.refresh()
+    }
+
+    ///
+    /// Sets user's trial status.
+    /// - Parameter isTrial: Is user trial.
+    ///
+    public func set(isTrial: Bool) {
+        guard
+            let userService
+        else {
+            Logger.warning("User identifier `appUserId` must be set before updating any other user properties.")
+            return
+        }
+        if userService.cachedUser?.isTrial == isTrial {
+            return
+        }
+        userService.set(isTrial: isTrial)
         userService.refresh()
     }
 
