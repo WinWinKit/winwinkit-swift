@@ -30,6 +30,8 @@ public struct User: Codable, Hashable {
     public private(set) var metadata: AnyCodable?
     /** The claim code eligibility of the user. */
     public private(set) var claimCodeEligibility: UserClaimCodeEligibility
+    /** The referred by object of the user. */
+    public private(set) var referredBy: UserReferredBy?
     /** The stats of the user. */
     public private(set) var stats: UserStats
     /** The rewards of the user. */
@@ -37,7 +39,7 @@ public struct User: Codable, Hashable {
     /** The program of the user. */
     public private(set) var referralProgram: ReferralProgram?
 
-    public init(appUserId: String, referralCode: String?, referralCodeLink: String?, isTrial: Bool?, isPremium: Bool?, firstSeenAt: Date?, lastSeenAt: Date?, metadata: AnyCodable?, claimCodeEligibility: UserClaimCodeEligibility, stats: UserStats, rewards: UserRewards, referralProgram: ReferralProgram?) {
+    public init(appUserId: String, referralCode: String?, referralCodeLink: String?, isTrial: Bool?, isPremium: Bool?, firstSeenAt: Date?, lastSeenAt: Date?, metadata: AnyCodable?, claimCodeEligibility: UserClaimCodeEligibility, referredBy: UserReferredBy?, stats: UserStats, rewards: UserRewards, referralProgram: ReferralProgram?) {
         self.appUserId = appUserId
         self.referralCode = referralCode
         self.referralCodeLink = referralCodeLink
@@ -47,6 +49,7 @@ public struct User: Codable, Hashable {
         self.lastSeenAt = lastSeenAt
         self.metadata = metadata
         self.claimCodeEligibility = claimCodeEligibility
+        self.referredBy = referredBy
         self.stats = stats
         self.rewards = rewards
         self.referralProgram = referralProgram
@@ -62,6 +65,7 @@ public struct User: Codable, Hashable {
         case lastSeenAt = "last_seen_at"
         case metadata
         case claimCodeEligibility = "claim_code_eligibility"
+        case referredBy = "referred_by"
         case stats
         case rewards
         case referralProgram = "referral_program"
@@ -80,6 +84,7 @@ public struct User: Codable, Hashable {
         try container.encode(self.lastSeenAt, forKey: .lastSeenAt)
         try container.encode(self.metadata, forKey: .metadata)
         try container.encode(self.claimCodeEligibility, forKey: .claimCodeEligibility)
+        try container.encode(self.referredBy, forKey: .referredBy)
         try container.encode(self.stats, forKey: .stats)
         try container.encode(self.rewards, forKey: .rewards)
         try container.encode(self.referralProgram, forKey: .referralProgram)
