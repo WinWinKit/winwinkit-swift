@@ -43,7 +43,8 @@ final class UserService {
                     isPremium: nil,
                     isTrial: nil,
                     firstSeenAt: nil,
-                    metadata: nil
+                    metadata: nil,
+                    stripeCustomerId: nil
                 )
             )
         }
@@ -68,7 +69,8 @@ final class UserService {
                            isPremium: isPremium,
                            isTrial: nil,
                            firstSeenAt: nil,
-                           metadata: nil)
+                           metadata: nil,
+                           stripeCustomerId: nil)
         )
     }
 
@@ -80,7 +82,8 @@ final class UserService {
                            isPremium: nil,
                            isTrial: isTrial,
                            firstSeenAt: nil,
-                           metadata: nil)
+                           metadata: nil,
+                           stripeCustomerId: nil)
         )
     }
 
@@ -92,7 +95,8 @@ final class UserService {
                            isPremium: nil,
                            isTrial: nil,
                            firstSeenAt: firstSeenAt,
-                           metadata: nil)
+                           metadata: nil,
+                           stripeCustomerId: nil)
         )
     }
 
@@ -104,7 +108,21 @@ final class UserService {
                            isPremium: nil,
                            isTrial: nil,
                            firstSeenAt: nil,
-                           metadata: metadata)
+                           metadata: metadata,
+                           stripeCustomerId: nil)
+        )
+    }
+
+    func set(stripeCustomerId: String?) {
+        Logger.debug("UserService: Set stripeCustomerId value")
+        self.cacheUserUpdate(
+            self.pendingUserUpdate?.set(stripeCustomerId: stripeCustomerId) ??
+                UserUpdate(appUserId: self.appUserId,
+                           isPremium: nil,
+                           isTrial: nil,
+                           firstSeenAt: nil,
+                           metadata: nil,
+                           stripeCustomerId: stripeCustomerId)
         )
     }
 
@@ -147,7 +165,8 @@ final class UserService {
                     isTrial: pendingUserUpdate?.isTrial,
                     isPremium: pendingUserUpdate?.isPremium,
                     firstSeenAt: pendingUserUpdate?.firstSeenAt,
-                    metadata: pendingUserUpdate?.metadata
+                    metadata: pendingUserUpdate?.metadata,
+                    stripeCustomerId: pendingUserUpdate?.stripeCustomerId,
                 )
                 let updatedUser = try await self.providers.users.createOrUpdateUser(
                     request: request,

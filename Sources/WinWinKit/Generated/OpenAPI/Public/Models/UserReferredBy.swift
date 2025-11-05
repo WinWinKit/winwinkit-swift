@@ -7,17 +7,17 @@
 
 import Foundation
 #if canImport(AnyCodable)
-    import AnyCodable
+import AnyCodable
 #endif
 
 /** The referred by of the user. */
 public struct UserReferredBy: Codable, Hashable {
-    public enum ModelType: String, Codable, CaseIterable {
-        case affiliate
-        case promo
-        case referral
-    }
 
+    public enum ModelType: String, Codable, CaseIterable {
+        case affiliate = "affiliate"
+        case promo = "promo"
+        case referral = "referral"
+    }
     /** The code claimed by the user. Can be null if the code's entity has been deleted. */
     public private(set) var code: String?
     /** The type of the code. Can be one of \"affiliate\", \"promo\", or \"referral\". */
@@ -37,7 +37,8 @@ public struct UserReferredBy: Codable, Hashable {
 
     public func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
-        try container.encode(self.code, forKey: .code)
-        try container.encode(self.type, forKey: .type)
+        try container.encode(code, forKey: .code)
+        try container.encode(type, forKey: .type)
     }
 }
+

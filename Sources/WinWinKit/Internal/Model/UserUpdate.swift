@@ -19,6 +19,7 @@ struct UserUpdate: Codable, Hashable {
     let isTrial: Bool?
     let firstSeenAt: Date?
     let metadata: AnyCodable?
+    let stripeCustomerId: String?
 }
 
 extension UserUpdate {
@@ -28,7 +29,8 @@ extension UserUpdate {
             isPremium: isPremium,
             isTrial: self.isTrial,
             firstSeenAt: self.firstSeenAt,
-            metadata: self.metadata
+            metadata: self.metadata,
+            stripeCustomerId: self.stripeCustomerId
         )
     }
 
@@ -38,7 +40,8 @@ extension UserUpdate {
             isPremium: self.isPremium,
             isTrial: isTrial,
             firstSeenAt: self.firstSeenAt,
-            metadata: self.metadata
+            metadata: self.metadata,
+            stripeCustomerId: self.stripeCustomerId
         )
     }
 
@@ -48,7 +51,8 @@ extension UserUpdate {
             isPremium: self.isPremium,
             isTrial: self.isTrial,
             firstSeenAt: firstSeenAt,
-            metadata: self.metadata
+            metadata: self.metadata,
+            stripeCustomerId: self.stripeCustomerId
         )
     }
 
@@ -58,7 +62,19 @@ extension UserUpdate {
             isPremium: self.isPremium,
             isTrial: self.isTrial,
             firstSeenAt: self.firstSeenAt,
-            metadata: metadata
+            metadata: metadata,
+            stripeCustomerId: self.stripeCustomerId
+        )
+    }
+
+    func set(stripeCustomerId: String?) -> Self {
+        UserUpdate(
+            appUserId: self.appUserId,
+            isPremium: self.isPremium,
+            isTrial: self.isTrial,
+            firstSeenAt: self.firstSeenAt,
+            metadata: self.metadata,
+            stripeCustomerId: stripeCustomerId
         )
     }
 }

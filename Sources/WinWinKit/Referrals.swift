@@ -283,6 +283,24 @@ public final class Referrals {
     }
 
     ///
+    /// Sets user's Stripe customer ID.
+    /// - Parameter stripeCustomerId: Stripe customer ID.
+    ///
+    public func set(stripeCustomerId: String?) {
+        guard
+            let userService
+        else {
+            Logger.warning("User identifier `appUserId` must be set before updating any other user properties.")
+            return
+        }
+        if userService.cachedUser?.stripeCustomerId == stripeCustomerId {
+            return
+        }
+        userService.set(stripeCustomerId: stripeCustomerId)
+        userService.refresh()
+    }
+
+    ///
     /// Claim a code. Code can be affiliate, promo or referral code.
     ///
     /// - Parameter code: The code to claim. Can be affiliate, promo or referral code.

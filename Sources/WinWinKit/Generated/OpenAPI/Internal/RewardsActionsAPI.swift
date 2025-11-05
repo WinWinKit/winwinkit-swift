@@ -13,6 +13,50 @@ import AnyCodable
 internal class RewardsActionsAPI {
 
     /**
+     Grant a Reward
+     
+     - parameter appUserId: (path) The app user id of the user to grant a reward to. 
+     - parameter xApiKey: (header) The secret API key. 
+     - parameter userGrantRewardRequest: (body)  
+     - returns: UserGrantRewardResponse
+     */
+    @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
+    internal class func grantReward(appUserId: String, xApiKey: String, userGrantRewardRequest: UserGrantRewardRequest) async throws -> UserGrantRewardResponse {
+        return try await grantRewardWithRequestBuilder(appUserId: appUserId, xApiKey: xApiKey, userGrantRewardRequest: userGrantRewardRequest).execute().body
+    }
+
+    /**
+     Grant a Reward
+     - POST /users/{app_user_id}/rewards/grant
+     - Grants a reward for a user. Note 1: currently only granting of credit rewards is supported. Note 2: this endpoint is only accessible with a secret API key.
+     - parameter appUserId: (path) The app user id of the user to grant a reward to. 
+     - parameter xApiKey: (header) The secret API key. 
+     - parameter userGrantRewardRequest: (body)  
+     - returns: RequestBuilder<UserGrantRewardResponse> 
+     */
+    internal class func grantRewardWithRequestBuilder(appUserId: String, xApiKey: String, userGrantRewardRequest: UserGrantRewardRequest) -> RequestBuilder<UserGrantRewardResponse> {
+        var localVariablePath = "/users/{app_user_id}/rewards/grant"
+        let appUserIdPreEscape = "\(APIHelper.mapValueToPathItem(appUserId))"
+        let appUserIdPostEscape = appUserIdPreEscape.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? ""
+        localVariablePath = localVariablePath.replacingOccurrences(of: "{app_user_id}", with: appUserIdPostEscape, options: .literal, range: nil)
+        let localVariableURLString = WinWinKitAPI.basePath + localVariablePath
+        let localVariableParameters = JSONEncodingHelper.encodingParameters(forEncodableObject: userGrantRewardRequest)
+
+        let localVariableUrlComponents = URLComponents(string: localVariableURLString)
+
+        let localVariableNillableHeaders: [String: Any?] = [
+            "Content-Type": "application/json",
+            "x-api-key": xApiKey.encodeToJSON(),
+        ]
+
+        let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
+
+        let localVariableRequestBuilder: RequestBuilder<UserGrantRewardResponse>.Type = WinWinKitAPI.requestBuilderFactory.getBuilder()
+
+        return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+    }
+
+    /**
      Withdraw Credits
      
      - parameter appUserId: (path) The app user id of the user to withdraw credits from. 

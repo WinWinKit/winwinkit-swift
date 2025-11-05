@@ -14,10 +14,12 @@ enum MockUser {
         firstSeenAt: Date? = nil,
         lastSeenAt: Date? = nil,
         metadata: AnyCodable? = nil,
+        stripeCustomerId: String? = nil,
         claimCodeEligibility: UserClaimCodeEligibility = .init(
             eligible: false,
             eligibleUntil: nil
         ),
+        referredBy: UserReferredBy? = nil,
         stats: UserStats = .init(
             claims: 0,
             conversions: 0,
@@ -52,7 +54,9 @@ enum MockUser {
             firstSeenAt: firstSeenAt,
             lastSeenAt: lastSeenAt,
             metadata: metadata,
+            stripeCustomerId: stripeCustomerId,
             claimCodeEligibility: claimCodeEligibility,
+            referredBy: referredBy,
             stats: stats,
             rewards: rewards,
             referralProgram: referralProgram

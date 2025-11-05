@@ -25,14 +25,17 @@ internal struct UserCreateRequest: Codable, Hashable {
     public private(set) var lastSeenAt: Date?
     /** The metadata of the user. */
     public private(set) var metadata: AnyCodable?
+    /** The unique identifier of the user in Stripe. */
+    public private(set) var stripeCustomerId: String?
 
-    public init(appUserId: String, isTrial: Bool? = nil, isPremium: Bool? = nil, firstSeenAt: Date? = nil, lastSeenAt: Date? = nil, metadata: AnyCodable? = nil) {
+    public init(appUserId: String, isTrial: Bool? = nil, isPremium: Bool? = nil, firstSeenAt: Date? = nil, lastSeenAt: Date? = nil, metadata: AnyCodable? = nil, stripeCustomerId: String?) {
         self.appUserId = appUserId
         self.isTrial = isTrial
         self.isPremium = isPremium
         self.firstSeenAt = firstSeenAt
         self.lastSeenAt = lastSeenAt
         self.metadata = metadata
+        self.stripeCustomerId = stripeCustomerId
     }
 
     public enum CodingKeys: String, CodingKey, CaseIterable {
@@ -42,6 +45,7 @@ internal struct UserCreateRequest: Codable, Hashable {
         case firstSeenAt = "first_seen_at"
         case lastSeenAt = "last_seen_at"
         case metadata
+        case stripeCustomerId = "stripe_customer_id"
     }
 
     // Encodable protocol methods
@@ -54,6 +58,7 @@ internal struct UserCreateRequest: Codable, Hashable {
         try container.encodeIfPresent(firstSeenAt, forKey: .firstSeenAt)
         try container.encodeIfPresent(lastSeenAt, forKey: .lastSeenAt)
         try container.encodeIfPresent(metadata, forKey: .metadata)
+        try container.encode(stripeCustomerId, forKey: .stripeCustomerId)
     }
 }
 

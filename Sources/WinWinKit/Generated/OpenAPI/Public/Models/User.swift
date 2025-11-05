@@ -7,10 +7,11 @@
 
 import Foundation
 #if canImport(AnyCodable)
-    import AnyCodable
+import AnyCodable
 #endif
 
 public struct User: Codable, Hashable {
+
     /** The unique identifier of the user in your app. */
     public private(set) var appUserId: String
     /** The referral code of the user. */
@@ -28,6 +29,8 @@ public struct User: Codable, Hashable {
     public private(set) var lastSeenAt: Date?
     /** The metadata of the user. */
     public private(set) var metadata: AnyCodable?
+    /** The unique identifier of the user in Stripe. */
+    public private(set) var stripeCustomerId: String?
     /** The claim code eligibility of the user. */
     public private(set) var claimCodeEligibility: UserClaimCodeEligibility
     /** The referred by object of the user. */
@@ -39,7 +42,7 @@ public struct User: Codable, Hashable {
     /** The program of the user. */
     public private(set) var referralProgram: ReferralProgram?
 
-    public init(appUserId: String, referralCode: String?, referralCodeLink: String?, isTrial: Bool?, isPremium: Bool?, firstSeenAt: Date?, lastSeenAt: Date?, metadata: AnyCodable?, claimCodeEligibility: UserClaimCodeEligibility, referredBy: UserReferredBy?, stats: UserStats, rewards: UserRewards, referralProgram: ReferralProgram?) {
+    public init(appUserId: String, referralCode: String?, referralCodeLink: String?, isTrial: Bool?, isPremium: Bool?, firstSeenAt: Date?, lastSeenAt: Date?, metadata: AnyCodable?, stripeCustomerId: String?, claimCodeEligibility: UserClaimCodeEligibility, referredBy: UserReferredBy?, stats: UserStats, rewards: UserRewards, referralProgram: ReferralProgram?) {
         self.appUserId = appUserId
         self.referralCode = referralCode
         self.referralCodeLink = referralCodeLink
@@ -48,6 +51,7 @@ public struct User: Codable, Hashable {
         self.firstSeenAt = firstSeenAt
         self.lastSeenAt = lastSeenAt
         self.metadata = metadata
+        self.stripeCustomerId = stripeCustomerId
         self.claimCodeEligibility = claimCodeEligibility
         self.referredBy = referredBy
         self.stats = stats
@@ -64,6 +68,7 @@ public struct User: Codable, Hashable {
         case firstSeenAt = "first_seen_at"
         case lastSeenAt = "last_seen_at"
         case metadata
+        case stripeCustomerId = "stripe_customer_id"
         case claimCodeEligibility = "claim_code_eligibility"
         case referredBy = "referred_by"
         case stats
@@ -75,18 +80,20 @@ public struct User: Codable, Hashable {
 
     public func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
-        try container.encode(self.appUserId, forKey: .appUserId)
-        try container.encode(self.referralCode, forKey: .referralCode)
-        try container.encode(self.referralCodeLink, forKey: .referralCodeLink)
-        try container.encode(self.isTrial, forKey: .isTrial)
-        try container.encode(self.isPremium, forKey: .isPremium)
-        try container.encode(self.firstSeenAt, forKey: .firstSeenAt)
-        try container.encode(self.lastSeenAt, forKey: .lastSeenAt)
-        try container.encode(self.metadata, forKey: .metadata)
-        try container.encode(self.claimCodeEligibility, forKey: .claimCodeEligibility)
-        try container.encode(self.referredBy, forKey: .referredBy)
-        try container.encode(self.stats, forKey: .stats)
-        try container.encode(self.rewards, forKey: .rewards)
-        try container.encode(self.referralProgram, forKey: .referralProgram)
+        try container.encode(appUserId, forKey: .appUserId)
+        try container.encode(referralCode, forKey: .referralCode)
+        try container.encode(referralCodeLink, forKey: .referralCodeLink)
+        try container.encode(isTrial, forKey: .isTrial)
+        try container.encode(isPremium, forKey: .isPremium)
+        try container.encode(firstSeenAt, forKey: .firstSeenAt)
+        try container.encode(lastSeenAt, forKey: .lastSeenAt)
+        try container.encode(metadata, forKey: .metadata)
+        try container.encode(stripeCustomerId, forKey: .stripeCustomerId)
+        try container.encode(claimCodeEligibility, forKey: .claimCodeEligibility)
+        try container.encode(referredBy, forKey: .referredBy)
+        try container.encode(stats, forKey: .stats)
+        try container.encode(rewards, forKey: .rewards)
+        try container.encode(referralProgram, forKey: .referralProgram)
     }
 }
+
