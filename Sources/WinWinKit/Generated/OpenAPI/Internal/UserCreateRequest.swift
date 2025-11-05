@@ -28,7 +28,7 @@ internal struct UserCreateRequest: Codable, Hashable {
     /** The unique identifier of the user in Stripe. */
     public private(set) var stripeCustomerId: String?
 
-    public init(appUserId: String, isTrial: Bool? = nil, isPremium: Bool? = nil, firstSeenAt: Date? = nil, lastSeenAt: Date? = nil, metadata: AnyCodable? = nil, stripeCustomerId: String?) {
+    public init(appUserId: String, isTrial: Bool? = nil, isPremium: Bool? = nil, firstSeenAt: Date? = nil, lastSeenAt: Date? = nil, metadata: AnyCodable? = nil, stripeCustomerId: String? = nil) {
         self.appUserId = appUserId
         self.isTrial = isTrial
         self.isPremium = isPremium
@@ -58,7 +58,7 @@ internal struct UserCreateRequest: Codable, Hashable {
         try container.encodeIfPresent(firstSeenAt, forKey: .firstSeenAt)
         try container.encodeIfPresent(lastSeenAt, forKey: .lastSeenAt)
         try container.encodeIfPresent(metadata, forKey: .metadata)
-        try container.encode(stripeCustomerId, forKey: .stripeCustomerId)
+        try container.encodeIfPresent(stripeCustomerId, forKey: .stripeCustomerId)
     }
 }
 
