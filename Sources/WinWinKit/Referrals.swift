@@ -454,6 +454,13 @@ public final class Referrals {
     }
 
     ///
+    /// Triggers internal refresh.
+    ///
+    public func refresh() {
+        self.userService?.refresh()
+    }
+
+    ///
     /// Resets internal state attached to previously set `appUserId`.
     ///
     public func reset() {
