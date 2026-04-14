@@ -21,7 +21,6 @@ final class UserService {
 
     struct Providers {
         let claimActions: ClaimActionsProviderType
-        let offerCodes: OfferCodesProviderType
         let rewardActions: RewardActionsProviderType
         let users: UsersProviderType
     }
@@ -275,37 +274,7 @@ final class UserService {
         }
     }
 
-    func fetchOfferCode(offerCodeId: String, completion: @escaping (Result<OfferCodeResponseData, Error>) -> Void) {
-        if self.shouldSuspendIndefinitely {
-            Logger.debug("UserService: Fetch offer code suspended indefinitely")
-            completion(.failure(ReferralsError.suspendedIndefinitely))
-            return
-        }
 
-        Task { @MainActor in
-            do {
-                let offerCode = try await self.providers.offerCodes.fetchOfferCode(
-                    offerCodeId: offerCodeId,
-                    apiKey: self.apiKey
-                )
-
-                Logger.debug("UserService: Fetch offer code did finish")
-
-                completion(.success(offerCode))
-            }
-            catch {
-                Logger.debug("UserService: Fetch offer code did fail")
-
-                let referralsError = ReferralsError.fromErrorResponse(error) ?? error
-
-                Logger.error("Failed to fetch offer code: \(String(describing: referralsError))")
-
-                self.handleTaskError(referralsError)
-
-                completion(.failure(referralsError))
-            }
-        }
-    }
 
     // MARK: - Private
 
