@@ -298,9 +298,21 @@ final class UserService {
             for await result in Transaction.updates {
                 guard !Task.isCancelled else { return }
                 guard let self else { return }
-                guard case let .verified(transaction) = result else { continue }
+                guard case let .verified(transaction) = result else {
+                    Logger.debug("UserService: App Store transaction update received but not verified, skipping")
+                    continue
+                }
+
                 let transactionId = String(transaction.originalID)
-                guard !(self.userCache.registeredAppStoreTransactionIds ?? []).contains(transactionId) else { continue }
+                Logger.debug("UserService: App Store transaction update received for \(transactionId)")
+
+                if let registeredIds = self.userCache.registeredAppStoreTransactionIds,
+                   registeredIds.contains(transactionId)
+                {
+                    Logger.debug("UserService: App Store transaction \(transactionId) already registered, skipping")
+                    continue
+                }
+
                 let registered = await self.registerAppStoreTransaction(
                     originalTransactionId: transactionId,
                     appAccountToken: transaction.appAccountToken?.uuidString
