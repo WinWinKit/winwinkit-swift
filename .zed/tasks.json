@@ -1,0 +1,17 @@
+[
+  {
+    "label": "swift: Build",
+    "command": "swift build",
+    "tags": ["swift-build"]
+  },
+  {
+    "label": "swift: Test",
+    "command": "swift test",
+    "tags": ["swift-test"]
+  },
+  {
+    "label": "Generate OpenAPI",
+    "command": "./openapi.generate",
+    "tags": ["openapi-generate"]
+  }
+]
