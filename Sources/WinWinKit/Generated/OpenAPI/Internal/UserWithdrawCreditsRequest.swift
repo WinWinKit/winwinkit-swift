@@ -17,15 +17,19 @@ internal struct UserWithdrawCreditsRequest: Codable, Hashable {
     public private(set) var key: String
     /** The amount of credits to withdraw */
     public private(set) var amount: Int
+    /** An optional operation id that ensures the same operation won't be performed again */
+    public private(set) var operationId: String?
 
-    public init(key: String, amount: Int) {
+    public init(key: String, amount: Int, operationId: String? = nil) {
         self.key = key
         self.amount = amount
+        self.operationId = operationId
     }
 
     public enum CodingKeys: String, CodingKey, CaseIterable {
         case key
         case amount
+        case operationId = "operation_id"
     }
 
     // Encodable protocol methods
@@ -34,6 +38,7 @@ internal struct UserWithdrawCreditsRequest: Codable, Hashable {
         var container = encoder.container(keyedBy: CodingKeys.self)
         try container.encode(key, forKey: .key)
         try container.encode(amount, forKey: .amount)
+        try container.encodeIfPresent(operationId, forKey: .operationId)
     }
 }
 
