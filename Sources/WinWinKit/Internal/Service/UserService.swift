@@ -295,21 +295,23 @@ final class UserService {
 
     private func startObservingAppStoreTransactions() {
         self.appStoreTransactionUpdatesTask = Task { [weak self] in
-            await withTaskGroup(of: Void.self) { group in
-                group.addTask { await self?.observeAppStoreTransactions(Transaction.currentEntitlements) }
-                group.addTask { await self?.observeAppStoreTransactions(Transaction.updates) }
+            for await result in Transaction.currentEntitlements {
+                guard !Task.isCancelled else { return }
+                await self?.handleAppStoreTransactionResult(result)
+            }
+
+            for await result in Transaction.updates {
+                guard !Task.isCancelled else { return }
+                await self?.handleAppStoreTransactionResult(result)
             }
         }
     }
 
-    private func observeAppStoreTransactions<S: AsyncSequence>(_ sequence: S) async where S.Element == VerificationResult<StoreKit.Transaction> {
-        do {
-            for try await result in sequence {
-                guard !Task.isCancelled else { return }
-                await self.handleAppStoreTransactionResult(result)
+    func syncTransactions() {
+        Task { [weak self] in
+            for await result in Transaction.currentEntitlements {
+                await self?.handleAppStoreTransactionResult(result)
             }
-        } catch {
-            Logger.error("Failed to observe App Store transactions: \(String(describing: error))")
         }
     }
 

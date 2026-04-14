@@ -404,6 +404,15 @@ public final class Referrals {
     }
 
     ///
+    /// Syncs App Store transactions with the backend.
+    /// Only needed when using the direct revenue tracking approach.
+    /// Call this after a purchase has been made.
+    ///
+    public func syncTransactions() {
+        self.userService?.syncTransactions()
+    }
+
+    ///
     /// Resets internal state attached to previously set `appUserId`.
     ///
     public func reset() {
