@@ -19,6 +19,7 @@ internal class AppStoreAPI {
      - parameter xApiKey: (header) The API key to authenticate with. 
      - returns: OfferCodeResponse
      */
+    @available(*, deprecated, message: "This operation is deprecated.")
     @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
     internal class func getOfferCode(offerCodeId: String, xApiKey: String) async throws -> OfferCodeResponse {
         return try await getOfferCodeWithRequestBuilder(offerCodeId: offerCodeId, xApiKey: xApiKey).execute().body
@@ -27,11 +28,12 @@ internal class AppStoreAPI {
     /**
      Get Offer Code
      - GET /app-store/offer-codes/{offer_code_id}
-     - Get an offer code with subscription and prices by the offer code id.
+     - Get an offer code with subscription and prices by the offer code id. Deprecated: this endpoint is deprecated and will be removed in a future release; please migrate away from it.
      - parameter offerCodeId: (path) The offer code id to retrieve. 
      - parameter xApiKey: (header) The API key to authenticate with. 
      - returns: RequestBuilder<OfferCodeResponse> 
      */
+    @available(*, deprecated, message: "This operation is deprecated.")
     internal class func getOfferCodeWithRequestBuilder(offerCodeId: String, xApiKey: String) -> RequestBuilder<OfferCodeResponse> {
         var localVariablePath = "/app-store/offer-codes/{offer_code_id}"
         let offerCodeIdPreEscape = "\(APIHelper.mapValueToPathItem(offerCodeId))"

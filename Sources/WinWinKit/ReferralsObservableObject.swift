@@ -115,59 +115,9 @@ public final class ReferralsObservableObject {
         self.onClaimCode?(code)
     }
 
-    // Offer Codes
-    public enum OfferCodeState {
-        case loading
-        case success(AppStoreOfferCode, AppStoreSubscription)
-        case failure(Error)
-
-        public var isLoading: Bool {
-            switch self {
-            case .loading:
-                return true
-            default:
-                return false
-            }
-        }
-
-        public var isSuccess: Bool {
-            switch self {
-            case .success:
-                return true
-            default:
-                return false
-            }
-        }
-
-        public var isFailure: Bool {
-            switch self {
-            case .failure:
-                return true
-            default:
-                return false
-            }
-        }
-        
-        public var errorObjects: [ErrorObject]? {
-            switch self {
-            case .failure(let error):
-                return (error as? ReferralsError)?.errorObjects
-            default:
-                return nil
-            }
-        }
-    }
-
-    public internal(set) var offerCodesState: [String: OfferCodeState] = [:]
-
-    public func fetchOfferCode(offerCodeId: String) {
-        self.onFetchOfferCode?(offerCodeId)
-    }
-
     // MARK: - Internal
 
     init() {}
 
     var onClaimCode: ((String) -> Void)?
-    var onFetchOfferCode: ((String) -> Void)?
 }

@@ -91,4 +91,48 @@ internal class UsersAPI {
 
         return localVariableRequestBuilder.init(method: "GET", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
     }
+
+    /**
+     Register App Store Transaction
+     
+     - parameter appUserId: (path) The app user id of the user. 
+     - parameter xApiKey: (header) The API key to authenticate with. 
+     - parameter userRegisterAppStoreTransactionRequest: (body)  
+     - returns: Void
+     */
+    @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
+    internal class func registerAppStoreTransaction(appUserId: String, xApiKey: String, userRegisterAppStoreTransactionRequest: UserRegisterAppStoreTransactionRequest) async throws {
+        return try await registerAppStoreTransactionWithRequestBuilder(appUserId: appUserId, xApiKey: xApiKey, userRegisterAppStoreTransactionRequest: userRegisterAppStoreTransactionRequest).execute().body
+    }
+
+    /**
+     Register App Store Transaction
+     - POST /users/{app_user_id}/transactions/app-store
+     - Registers the mapping between a user and their Apple originalTransactionId.
+     - parameter appUserId: (path) The app user id of the user. 
+     - parameter xApiKey: (header) The API key to authenticate with. 
+     - parameter userRegisterAppStoreTransactionRequest: (body)  
+     - returns: RequestBuilder<Void> 
+     */
+    internal class func registerAppStoreTransactionWithRequestBuilder(appUserId: String, xApiKey: String, userRegisterAppStoreTransactionRequest: UserRegisterAppStoreTransactionRequest) -> RequestBuilder<Void> {
+        var localVariablePath = "/users/{app_user_id}/transactions/app-store"
+        let appUserIdPreEscape = "\(APIHelper.mapValueToPathItem(appUserId))"
+        let appUserIdPostEscape = appUserIdPreEscape.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? ""
+        localVariablePath = localVariablePath.replacingOccurrences(of: "{app_user_id}", with: appUserIdPostEscape, options: .literal, range: nil)
+        let localVariableURLString = WinWinKitAPI.basePath + localVariablePath
+        let localVariableParameters = JSONEncodingHelper.encodingParameters(forEncodableObject: userRegisterAppStoreTransactionRequest)
+
+        let localVariableUrlComponents = URLComponents(string: localVariableURLString)
+
+        let localVariableNillableHeaders: [String: Any?] = [
+            "Content-Type": "application/json",
+            "x-api-key": xApiKey.encodeToJSON(),
+        ]
+
+        let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
+
+        let localVariableRequestBuilder: RequestBuilder<Void>.Type = WinWinKitAPI.requestBuilderFactory.getNonDecodableBuilder()
+
+        return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+    }
 }

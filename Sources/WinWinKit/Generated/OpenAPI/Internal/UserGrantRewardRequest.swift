@@ -14,13 +14,17 @@ internal struct UserGrantRewardRequest: Codable, Hashable {
 
     /** The key of the reward to grant */
     public private(set) var key: String
+    /** An optional operation id that ensures the same operation won't be performed again */
+    public private(set) var operationId: String?
 
-    public init(key: String) {
+    public init(key: String, operationId: String? = nil) {
         self.key = key
+        self.operationId = operationId
     }
 
     public enum CodingKeys: String, CodingKey, CaseIterable {
         case key
+        case operationId = "operation_id"
     }
 
     // Encodable protocol methods
@@ -28,6 +32,7 @@ internal struct UserGrantRewardRequest: Codable, Hashable {
     internal func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
         try container.encode(key, forKey: .key)
+        try container.encodeIfPresent(operationId, forKey: .operationId)
     }
 }
 

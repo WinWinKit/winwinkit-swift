@@ -12,6 +12,7 @@
 
 import AnyCodable
 import Foundation
+import StoreKit
 
 final class UserService {
     let appUserId: String
@@ -20,8 +21,8 @@ final class UserService {
     let userCache: UserCacheType
 
     struct Providers {
+        let appStoreTransactions: AppStoreTransactionsProviderType
         let claimActions: ClaimActionsProviderType
-        let offerCodes: OfferCodesProviderType
         let rewardActions: RewardActionsProviderType
         let users: UsersProviderType
     }
@@ -36,6 +37,10 @@ final class UserService {
         self.providers = providers
         self.userCache = userCache
 
+        if let cachedUser = self.userCache.user, cachedUser.appUserId != appUserId {
+            self.userCache.registeredAppStoreTransactionIds = nil
+        }
+
         if self.cachedUser == nil {
             self.cacheUserUpdate(
                 UserUpdate(
@@ -48,6 +53,12 @@ final class UserService {
                 )
             )
         }
+
+        self.startObservingAppStoreTransactions()
+    }
+
+    deinit {
+        self.appStoreTransactionUpdatesTask?.cancel()
     }
 
     weak var delegate: UserServiceDelegate?
@@ -275,43 +286,93 @@ final class UserService {
         }
     }
 
-    func fetchOfferCode(offerCodeId: String, completion: @escaping (Result<OfferCodeResponseData, Error>) -> Void) {
-        if self.shouldSuspendIndefinitely {
-            Logger.debug("UserService: Fetch offer code suspended indefinitely")
-            completion(.failure(ReferralsError.suspendedIndefinitely))
-            return
-        }
-
-        Task { @MainActor in
-            do {
-                let offerCode = try await self.providers.offerCodes.fetchOfferCode(
-                    offerCodeId: offerCodeId,
-                    apiKey: self.apiKey
-                )
-
-                Logger.debug("UserService: Fetch offer code did finish")
-
-                completion(.success(offerCode))
-            }
-            catch {
-                Logger.debug("UserService: Fetch offer code did fail")
-
-                let referralsError = ReferralsError.fromErrorResponse(error) ?? error
-
-                Logger.error("Failed to fetch offer code: \(String(describing: referralsError))")
-
-                self.handleTaskError(referralsError)
-
-                completion(.failure(referralsError))
-            }
-        }
-    }
-
     // MARK: - Private
 
     private(set) var shouldSuspendIndefinitely: Bool = false
 
     private var refreshTask: Task<Void, Never>?
+    private var appStoreTransactionUpdatesTask: Task<Void, Never>?
+
+    private func startObservingAppStoreTransactions() {
+        self.appStoreTransactionUpdatesTask = Task { [weak self] in
+            for await result in Transaction.currentEntitlements {
+                guard !Task.isCancelled else { return }
+                await self?.handleAppStoreTransactionResult(result)
+            }
+
+            for await result in Transaction.updates {
+                guard !Task.isCancelled else { return }
+                await self?.handleAppStoreTransactionResult(result)
+            }
+        }
+    }
+
+    func syncTransactions() {
+        Task { [weak self] in
+            for await result in Transaction.currentEntitlements {
+                await self?.handleAppStoreTransactionResult(result)
+            }
+        }
+    }
+
+    private func handleAppStoreTransactionResult(_ result: VerificationResult<StoreKit.Transaction>) async {
+        guard case let .verified(transaction) = result else {
+            Logger.debug("UserService: App Store transaction update received but not verified, skipping")
+            return
+        }
+
+        let transactionId = String(transaction.originalID)
+        Logger.debug("UserService: App Store transaction update received for \(transactionId)")
+
+        if let registeredIds = self.userCache.registeredAppStoreTransactionIds,
+           registeredIds.contains(transactionId)
+        {
+            Logger.debug("UserService: App Store transaction \(transactionId) already registered, skipping")
+            return
+        }
+
+        let registered = await self.registerAppStoreTransaction(
+            originalTransactionId: transactionId,
+            appAccountToken: transaction.appAccountToken?.uuidString
+        )
+        if registered {
+            var ids = self.userCache.registeredAppStoreTransactionIds ?? []
+            ids.insert(transactionId)
+            self.userCache.registeredAppStoreTransactionIds = ids
+        }
+    }
+
+    private func registerAppStoreTransaction(originalTransactionId: String, appAccountToken: String?) async -> Bool {
+        guard !self.shouldSuspendIndefinitely else {
+            Logger.debug("UserService: Register App Store transaction suspended indefinitely")
+            return false
+        }
+
+        do {
+            let request = UserRegisterAppStoreTransactionRequest(
+                originalTransactionId: originalTransactionId,
+                appAccountToken: appAccountToken
+            )
+            try await self.providers.appStoreTransactions.registerTransaction(
+                request: request,
+                appUserId: self.appUserId,
+                apiKey: self.apiKey
+            )
+
+            Logger.debug("UserService: Register App Store transaction did finish")
+
+            return true
+        }
+        catch {
+            let referralsError = ReferralsError.fromErrorResponse(error) ?? error
+
+            Logger.error("Failed to register App Store transaction: \(String(describing: referralsError))")
+
+            await MainActor.run { self.handleTaskError(referralsError) }
+
+            return false
+        }
+    }
 
     private var pendingUserUpdate: UserUpdate? {
         get {

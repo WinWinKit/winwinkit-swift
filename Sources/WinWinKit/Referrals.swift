@@ -174,9 +174,6 @@ public final class Referrals {
         created.onClaimCode = { [weak self] code in
             self?.claimCode(code: code) { _ in }
         }
-        created.onFetchOfferCode = { [weak self] offerCodeId in
-            self?.fetchOfferCode(offerCodeId: offerCodeId) { _ in }
-        }
         self._observableObject = created
         return created
     }
@@ -400,64 +397,19 @@ public final class Referrals {
     }
 
     ///
-    /// Fetch an offer code.
-    ///
-    /// - Parameter offerCodeId: The id of the offer code to fetch.
-    ///
-    /// - Returns: A tuple containing the offer code and the subscription.
-    ///
-    /// - Throws: An error if the offer code is not found or the user is not eligible to fetch it.
-    ///
-    public func fetchOfferCode(offerCodeId: String) async throws -> (AppStoreOfferCode, AppStoreSubscription) {
-        try await withCheckedThrowingContinuation { continuation in
-            self.fetchOfferCode(offerCodeId: offerCodeId) { result in
-                switch result {
-                case let .success(data):
-                    continuation.resume(returning: data)
-                case let .failure(error):
-                    continuation.resume(throwing: error)
-                }
-            }
-        }
-    }
-
-    ///
-    /// Fetch an offer code.
-    ///
-    /// - Parameter offerCodeId: The id of the offer code to fetch.
-    /// - Parameter completion: A closure to be called when the offer code is fetched.
-    ///
-    public func fetchOfferCode(offerCodeId: String, completion: @escaping (Result<(AppStoreOfferCode, AppStoreSubscription), Error>) -> Void) {
-        guard
-            let userService
-        else {
-            Logger.warning("User identifier `appUserId` must be set before fetching offer code.")
-            completion(.failure(ReferralsError.appUserIdNotSet))
-            return
-        }
-
-        if #available(iOS 17.0, macOS 14.0, *) {
-            self.retainedObservableObject?.offerCodesState[offerCodeId] = .loading
-        }
-
-        userService.fetchOfferCode(offerCodeId: offerCodeId) { result in
-            if #available(iOS 17.0, macOS 14.0, *) {
-                switch result {
-                case let .success(data):
-                    self.retainedObservableObject?.offerCodesState[offerCodeId] = .success(data.offerCode, data.subscription)
-                case let .failure(error):
-                    self.retainedObservableObject?.offerCodesState[offerCodeId] = .failure(error)
-                }
-            }
-            completion(result.map { ($0.offerCode, $0.subscription) })
-        }
-    }
-
-    ///
     /// Triggers internal refresh.
     ///
     public func refresh() {
         self.userService?.refresh()
+    }
+
+    ///
+    /// Syncs App Store transactions with the backend.
+    /// Only needed when using the direct revenue tracking approach.
+    /// Call this after a purchase has been made.
+    ///
+    public func syncTransactions() {
+        self.userService?.syncTransactions()
     }
 
     ///
@@ -510,8 +462,8 @@ public final class Referrals {
         let networkReachability = NetworkReachability()
         let userCache = UserCache(keyValueCache: keyValueCache)
         let providers = UserService.Providers(
+            appStoreTransactions: AppStoreTransactionsProvider(),
             claimActions: ClaimActionsProvider(),
-            offerCodes: OfferCodesProvider(),
             rewardActions: RewardActionsProvider(),
             users: UsersProvider()
         )

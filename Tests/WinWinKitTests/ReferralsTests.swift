@@ -5,9 +5,9 @@ import Testing
 @Suite struct ReferralsTests {
     struct Dependencies {
         let apiKey: String
+        let appStoreTransactionsProvider: MockAppStoreTransactionsProvider
         let claimActionsProvider: MockClaimActionsProvider
         let networkReachability: MockNetworkReachability
-        let offerCodeProvider: MockOfferCodesProvider
         let rewardActionsProvider: MockRewardActionsProvider
         let usersProvider: MockUsersProvider
         let userCache: UserCacheType
@@ -19,9 +19,9 @@ import Testing
     init() {
         self.dependencies = Dependencies(
             apiKey: MockConstants.apiKey,
+            appStoreTransactionsProvider: MockAppStoreTransactionsProvider(),
             claimActionsProvider: MockClaimActionsProvider(),
             networkReachability: MockNetworkReachability(),
-            offerCodeProvider: MockOfferCodesProvider(),
             rewardActionsProvider: MockRewardActionsProvider(),
             usersProvider: MockUsersProvider(),
             userCache: UserCache(keyValueCache: MockKeyValueCache())
@@ -30,8 +30,8 @@ import Testing
             apiKey: self.dependencies.apiKey,
             networkReachability: self.dependencies.networkReachability,
             providers: .init(
+                appStoreTransactions: self.dependencies.appStoreTransactionsProvider,
                 claimActions: self.dependencies.claimActionsProvider,
-                offerCodes: self.dependencies.offerCodeProvider,
                 rewardActions: self.dependencies.rewardActionsProvider,
                 users: self.dependencies.usersProvider
             ),
@@ -165,9 +165,6 @@ import Testing
         }
         await #expect(throws: ReferralsError.suspendedIndefinitely) {
             try await self.referrals.withdrawCredits(key: "key", amount: 100)
-        }
-        await #expect(throws: ReferralsError.suspendedIndefinitely) {
-            try await self.referrals.fetchOfferCode(offerCodeId: "offer-code-id")
         }
         #expect(delegate.receivedUpdatedUserCallsCounter == 0)
         #expect(delegate.receivedErrorCallsCounter == 4)
