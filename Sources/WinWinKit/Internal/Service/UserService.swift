@@ -368,7 +368,7 @@ final class UserService {
 
             Logger.error("Failed to register App Store transaction: \(String(describing: referralsError))")
 
-            self.handleTaskError(referralsError)
+            await MainActor.run { self.handleTaskError(referralsError) }
 
             return false
         }
