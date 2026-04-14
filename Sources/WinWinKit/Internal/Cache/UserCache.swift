@@ -13,12 +13,14 @@
 protocol UserCacheType {
     var user: User? { get nonmutating set }
     var userUpdate: UserUpdate? { get nonmutating set }
+    var registeredAppStoreTransactionIds: Set<String>? { get nonmutating set }
 }
 
 extension UserCacheType {
     func reset() {
         self.user = nil
         self.userUpdate = nil
+        self.registeredAppStoreTransactionIds = nil
     }
 }
 
@@ -69,10 +71,32 @@ struct UserCache: UserCacheType {
         }
     }
 
+    var registeredAppStoreTransactionIds: Set<String>? {
+        get {
+            do {
+                return try self.keyValueCache[Keys.appStoreTransactionIds].map { try CodableHelper.jsonDecoder.decode(Set<String>.self, from: $0) }
+            }
+            catch {
+                Logger.error("Unable to deserialize registered App Store transaction ids.")
+                self.keyValueCache[Keys.appStoreTransactionIds] = nil
+                return nil
+            }
+        }
+        nonmutating set {
+            do {
+                self.keyValueCache[Keys.appStoreTransactionIds] = try newValue.map { try CodableHelper.jsonEncoder.encode($0) }
+            }
+            catch {
+                Logger.error("Unable to serialize registered App Store transaction ids.")
+            }
+        }
+    }
+
     // MARK: - Private
 
     private enum Keys {
         static let user = "com.winwinkit.cache.user"
         static let userUpdate = "com.winwinkit.cache.userUpdate"
+        static let appStoreTransactionIds = "com.winwinkit.cache.appStoreTransactionIds"
     }
 }

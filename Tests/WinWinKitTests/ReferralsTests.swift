@@ -5,6 +5,7 @@ import Testing
 @Suite struct ReferralsTests {
     struct Dependencies {
         let apiKey: String
+        let appStoreTransactionsProvider: MockAppStoreTransactionsProvider
         let claimActionsProvider: MockClaimActionsProvider
         let networkReachability: MockNetworkReachability
         let rewardActionsProvider: MockRewardActionsProvider
@@ -18,6 +19,7 @@ import Testing
     init() {
         self.dependencies = Dependencies(
             apiKey: MockConstants.apiKey,
+            appStoreTransactionsProvider: MockAppStoreTransactionsProvider(),
             claimActionsProvider: MockClaimActionsProvider(),
             networkReachability: MockNetworkReachability(),
             rewardActionsProvider: MockRewardActionsProvider(),
@@ -28,6 +30,7 @@ import Testing
             apiKey: self.dependencies.apiKey,
             networkReachability: self.dependencies.networkReachability,
             providers: .init(
+                appStoreTransactions: self.dependencies.appStoreTransactionsProvider,
                 claimActions: self.dependencies.claimActionsProvider,
                 rewardActions: self.dependencies.rewardActionsProvider,
                 users: self.dependencies.usersProvider

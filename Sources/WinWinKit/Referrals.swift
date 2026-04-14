@@ -453,6 +453,7 @@ public final class Referrals {
         let networkReachability = NetworkReachability()
         let userCache = UserCache(keyValueCache: keyValueCache)
         let providers = UserService.Providers(
+            appStoreTransactions: AppStoreTransactionsProvider(),
             claimActions: ClaimActionsProvider(),
             rewardActions: RewardActionsProvider(),
             users: UsersProvider()
