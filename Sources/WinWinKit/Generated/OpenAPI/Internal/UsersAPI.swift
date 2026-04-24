@@ -135,4 +135,48 @@ internal class UsersAPI {
 
         return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
     }
+
+    /**
+     Register Google Play Transaction
+     
+     - parameter appUserId: (path) The app user id of the user. 
+     - parameter xApiKey: (header) The API key to authenticate with. 
+     - parameter userRegisterGooglePlayTransactionRequest: (body)  
+     - returns: Void
+     */
+    @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
+    internal class func registerGooglePlayTransaction(appUserId: String, xApiKey: String, userRegisterGooglePlayTransactionRequest: UserRegisterGooglePlayTransactionRequest) async throws {
+        return try await registerGooglePlayTransactionWithRequestBuilder(appUserId: appUserId, xApiKey: xApiKey, userRegisterGooglePlayTransactionRequest: userRegisterGooglePlayTransactionRequest).execute().body
+    }
+
+    /**
+     Register Google Play Transaction
+     - POST /users/{app_user_id}/transactions/google-play
+     - Registers the mapping between a user and their Google Play purchaseToken.
+     - parameter appUserId: (path) The app user id of the user. 
+     - parameter xApiKey: (header) The API key to authenticate with. 
+     - parameter userRegisterGooglePlayTransactionRequest: (body)  
+     - returns: RequestBuilder<Void> 
+     */
+    internal class func registerGooglePlayTransactionWithRequestBuilder(appUserId: String, xApiKey: String, userRegisterGooglePlayTransactionRequest: UserRegisterGooglePlayTransactionRequest) -> RequestBuilder<Void> {
+        var localVariablePath = "/users/{app_user_id}/transactions/google-play"
+        let appUserIdPreEscape = "\(APIHelper.mapValueToPathItem(appUserId))"
+        let appUserIdPostEscape = appUserIdPreEscape.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? ""
+        localVariablePath = localVariablePath.replacingOccurrences(of: "{app_user_id}", with: appUserIdPostEscape, options: .literal, range: nil)
+        let localVariableURLString = WinWinKitAPI.basePath + localVariablePath
+        let localVariableParameters = JSONEncodingHelper.encodingParameters(forEncodableObject: userRegisterGooglePlayTransactionRequest)
+
+        let localVariableUrlComponents = URLComponents(string: localVariableURLString)
+
+        let localVariableNillableHeaders: [String: Any?] = [
+            "Content-Type": "application/json",
+            "x-api-key": xApiKey.encodeToJSON(),
+        ]
+
+        let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
+
+        let localVariableRequestBuilder: RequestBuilder<Void>.Type = WinWinKitAPI.requestBuilderFactory.getNonDecodableBuilder()
+
+        return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+    }
 }
