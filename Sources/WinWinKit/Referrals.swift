@@ -174,6 +174,36 @@ public final class Referrals {
         created.onClaimCode = { [weak self] code in
             self?.claimCode(code: code) { _ in }
         }
+        created.onWithdrawCredits = { [weak self] key, amount in
+            self?.withdrawCredits(key: key, amount: amount) { _ in }
+        }
+        created.onSetAppUserId = { [weak self] appUserId in
+            self?.set(appUserId: appUserId)
+        }
+        created.onSetIsPremium = { [weak self] isPremium in
+            self?.set(isPremium: isPremium)
+        }
+        created.onSetIsTrial = { [weak self] isTrial in
+            self?.set(isTrial: isTrial)
+        }
+        created.onSetFirstSeenAt = { [weak self] firstSeenAt in
+            self?.set(firstSeenAt: firstSeenAt)
+        }
+        created.onSetMetadata = { [weak self] metadata in
+            self?.set(metadata: metadata)
+        }
+        created.onSetStripeCustomerId = { [weak self] stripeCustomerId in
+            self?.set(stripeCustomerId: stripeCustomerId)
+        }
+        created.onRefresh = { [weak self] in
+            self?.refresh()
+        }
+        created.onSyncTransactions = { [weak self] in
+            self?.syncTransactions()
+        }
+        created.onReset = { [weak self] in
+            self?.reset()
+        }
         self._observableObject = created
         return created
     }
@@ -391,7 +421,20 @@ public final class Referrals {
             return
         }
 
-        userService.withdrawCredits(key: key, amount: amount) { result in
+        if #available(iOS 17.0, macOS 14.0, *) {
+            self.retainedObservableObject?.withdrawCreditsState = .loading
+        }
+
+        userService.withdrawCredits(key: key, amount: amount) { [weak self] result in
+            if #available(iOS 17.0, macOS 14.0, *) {
+                switch result {
+                case let .success(data):
+                    self?.retainedObservableObject?.withdrawCreditsState = .success(data.withdrawResult)
+                case let .failure(error):
+                    self?.retainedObservableObject?.withdrawCreditsState = .failure(error)
+                }
+            }
+
             completion(result.map { ($0.user, $0.withdrawResult) })
         }
     }

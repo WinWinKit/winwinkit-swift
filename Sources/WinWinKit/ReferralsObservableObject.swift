@@ -10,6 +10,8 @@
 //  Created by Oleh Stasula on 22/05/2025.
 //
 
+import AnyCodable
+import Foundation
 import Observation
 
 @available(iOS 17.0, *)
@@ -52,7 +54,7 @@ public final class ReferralsObservableObject {
                 return false
             }
         }
-        
+
         public var errorObjects: [ErrorObject]? {
             switch self {
             case .failure(let error):
@@ -98,7 +100,7 @@ public final class ReferralsObservableObject {
                 return false
             }
         }
-        
+
         public var errorObjects: [ErrorObject]? {
             switch self {
             case .failure(let error):
@@ -115,9 +117,107 @@ public final class ReferralsObservableObject {
         self.onClaimCode?(code)
     }
 
+    // Withdraw Credits
+    public enum WithdrawCreditsState {
+        case none
+        case loading
+        case success(UserWithdrawCreditsResult)
+        case failure(Error)
+
+        public var isLoading: Bool {
+            switch self {
+            case .loading:
+                return true
+            default:
+                return false
+            }
+        }
+
+        public var isSuccess: Bool {
+            switch self {
+            case .success:
+                return true
+            default:
+                return false
+            }
+        }
+
+        public var isFailure: Bool {
+            switch self {
+            case .failure:
+                return true
+            default:
+                return false
+            }
+        }
+
+        public var errorObjects: [ErrorObject]? {
+            switch self {
+            case .failure(let error):
+                return (error as? ReferralsError)?.errorObjects
+            default:
+                return nil
+            }
+        }
+    }
+
+    public internal(set) var withdrawCreditsState: WithdrawCreditsState = .none
+
+    public func withdrawCredits(key: String, amount: Int) {
+        self.onWithdrawCredits?(key, amount)
+    }
+
+    // User properties
+    public func set(appUserId: String) {
+        self.onSetAppUserId?(appUserId)
+    }
+
+    public func set(isPremium: Bool) {
+        self.onSetIsPremium?(isPremium)
+    }
+
+    public func set(isTrial: Bool) {
+        self.onSetIsTrial?(isTrial)
+    }
+
+    public func set(firstSeenAt: Date) {
+        self.onSetFirstSeenAt?(firstSeenAt)
+    }
+
+    public func set(metadata: AnyCodable) {
+        self.onSetMetadata?(metadata)
+    }
+
+    public func set(stripeCustomerId: String?) {
+        self.onSetStripeCustomerId?(stripeCustomerId)
+    }
+
+    // Lifecycle
+    public func refresh() {
+        self.onRefresh?()
+    }
+
+    public func syncTransactions() {
+        self.onSyncTransactions?()
+    }
+
+    public func reset() {
+        self.onReset?()
+    }
+
     // MARK: - Internal
 
     init() {}
 
     var onClaimCode: ((String) -> Void)?
+    var onWithdrawCredits: ((String, Int) -> Void)?
+    var onSetAppUserId: ((String) -> Void)?
+    var onSetIsPremium: ((Bool) -> Void)?
+    var onSetIsTrial: ((Bool) -> Void)?
+    var onSetFirstSeenAt: ((Date) -> Void)?
+    var onSetMetadata: ((AnyCodable) -> Void)?
+    var onSetStripeCustomerId: ((String?) -> Void)?
+    var onRefresh: (() -> Void)?
+    var onSyncTransactions: (() -> Void)?
+    var onReset: (() -> Void)?
 }
