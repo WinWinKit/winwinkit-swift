@@ -247,6 +247,45 @@ final class UserService {
         }
     }
 
+    func grantReward(key: String, operationId: String?, completion: @escaping (Result<UserGrantRewardResponseData, Error>) -> Void) {
+        if self.shouldSuspendIndefinitely {
+            Logger.debug("UserService: Grant reward suspended indefinitely")
+            completion(.failure(ReferralsError.suspendedIndefinitely))
+            return
+        }
+
+        Task { @MainActor in
+            do {
+                let request = UserGrantRewardRequest(
+                    key: key,
+                    operationId: operationId
+                )
+                let userGrantRewardResponse = try await self.providers.rewardActions.grantReward(
+                    request: request,
+                    appUserId: self.appUserId,
+                    apiKey: self.apiKey
+                )
+
+                Logger.debug("UserService: Grant reward did finish")
+
+                self.cacheUser(userGrantRewardResponse.user)
+
+                completion(.success(userGrantRewardResponse))
+            }
+            catch {
+                Logger.debug("UserService: Grant reward did fail")
+
+                let referralsError = ReferralsError.fromErrorResponse(error) ?? error
+
+                Logger.error("Failed to grant reward: \(String(describing: referralsError))")
+
+                self.handleTaskError(referralsError)
+
+                completion(.failure(referralsError))
+            }
+        }
+    }
+
     func withdrawCredits(key: String, amount: Int, completion: @escaping (Result<UserWithdrawCreditsResponseData, Error>) -> Void) {
         if self.shouldSuspendIndefinitely {
             Logger.debug("UserService: Withdraw credits suspended indefinitely")

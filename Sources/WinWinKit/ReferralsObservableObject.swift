@@ -117,6 +117,62 @@ public final class ReferralsObservableObject {
         self.onClaimCode?(code)
     }
 
+    // Grant Reward
+    public enum GrantRewardState {
+        case none
+        case loading
+        case success(UserRewardsGranted)
+        case failure(Error)
+
+        public var isLoading: Bool {
+            switch self {
+            case .loading:
+                return true
+            default:
+                return false
+            }
+        }
+
+        public var isSuccess: Bool {
+            switch self {
+            case .success:
+                return true
+            default:
+                return false
+            }
+        }
+
+        public var isFailure: Bool {
+            switch self {
+            case .failure:
+                return true
+            default:
+                return false
+            }
+        }
+
+        public var errorObjects: [ErrorObject]? {
+            switch self {
+            case .failure(let error):
+                return (error as? ReferralsError)?.errorObjects
+            default:
+                return nil
+            }
+        }
+    }
+
+    public internal(set) var grantRewardState: GrantRewardState = .none
+
+    ///
+    /// Grant a reward to the current user.
+    ///
+    /// - Important: This endpoint is only accessible when ``Referrals`` was configured
+    /// with a **secret API key**. Calls made with a public key will be rejected by the server.
+    ///
+    public func grantReward(key: String, operationId: String? = nil) {
+        self.onGrantReward?(key, operationId)
+    }
+
     // Withdraw Credits
     public enum WithdrawCreditsState {
         case none
@@ -210,6 +266,7 @@ public final class ReferralsObservableObject {
     init() {}
 
     var onClaimCode: ((String) -> Void)?
+    var onGrantReward: ((String, String?) -> Void)?
     var onWithdrawCredits: ((String, Int) -> Void)?
     var onSetAppUserId: ((String) -> Void)?
     var onSetIsPremium: ((Bool) -> Void)?

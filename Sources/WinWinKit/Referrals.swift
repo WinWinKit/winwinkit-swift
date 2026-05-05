@@ -174,6 +174,9 @@ public final class Referrals {
         created.onClaimCode = { [weak self] code in
             self?.claimCode(code: code) { _ in }
         }
+        created.onGrantReward = { [weak self] key, operationId in
+            self?.grantReward(key: key, operationId: operationId) { _ in }
+        }
         created.onWithdrawCredits = { [weak self] key, amount in
             self?.withdrawCredits(key: key, amount: amount) { _ in }
         }
@@ -375,6 +378,73 @@ public final class Referrals {
                     self?.retainedObservableObject?.claimCodeState = .success(data.rewardsGranted)
                 case let .failure(error):
                     self?.retainedObservableObject?.claimCodeState = .failure(error)
+                }
+            }
+
+            completion(result.map { ($0.user, $0.rewardsGranted) })
+        }
+    }
+
+    ///
+    /// Grant a reward to the current user.
+    ///
+    /// - Important: This endpoint is only accessible with a **secret API key**.
+    /// ``Referrals`` must have been configured via ``Referrals/configure(apiKey:)``
+    /// using a secret key — calls made with a public key will be rejected by the server.
+    /// Currently only granting of credit rewards is supported.
+    ///
+    /// - Parameter key: The key of the reward to grant.
+    /// - Parameter operationId: An optional operation id that ensures the same operation won't be performed again.
+    ///
+    /// - Returns: A tuple containing the updated user and the rewards granted.
+    ///
+    /// - Throws: An error if the reward cannot be granted.
+    ///
+    public func grantReward(key: String, operationId: String? = nil) async throws -> (User, UserRewardsGranted) {
+        try await withCheckedThrowingContinuation { continuation in
+            self.grantReward(key: key, operationId: operationId) { result in
+                switch result {
+                case let .success(data):
+                    continuation.resume(returning: data)
+                case let .failure(error):
+                    continuation.resume(throwing: error)
+                }
+            }
+        }
+    }
+
+    ///
+    /// Grant a reward to the current user.
+    ///
+    /// - Important: This endpoint is only accessible with a **secret API key**.
+    /// ``Referrals`` must have been configured via ``Referrals/configure(apiKey:)``
+    /// using a secret key — calls made with a public key will be rejected by the server.
+    /// Currently only granting of credit rewards is supported.
+    ///
+    /// - Parameter key: The key of the reward to grant.
+    /// - Parameter operationId: An optional operation id that ensures the same operation won't be performed again.
+    /// - Parameter completion: A closure to be called when the grant is complete.
+    ///
+    public func grantReward(key: String, operationId: String? = nil, completion: @escaping (Result<(User, UserRewardsGranted), Error>) -> Void) {
+        guard
+            let userService
+        else {
+            Logger.warning("User identifier `appUserId` must be set before granting reward.")
+            completion(.failure(ReferralsError.appUserIdNotSet))
+            return
+        }
+
+        if #available(iOS 17.0, macOS 14.0, *) {
+            self.retainedObservableObject?.grantRewardState = .loading
+        }
+
+        userService.grantReward(key: key, operationId: operationId) { [weak self] result in
+            if #available(iOS 17.0, macOS 14.0, *) {
+                switch result {
+                case let .success(data):
+                    self?.retainedObservableObject?.grantRewardState = .success(data.rewardsGranted)
+                case let .failure(error):
+                    self?.retainedObservableObject?.grantRewardState = .failure(error)
                 }
             }
 
