@@ -223,6 +223,75 @@ public final class ReferralsObservableObject {
         self.onWithdrawCredits?(key, amount)
     }
 
+    // Affiliate Apply Link
+    public enum AffiliateApplyLinkState {
+        case none
+        case loading
+        case success(String)
+        case failure(Error)
+
+        public var isLoading: Bool {
+            switch self {
+            case .loading:
+                return true
+            default:
+                return false
+            }
+        }
+
+        public var isSuccess: Bool {
+            switch self {
+            case .success:
+                return true
+            default:
+                return false
+            }
+        }
+
+        public var isFailure: Bool {
+            switch self {
+            case .failure:
+                return true
+            default:
+                return false
+            }
+        }
+
+        public var link: String? {
+            switch self {
+            case let .success(link):
+                return link
+            default:
+                return nil
+            }
+        }
+
+        public var errorObjects: [ErrorObject]? {
+            switch self {
+            case .failure(let error):
+                return (error as? ReferralsError)?.errorObjects
+            default:
+                return nil
+            }
+        }
+    }
+
+    public internal(set) var affiliateApplyLinkState: AffiliateApplyLinkState = .none
+
+    ///
+    /// Creates a link the current user can open to apply as an affiliate.
+    ///
+    /// The resulting link is delivered via ``affiliateApplyLinkState``.
+    /// Request it when the user asks to apply, rather than ahead of time,
+    /// as the link carries a short-lived token identifying the user.
+    ///
+    /// - Parameter groupSlug: The affiliate group to apply to.
+    /// Omit it to link to the app's default group.
+    ///
+    public func createAffiliateApplyLink(groupSlug: String? = nil) {
+        self.onCreateAffiliateApplyLink?(groupSlug)
+    }
+
     // User properties
     public func set(appUserId: String) {
         self.onSetAppUserId?(appUserId)
@@ -268,6 +337,7 @@ public final class ReferralsObservableObject {
     var onClaimCode: ((String) -> Void)?
     var onGrantReward: ((String, String?) -> Void)?
     var onWithdrawCredits: ((String, Int) -> Void)?
+    var onCreateAffiliateApplyLink: ((String?) -> Void)?
     var onSetAppUserId: ((String) -> Void)?
     var onSetIsPremium: ((Bool) -> Void)?
     var onSetIsTrial: ((Bool) -> Void)?

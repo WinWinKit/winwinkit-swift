@@ -21,6 +21,7 @@ final class UserService {
     let userCache: UserCacheType
 
     struct Providers {
+        let affiliateActions: AffiliateActionsProviderType
         let appStoreTransactions: AppStoreTransactionsProviderType
         let claimActions: ClaimActionsProviderType
         let rewardActions: RewardActionsProviderType
@@ -317,6 +318,40 @@ final class UserService {
                 let referralsError = ReferralsError.fromErrorResponse(error) ?? error
 
                 Logger.error("Failed to withdraw credits: \(String(describing: referralsError))")
+
+                self.handleTaskError(referralsError)
+
+                completion(.failure(referralsError))
+            }
+        }
+    }
+
+    func createAffiliateApplyLink(groupSlug: String?, completion: @escaping (Result<UserAffiliateApplyLinkResponseData, Error>) -> Void) {
+        if self.shouldSuspendIndefinitely {
+            Logger.debug("UserService: Create affiliate apply link suspended indefinitely")
+            completion(.failure(ReferralsError.suspendedIndefinitely))
+            return
+        }
+
+        Task { @MainActor in
+            do {
+                let request = UserAffiliateApplyLinkRequest(groupSlug: groupSlug)
+                let userAffiliateApplyLinkResponse = try await self.providers.affiliateActions.createApplyLink(
+                    request: request,
+                    appUserId: self.appUserId,
+                    apiKey: self.apiKey
+                )
+
+                Logger.debug("UserService: Create affiliate apply link did finish")
+
+                completion(.success(userAffiliateApplyLinkResponse))
+            }
+            catch {
+                Logger.debug("UserService: Create affiliate apply link did fail")
+
+                let referralsError = ReferralsError.fromErrorResponse(error) ?? error
+
+                Logger.error("Failed to create affiliate apply link: \(String(describing: referralsError))")
 
                 self.handleTaskError(referralsError)
 

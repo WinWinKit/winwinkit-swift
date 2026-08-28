@@ -180,6 +180,9 @@ public final class Referrals {
         created.onWithdrawCredits = { [weak self] key, amount in
             self?.withdrawCredits(key: key, amount: amount) { _ in }
         }
+        created.onCreateAffiliateApplyLink = { [weak self] groupSlug in
+            self?.createAffiliateApplyLink(groupSlug: groupSlug) { _ in }
+        }
         created.onSetAppUserId = { [weak self] appUserId in
             self?.set(appUserId: appUserId)
         }
@@ -510,6 +513,71 @@ public final class Referrals {
     }
 
     ///
+    /// Creates a link the current user can open to apply as an affiliate.
+    ///
+    /// The link carries a short-lived token identifying the user,
+    /// so the affiliate they become is attributed back to them.
+    /// Request it when the user asks to apply, rather than ahead of time.
+    ///
+    /// - Parameter groupSlug: The affiliate group to apply to.
+    /// Omit it to link to the app's default group.
+    ///
+    /// - Returns: The apply link to open.
+    ///
+    /// - Throws: An error if the link cannot be created.
+    ///
+    public func createAffiliateApplyLink(groupSlug: String? = nil) async throws -> String {
+        try await withCheckedThrowingContinuation { continuation in
+            self.createAffiliateApplyLink(groupSlug: groupSlug) { result in
+                switch result {
+                case let .success(link):
+                    continuation.resume(returning: link)
+                case let .failure(error):
+                    continuation.resume(throwing: error)
+                }
+            }
+        }
+    }
+
+    ///
+    /// Creates a link the current user can open to apply as an affiliate.
+    ///
+    /// The link carries a short-lived token identifying the user,
+    /// so the affiliate they become is attributed back to them.
+    /// Request it when the user asks to apply, rather than ahead of time.
+    ///
+    /// - Parameter groupSlug: The affiliate group to apply to.
+    /// Omit it to link to the app's default group.
+    /// - Parameter completion: A closure to be called when the link is created.
+    ///
+    public func createAffiliateApplyLink(groupSlug: String? = nil, completion: @escaping (Result<String, Error>) -> Void) {
+        guard
+            let userService
+        else {
+            Logger.warning("User identifier `appUserId` must be set before creating affiliate apply link.")
+            completion(.failure(ReferralsError.appUserIdNotSet))
+            return
+        }
+
+        if #available(iOS 17.0, macOS 14.0, *) {
+            self.retainedObservableObject?.affiliateApplyLinkState = .loading
+        }
+
+        userService.createAffiliateApplyLink(groupSlug: groupSlug) { [weak self] result in
+            if #available(iOS 17.0, macOS 14.0, *) {
+                switch result {
+                case let .success(data):
+                    self?.retainedObservableObject?.affiliateApplyLinkState = .success(data.link)
+                case let .failure(error):
+                    self?.retainedObservableObject?.affiliateApplyLinkState = .failure(error)
+                }
+            }
+
+            completion(result.map(\.link))
+        }
+    }
+
+    ///
     /// Triggers internal refresh.
     ///
     public func refresh() {
@@ -575,6 +643,7 @@ public final class Referrals {
         let networkReachability = NetworkReachability()
         let userCache = UserCache(keyValueCache: keyValueCache)
         let providers = UserService.Providers(
+            affiliateActions: AffiliateActionsProvider(),
             appStoreTransactions: AppStoreTransactionsProvider(),
             claimActions: ClaimActionsProvider(),
             rewardActions: RewardActionsProvider(),
