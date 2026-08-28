@@ -43,7 +43,8 @@ enum MockUser {
                 revenuecatOffering: []
             )
         ),
-        referralProgram: ReferralProgram? = nil
+        referralProgram: ReferralProgram? = nil,
+        affiliate: UserAffiliate? = nil
     ) -> User {
         return User(
             appUserId: appUserId,
@@ -59,7 +60,8 @@ enum MockUser {
             referredBy: referredBy,
             stats: stats,
             rewards: rewards,
-            referralProgram: referralProgram
+            referralProgram: referralProgram,
+            affiliate: affiliate
         )
     }
 }

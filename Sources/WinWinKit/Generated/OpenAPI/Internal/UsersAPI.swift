@@ -13,6 +13,50 @@ import AnyCodable
 internal class UsersAPI {
 
     /**
+     Create Affiliate Apply Link
+     
+     - parameter appUserId: (path) The app user id of the user applying. 
+     - parameter xApiKey: (header) The API key to authenticate with. 
+     - parameter userAffiliateApplyLinkRequest: (body)  
+     - returns: UserAffiliateApplyLinkResponse
+     */
+    @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
+    internal class func createAffiliateApplyLink(appUserId: String, xApiKey: String, userAffiliateApplyLinkRequest: UserAffiliateApplyLinkRequest) async throws -> UserAffiliateApplyLinkResponse {
+        return try await createAffiliateApplyLinkWithRequestBuilder(appUserId: appUserId, xApiKey: xApiKey, userAffiliateApplyLinkRequest: userAffiliateApplyLinkRequest).execute().body
+    }
+
+    /**
+     Create Affiliate Apply Link
+     - POST /users/{app_user_id}/affiliate-apply-link
+     - Builds an affiliate apply link for the user, carrying a short-lived token so the affiliate they become is attributed back to them. Request it when the user asks to apply, rather than ahead of time.
+     - parameter appUserId: (path) The app user id of the user applying. 
+     - parameter xApiKey: (header) The API key to authenticate with. 
+     - parameter userAffiliateApplyLinkRequest: (body)  
+     - returns: RequestBuilder<UserAffiliateApplyLinkResponse> 
+     */
+    internal class func createAffiliateApplyLinkWithRequestBuilder(appUserId: String, xApiKey: String, userAffiliateApplyLinkRequest: UserAffiliateApplyLinkRequest) -> RequestBuilder<UserAffiliateApplyLinkResponse> {
+        var localVariablePath = "/users/{app_user_id}/affiliate-apply-link"
+        let appUserIdPreEscape = "\(APIHelper.mapValueToPathItem(appUserId))"
+        let appUserIdPostEscape = appUserIdPreEscape.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? ""
+        localVariablePath = localVariablePath.replacingOccurrences(of: "{app_user_id}", with: appUserIdPostEscape, options: .literal, range: nil)
+        let localVariableURLString = WinWinKitAPI.basePath + localVariablePath
+        let localVariableParameters = JSONEncodingHelper.encodingParameters(forEncodableObject: userAffiliateApplyLinkRequest)
+
+        let localVariableUrlComponents = URLComponents(string: localVariableURLString)
+
+        let localVariableNillableHeaders: [String: Any?] = [
+            "Content-Type": "application/json",
+            "x-api-key": xApiKey.encodeToJSON(),
+        ]
+
+        let localVariableHeaderParameters = APIHelper.rejectNilHeaders(localVariableNillableHeaders)
+
+        let localVariableRequestBuilder: RequestBuilder<UserAffiliateApplyLinkResponse>.Type = WinWinKitAPI.requestBuilderFactory.getBuilder()
+
+        return localVariableRequestBuilder.init(method: "POST", URLString: (localVariableUrlComponents?.string ?? localVariableURLString), parameters: localVariableParameters, headers: localVariableHeaderParameters, requiresAuthentication: false)
+    }
+
+    /**
      Create or Update User
      
      - parameter xApiKey: (header) The API key to authenticate with. 

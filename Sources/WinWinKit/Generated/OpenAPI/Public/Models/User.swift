@@ -41,8 +41,10 @@ public struct User: Codable, Hashable {
     public private(set) var rewards: UserRewards
     /** The program of the user. */
     public private(set) var referralProgram: ReferralProgram?
+    /** The affiliate this user was recruited into on this app, or null if they are not one. */
+    public private(set) var affiliate: UserAffiliate?
 
-    public init(appUserId: String, referralCode: String?, referralCodeLink: String?, isTrial: Bool?, isPremium: Bool?, firstSeenAt: Date?, lastSeenAt: Date?, metadata: AnyCodable?, stripeCustomerId: String?, claimCodeEligibility: UserClaimCodeEligibility, referredBy: UserReferredBy?, stats: UserStats, rewards: UserRewards, referralProgram: ReferralProgram?) {
+    public init(appUserId: String, referralCode: String?, referralCodeLink: String?, isTrial: Bool?, isPremium: Bool?, firstSeenAt: Date?, lastSeenAt: Date?, metadata: AnyCodable?, stripeCustomerId: String?, claimCodeEligibility: UserClaimCodeEligibility, referredBy: UserReferredBy?, stats: UserStats, rewards: UserRewards, referralProgram: ReferralProgram?, affiliate: UserAffiliate?) {
         self.appUserId = appUserId
         self.referralCode = referralCode
         self.referralCodeLink = referralCodeLink
@@ -57,6 +59,7 @@ public struct User: Codable, Hashable {
         self.stats = stats
         self.rewards = rewards
         self.referralProgram = referralProgram
+        self.affiliate = affiliate
     }
 
     public enum CodingKeys: String, CodingKey, CaseIterable {
@@ -74,6 +77,7 @@ public struct User: Codable, Hashable {
         case stats
         case rewards
         case referralProgram = "referral_program"
+        case affiliate
     }
 
     // Encodable protocol methods
@@ -94,6 +98,7 @@ public struct User: Codable, Hashable {
         try container.encode(stats, forKey: .stats)
         try container.encode(rewards, forKey: .rewards)
         try container.encode(referralProgram, forKey: .referralProgram)
+        try container.encode(affiliate, forKey: .affiliate)
     }
 }
 
